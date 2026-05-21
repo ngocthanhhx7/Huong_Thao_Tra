@@ -12,6 +12,23 @@ const orderSchema = new mongoose.Schema(
     {
         user: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
         orderItems: [orderItemSchema],
+        orderStatus: {
+            type: String,
+            enum: ['Pending', 'Confirmed', 'Processing', 'Shipping', 'Delivered'],
+            default: 'Pending',
+        },
+        statusHistory: [
+            {
+                status: {
+                    type: String,
+                    enum: ['Pending', 'Confirmed', 'Processing', 'Shipping', 'Delivered'],
+                    required: true,
+                },
+                changedAt: { type: Date, default: Date.now },
+                changedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+                note: { type: String, default: '' },
+            },
+        ],
         shippingAddress: {
             address: { type: String, required: true },
             city: { type: String, required: true },

@@ -5,7 +5,8 @@ const Tea = require('../models/Tea');
 // @access  Public
 const getTeas = async (req, res) => {
     try {
-        const teas = await Tea.find({});
+        const filter = ['Admin', 'Staff'].includes(req.user?.role) ? {} : { isPublished: true };
+        const teas = await Tea.find(filter).sort({ createdAt: -1 });
         res.json(teas);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -17,9 +18,12 @@ const getTeas = async (req, res) => {
 // @access  Public
 const getTeaById = async (req, res) => {
     try {
-        const tea = await Tea.findById(req.params.id);
+        const tea = await Tea.findById(req.params.id).populate('ingredients', 'name description flavorProfile benefits');
 
         if (tea) {
+            if (!tea.isPublished && !['Admin', 'Staff'].includes(req.user?.role)) {
+                return res.status(404).json({ message: 'Tea not found' });
+            }
             res.json(tea);
         } else {
             res.status(404).json({ message: 'Tea not found' });
@@ -45,6 +49,9 @@ const createTea = async (req, res) => {
             ingredients,
             benefits,
             mixGoal,
+            isPublished,
+            source,
+            createdFromSuggestion,
         } = req.body;
 
         const tea = new Tea({
@@ -58,6 +65,9 @@ const createTea = async (req, res) => {
             ingredients,
             benefits,
             mixGoal,
+            isPublished,
+            source,
+            createdFromSuggestion,
         });
 
         const createdTea = await tea.save();
@@ -88,6 +98,8 @@ const updateTea = async (req, res) => {
         tea.ingredients = req.body.ingredients ?? tea.ingredients;
         tea.benefits = req.body.benefits ?? tea.benefits;
         tea.mixGoal = req.body.mixGoal ?? tea.mixGoal;
+        tea.isPublished = req.body.isPublished ?? tea.isPublished;
+        tea.source = req.body.source ?? tea.source;
 
         const updatedTea = await tea.save();
         res.json(updatedTea);

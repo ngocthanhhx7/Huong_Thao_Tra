@@ -1,10 +1,20 @@
 const { GoogleGenerativeAI, SchemaType } = require('@google/generative-ai');
 const AISuggestion = require('../models/AISuggestion');
+const Tea = require('../models/Tea');
+const Ingredient = require('../models/Ingredient');
+const Cart = require('../models/Cart');
+const { createNotification } = require('../utils/notificationHelper');
 
-// Setup Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY_1);
+const DEFAULT_AI_TEA_IMAGE = 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=900&q=80';
+const LIFECYCLE_STATUS_PRIORITY = {
+    draft: 0,
+    saved: 1,
+    submitted_for_sale: 2,
+    approved_for_sale: 3,
+    rejected: 4,
+};
 
-// System prompt chuyên gia thảo mộc - Hương Thảo Trà
 const HERBAL_EXPERT_SYSTEM = `Bạn là chuyên gia thảo mộc và trà thảo dược của HƯƠNG THẢO TRÀ – AI HERBAL TEA PLATFORM.
 
 KIẾN THỨC: Healing Herbal Teas (Sarah Farr), The Book of Herbal Teas, The Complete Book of Herbal Teas (Marietta Marshall Marcin), The Herb Book (John Lust), Rosemary Gladstar's Herbal Recipes for Vibrant Health.
@@ -14,89 +24,217 @@ PHONG CÁCH: Chuyên gia thảo mộc thân thiện. KHÔNG nói bạn là AI. K
 const MIX_TEA_SYSTEM = `${HERBAL_EXPERT_SYSTEM}
 
 LOGIC TẠO CÔNG THỨC TRÀ:
-Mỗi công thức phải tuân theo cấu trúc: 1-2 Core Herb (thảo mộc chính) + 1-3 Support Herb (thảo mộc hỗ trợ) + 1 Flavor Herb (thảo mộc tạo hương). Tổng cộng tối thiểu 5 nguyên liệu. Danh sách thảo mộc trong cấu trúc PHẢI trùng khớp 100% với danh sách nguyên liệu pha trà.
+Mỗi công thức phải tuân theo cấu trúc: 1-2 Core Herb + 1-3 Support Herb + 1 Flavor Herb. Tổng cộng tối thiểu 5 nguyên liệu. Danh sách thảo mộc trong cấu trúc PHẢI trùng khớp 100% với danh sách nguyên liệu pha trà.
 
-NGUYÊN TẮC CHỌN THẢO MỘC THEO ĐỘ TUỔI:
-- Trẻ em (<18): Ưu tiên thảo mộc nhẹ (Hoa Cúc, Tía Tô, Thì Là). Tránh thảo mộc mạnh, gừng liều cao, cam thảo liều cao.
-- Trưởng thành (18-50): Đa dạng thảo mộc (Hoa Cúc, Bạc Hà, Gừng, Oải Hương, Dâm Bụt, Tulsi, Sả, Hoa Hồng, Quế, Cam Thảo).
-- Lớn tuổi (50+): Ưu tiên thảo mộc nhẹ, hỗ trợ tiêu hóa/tim mạch/giấc ngủ (Hoa Cúc, Tía Tô, Táo Đỏ, Thì Là).
-
-QUY TẮC DỊ ỨNG: Nếu người dùng liệt kê nguyên liệu cần tránh/dị ứng, TUYỆT ĐỐI không đưa nguyên liệu đó vào công thức. Phải ghi rõ trong phần lưu ý.
+QUY TẮC DỊ ỨNG: Nếu người dùng liệt kê nguyên liệu cần tránh/dị ứng, TUYỆT ĐỐI không đưa nguyên liệu đó vào công thức.
 
 ƯU TIÊN AN TOÀN: Thảo mộc an toàn, liều lượng hợp lý, kết hợp hài hòa.`;
 
+const normalizeAiInput = (body) => ({
+    goal: body.goal || '',
+    symptoms: body.symptoms || [],
+    stress_level: body.stressLevel || '',
+    sleep_quality: body.sleepQuality || '',
+    flavor_preference: Array.isArray(body.flavorPreference) ? body.flavorPreference : [body.flavorPreference || ''],
+    caffeine: body.caffeinePreference || '',
+    drink_time: body.drinkTime || '',
+    age_group: body.ageGroup || '18-50',
+    allergies: body.allergies || [],
+    avoid: body.avoid || [],
+    other_request: body.otherRequest || '',
+});
+
+const normalizeText = (value = '') =>
+    value
+        .toString()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim();
+
+const mergeLifecycleStatus = (currentStatus = 'draft', nextStatus = 'draft') =>
+    LIFECYCLE_STATUS_PRIORITY[nextStatus] > LIFECYCLE_STATUS_PRIORITY[currentStatus]
+        ? nextStatus
+        : currentStatus;
+
+const buildInputParams = (userInput) => ({
+    goal: userInput.goal || '',
+    symptoms: (userInput.symptoms || []).join(', '),
+    flavorPreference: (userInput.flavor_preference || []).join(', '),
+    caffeinePreference: userInput.caffeine || '',
+    ageGroup: userInput.age_group || '',
+    drinkTime: userInput.drink_time || '',
+    stressLevel: userInput.stress_level || '',
+    sleepQuality: userInput.sleep_quality || '',
+    allergies: (userInput.allergies || []).join(', '),
+    avoid: (userInput.avoid || []).join(', '),
+    otherRequest: userInput.other_request || '',
+});
+
+const extractIngredientNames = (suggestion) => {
+    const items = Array.isArray(suggestion?.result?.ingredients) ? suggestion.result.ingredients : [];
+
+    return items
+        .map((item) => {
+            if (typeof item === 'string') {
+                return item;
+            }
+
+            return item?.name || '';
+        })
+        .filter(Boolean);
+};
+
+const resolveIngredientIds = async (suggestion) => {
+    const ingredientNames = extractIngredientNames(suggestion);
+
+    if (!ingredientNames.length) {
+        return [];
+    }
+
+    const catalogIngredients = await Ingredient.find({}).select('_id name');
+
+    return ingredientNames
+        .map((name) => {
+            const normalizedName = normalizeText(name);
+
+            const exactIngredient = catalogIngredients.find(
+                (ingredient) => normalizeText(ingredient.name) === normalizedName
+            );
+
+            if (exactIngredient) {
+                return exactIngredient._id;
+            }
+
+            const fuzzyIngredient = catalogIngredients.find((ingredient) => {
+                const normalizedIngredientName = normalizeText(ingredient.name);
+                return normalizedIngredientName.includes(normalizedName) || normalizedName.includes(normalizedIngredientName);
+            });
+
+            return fuzzyIngredient?._id;
+        })
+        .filter(Boolean);
+};
+
+const buildTeaDraftFromSuggestion = async (suggestion, pricingDraft = {}, extraTeaFields = {}) => {
+    const result = suggestion.result || {};
+    const benefits = Array.isArray(result.benefits) ? result.benefits : [];
+    const ingredientIds = await resolveIngredientIds(suggestion);
+
+    return {
+        name: result.teaName || 'AI Tea Formula',
+        description: result.useCase || 'AI-generated herbal tea formula for Huong Thao Tra.',
+        image: pricingDraft.image || DEFAULT_AI_TEA_IMAGE,
+        price: Number(pricingDraft.price) || 299000,
+        stock: Number(pricingDraft.stock) || 10,
+        caffeineLevel: suggestion.inputParams?.get('caffeinePreference') || 'Low',
+        ingredients: ingredientIds,
+        benefits,
+        isAIMixture: true,
+        mixGoal: suggestion.inputParams?.get('goal') || result.useCase || 'AI Mix',
+        source: 'ai',
+        createdFromSuggestion: suggestion._id,
+        isPublished: false,
+        ...extraTeaFields,
+    };
+};
+
+const upsertUserMixSuggestion = async ({ userId, suggestionId, result, userInput, lifecycleStatus }) => {
+    if (suggestionId) {
+        const existingSuggestion = await AISuggestion.findOne({
+            _id: suggestionId,
+            user: userId,
+            type: 'MixTea',
+        });
+
+        if (existingSuggestion) {
+            existingSuggestion.result = result;
+            existingSuggestion.inputParams = buildInputParams(userInput);
+            existingSuggestion.lifecycleStatus = mergeLifecycleStatus(existingSuggestion.lifecycleStatus, lifecycleStatus);
+            await existingSuggestion.save();
+            return existingSuggestion;
+        }
+    }
+
+    return AISuggestion.create({
+        user: userId,
+        type: 'MixTea',
+        lifecycleStatus,
+        inputParams: buildInputParams(userInput),
+        result,
+    });
+};
+
+const createOrUpdateTeaFromSuggestion = async (suggestion, overrides = {}) => {
+    const teaDraft = await buildTeaDraftFromSuggestion(suggestion, suggestion.pricingDraft || {}, overrides);
+    const existingTea = await Tea.findOne({ createdFromSuggestion: suggestion._id });
+
+    if (existingTea) {
+        Object.assign(existingTea, teaDraft);
+        return existingTea.save();
+    }
+
+    return Tea.create(teaDraft);
+};
+
+const getOrCreateCart = async (userId) => {
+    let cart = await Cart.findOne({ user: userId });
+
+    if (!cart) {
+        cart = await Cart.create({ user: userId, items: [] });
+    }
+
+    return cart;
+};
 
 // @desc    AI Mix Tea
 // @route   POST /api/ai/mix-tea
-// @access  Public (Optional auth)
+// @access  Public
 const aiMixTea = async (req, res) => {
-    const {
-        goal, symptoms, stressLevel, sleepQuality,
-        flavorPreference, caffeinePreference, drinkTime,
-        ageGroup, allergies, avoid
-    } = req.body;
-
     try {
-        const userInput = {
-            goal: goal || '',
-            symptoms: symptoms || [],
-            stress_level: stressLevel || '',
-            sleep_quality: sleepQuality || '',
-            flavor_preference: Array.isArray(flavorPreference) ? flavorPreference : [flavorPreference || ''],
-            caffeine: caffeinePreference || '',
-            drink_time: drinkTime || '',
-            age_group: ageGroup || '18-50',
-            allergies: allergies || [],
-            avoid: avoid || []
-        };
-
+        const userInput = normalizeAiInput(req.body);
         const prompt = `${MIX_TEA_SYSTEM}
 
 INPUT TỪ NGƯỜI DÙNG:
 ${JSON.stringify(userInput, null, 2)}
 
-Dựa trên thông tin trên, hãy:
-1. Phân tích mục tiêu và triệu chứng
-2. Chọn thảo mộc phù hợp theo độ tuổi "${userInput.age_group}"
-3. Loại bỏ hoàn toàn các nguyên liệu trong danh sách dị ứng/tránh: [${[...userInput.allergies, ...userInput.avoid].join(', ')}]
-4. Tạo công thức theo cấu trúc: 1 Core Herb + 1-3 Support Herb + 1 Flavor Herb (tối đa 5 nguyên liệu). Tên các thảo mộc ở phần cấu trúc (coreHerb, supportHerbs, flavorHerb) PHẢI KHỚP ĐÚNG 100% với danh sách ở phần nguyên liệu chi tiết (ingredients).
-5. Trả lời hoàn toàn bằng TIẾNG VIỆT`;
+Trả lời hoàn toàn bằng TIẾNG VIỆT.`;
 
         const model = genAI.getGenerativeModel({
-            model: "gemini-3.1-flash-lite-preview",
+            model: 'gemini-3.1-flash-lite-preview',
             generationConfig: {
-                responseMimeType: "application/json",
+                responseMimeType: 'application/json',
                 responseSchema: {
                     type: SchemaType.OBJECT,
                     properties: {
-                        teaName: { type: SchemaType.STRING, description: "Tên công thức trà tiếng Việt" },
-                        useCase: { type: SchemaType.STRING, description: "Công dụng chính (1-2 câu)" },
-                        coreHerb: { type: SchemaType.STRING, description: "Thảo mộc chính" },
-                        supportHerbs: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING }, description: "1-3 thảo mộc hỗ trợ" },
-                        flavorHerb: { type: SchemaType.STRING, description: "Thảo mộc tạo hương" },
+                        teaName: { type: SchemaType.STRING },
+                        useCase: { type: SchemaType.STRING },
+                        coreHerb: { type: SchemaType.STRING },
+                        supportHerbs: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING } },
+                        flavorHerb: { type: SchemaType.STRING },
                         ingredients: {
                             type: SchemaType.ARRAY,
                             items: {
                                 type: SchemaType.OBJECT,
                                 properties: {
-                                    name: { type: SchemaType.STRING, description: "Tên nguyên liệu" },
-                                    amount: { type: SchemaType.STRING, description: "Liều lượng (gram)" },
-                                    role: { type: SchemaType.STRING, description: "Vai trò: chính/hỗ trợ/tạo hương" }
+                                    name: { type: SchemaType.STRING },
+                                    amount: { type: SchemaType.STRING },
+                                    role: { type: SchemaType.STRING },
                                 },
-                                required: ["name", "amount", "role"]
+                                required: ['name', 'amount', 'role'],
                             },
-                            description: "Danh sách nguyên liệu chi tiết với liều lượng. PHẢI trùng khớp 100% với các thảo mộc đã kê ở coreHerb, supportHerbs và flavorHerb."
                         },
-                        ratio: { type: SchemaType.STRING, description: "Tỉ lệ pha (gram / ml nước / nhiệt độ / thời gian hãm)" },
-                        brewSteps: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING }, description: "Các bước pha chi tiết" },
-                        benefits: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING }, description: "Lợi ích sức khỏe" },
-                        frequency: { type: SchemaType.STRING, description: "Tần suất: bao nhiêu tách/ngày, thời điểm, thời gian dùng" },
-                        suggestions: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING }, description: "Gợi ý biến thể, thay thế nguyên liệu, tăng hương vị" },
-                        warnings: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING }, description: "Lưu ý an toàn, cảnh báo sức khỏe, trường hợp nên tránh" }
+                        ratio: { type: SchemaType.STRING },
+                        brewSteps: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING } },
+                        benefits: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING } },
+                        frequency: { type: SchemaType.STRING },
+                        suggestions: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING } },
+                        warnings: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING } },
                     },
-                    required: ["teaName", "useCase", "coreHerb", "flavorHerb", "ingredients", "ratio", "brewSteps", "benefits", "frequency"]
-                }
-            }
+                    required: ['teaName', 'useCase', 'ingredients', 'ratio', 'brewSteps', 'benefits', 'frequency'],
+                },
+            },
         });
 
         const completion = await model.generateContent(prompt);
@@ -106,14 +244,8 @@ Dựa trên thông tin trên, hãy:
             await AISuggestion.create({
                 user: req.user._id,
                 type: 'MixTea',
-                inputParams: {
-                    goal: userInput.goal,
-                    flavorPreference: userInput.flavor_preference.join(', '),
-                    caffeinePreference: userInput.caffeine,
-                    ageGroup: userInput.age_group,
-                    drinkTime: userInput.drink_time,
-                    stressLevel: userInput.stress_level,
-                },
+                lifecycleStatus: 'draft',
+                inputParams: buildInputParams(userInput),
                 result,
             });
         }
@@ -134,7 +266,7 @@ const aiHealthPlan = async (req, res) => {
     try {
         const prompt = `${HERBAL_EXPERT_SYSTEM}
 
-Nhiệm vụ: Xây dựng liệu trình uống trà thảo mộc hàng ngày cá nhân hóa.
+Nhiệm vụ: Xây dựng liệu trình uống trà thảo mộc hằng ngày cá nhân hóa.
 
 Thông tin người dùng:
 - Tuổi: ${age}
@@ -142,32 +274,23 @@ Thông tin người dùng:
 - Mức độ stress: ${stressLevel}
 - Mục tiêu sức khỏe: ${healthGoal}
 
-Phân tích nhu cầu, chọn thảo mộc phù hợp, đề xuất trà sáng/chiều/tối, lịch trình giấc ngủ và chế độ ăn bổ trợ. Giải thích lý do chọn mỗi loại trà. Viết tất cả BẰNG TIẾNG VIỆT. Không thay thế lời khuyên y tế của bác sĩ.`;
+Viết tất cả BẰNG TIẾNG VIỆT.`;
 
         const model = genAI.getGenerativeModel({
-            model: "gemini-2.5-flash",
+            model: 'gemini-2.5-flash',
             generationConfig: {
-                responseMimeType: "application/json",
+                responseMimeType: 'application/json',
                 responseSchema: {
                     type: SchemaType.OBJECT,
                     properties: {
-                        morningTea: {
-                            type: SchemaType.OBJECT,
-                            properties: { name: { type: SchemaType.STRING }, reason: { type: SchemaType.STRING } }
-                        },
-                        afternoonTea: {
-                            type: SchemaType.OBJECT,
-                            properties: { name: { type: SchemaType.STRING }, reason: { type: SchemaType.STRING } }
-                        },
-                        nightTea: {
-                            type: SchemaType.OBJECT,
-                            properties: { name: { type: SchemaType.STRING }, reason: { type: SchemaType.STRING } }
-                        },
-                        sleepSchedule: { type: SchemaType.STRING, description: "suggested customized sleep schedule" },
-                        dietSuggestion: { type: SchemaType.STRING, description: "suggested diet to accompany the teas" }
-                    }
-                }
-            }
+                        morningTea: { type: SchemaType.OBJECT, properties: { name: { type: SchemaType.STRING }, reason: { type: SchemaType.STRING } } },
+                        afternoonTea: { type: SchemaType.OBJECT, properties: { name: { type: SchemaType.STRING }, reason: { type: SchemaType.STRING } } },
+                        nightTea: { type: SchemaType.OBJECT, properties: { name: { type: SchemaType.STRING }, reason: { type: SchemaType.STRING } } },
+                        sleepSchedule: { type: SchemaType.STRING },
+                        dietSuggestion: { type: SchemaType.STRING },
+                    },
+                },
+            },
         });
 
         const completion = await model.generateContent(prompt);
@@ -177,7 +300,7 @@ Phân tích nhu cầu, chọn thảo mộc phù hợp, đề xuất trà sáng/c
             user: req.user._id,
             type: 'HealthPlan',
             inputParams: { age: age.toString(), sleepTime, stressLevel, healthGoal },
-            result: result,
+            result,
         });
 
         res.json(result);
@@ -191,8 +314,196 @@ Phân tích nhu cầu, chọn thảo mộc phù hợp, đề xuất trà sáng/c
 // @route   GET /api/ai/history
 // @access  Private
 const getAiHistory = async (req, res) => {
-    const history = await AISuggestion.find({ user: req.user._id }).sort({ createdAt: -1 });
-    res.json(history);
+    try {
+        const history = await AISuggestion.find({ user: req.user._id }).sort({ createdAt: -1 });
+        res.json(history);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };
 
-module.exports = { aiMixTea, aiHealthPlan, getAiHistory };
+// @desc    Save latest AI mix result
+// @route   POST /api/ai/mix-tea/save
+// @access  Private
+const saveAiMixTea = async (req, res) => {
+    try {
+        const { result, suggestionId } = req.body;
+        const userInput = normalizeAiInput(req.body.inputParams || {});
+
+        if (!result) {
+            return res.status(400).json({ message: 'Result is required' });
+        }
+
+        const savedSuggestion = await upsertUserMixSuggestion({
+            userId: req.user._id,
+            suggestionId,
+            result,
+            userInput,
+            lifecycleStatus: 'saved',
+        });
+
+        res.status(201).json(savedSuggestion);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Submit AI mix for sale approval
+// @route   POST /api/ai/mix-tea/:id/submit-for-sale
+// @access  Private
+const submitAiMixTeaForSale = async (req, res) => {
+    try {
+        const suggestion = await AISuggestion.findOne({
+            _id: req.params.id,
+            user: req.user._id,
+            type: 'MixTea',
+        });
+
+        if (!suggestion) {
+            return res.status(404).json({ message: 'AI recipe not found' });
+        }
+
+        suggestion.lifecycleStatus = 'submitted_for_sale';
+        suggestion.pricingDraft = {
+            price: req.body.price,
+            stock: req.body.stock,
+            image: req.body.image || DEFAULT_AI_TEA_IMAGE,
+        };
+
+        const updatedSuggestion = await suggestion.save();
+        const tea = await createOrUpdateTeaFromSuggestion(updatedSuggestion, { isPublished: false });
+
+        await createNotification({
+            type: 'ai_recipe_submitted',
+            title: 'Có công thức AI chờ duyệt',
+            message: `${req.user.name} vừa gửi công thức AI để bán trên cửa hàng.`,
+            link: '/admin/ai-recipes',
+            audienceScope: 'all-staff',
+            actor: req.user._id,
+        });
+
+        res.json({ suggestion: updatedSuggestion, tea });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Save AI mix and add it to cart immediately
+// @route   POST /api/ai/mix-tea/buy-now
+// @access  Private
+const buyAiMixTeaNow = async (req, res) => {
+    try {
+        const { result, suggestionId } = req.body;
+        const userInput = normalizeAiInput(req.body.inputParams || {});
+
+        if (!result) {
+            return res.status(400).json({ message: 'Result is required' });
+        }
+
+        const suggestion = await upsertUserMixSuggestion({
+            userId: req.user._id,
+            suggestionId,
+            result,
+            userInput,
+            lifecycleStatus: 'saved',
+        });
+
+        const tea = await createOrUpdateTeaFromSuggestion(suggestion, {
+            isPublished: false,
+        });
+
+        const cart = await getOrCreateCart(req.user._id);
+        const existingItem = cart.items.find((item) => item.tea.toString() === tea._id.toString());
+
+        if (existingItem) {
+            existingItem.qty += 1;
+        } else {
+            cart.items.push({
+                tea: tea._id,
+                name: tea.name,
+                image: tea.image,
+                price: tea.price,
+                qty: 1,
+            });
+        }
+
+        const updatedCart = await cart.save();
+
+        res.status(201).json({
+            suggestion,
+            tea,
+            cart: updatedCart,
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Get AI recipes for admin/staff
+// @route   GET /api/admin/ai-recipes
+// @access  Private/Staff
+const getAdminAiRecipes = async (req, res) => {
+    try {
+        const suggestions = await AISuggestion.find({ type: 'MixTea' })
+            .populate('user', 'name email')
+            .sort({ updatedAt: -1 });
+        res.json(suggestions);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Approve AI recipe for sale
+// @route   POST /api/admin/ai-recipes/:id/approve
+// @access  Private/Staff
+const approveAiRecipe = async (req, res) => {
+    try {
+        const suggestion = await AISuggestion.findById(req.params.id);
+
+        if (!suggestion || suggestion.type !== 'MixTea') {
+            return res.status(404).json({ message: 'AI recipe not found' });
+        }
+
+        suggestion.pricingDraft = {
+            price: req.body.price || suggestion.pricingDraft?.price,
+            stock: req.body.stock || suggestion.pricingDraft?.stock,
+            image: req.body.image || suggestion.pricingDraft?.image || DEFAULT_AI_TEA_IMAGE,
+        };
+
+        const tea = await createOrUpdateTeaFromSuggestion(suggestion, {
+            isPublished: true,
+        });
+
+        suggestion.lifecycleStatus = 'approved_for_sale';
+        suggestion.publishReview = {
+            reviewedBy: req.user._id,
+            reviewedAt: new Date(),
+            note: req.body.note || 'Approved for sale',
+        };
+        await suggestion.save();
+
+        await createNotification({
+            recipient: suggestion.user,
+            type: 'ai_recipe_approved',
+            title: 'Công thức AI của bạn đã được duyệt',
+            message: `${tea.name} hiện đã có mặt trên cửa hàng Hương Thảo Trà.`,
+            link: `/teas`,
+            actor: req.user._id,
+        });
+
+        res.status(201).json({ suggestion, tea });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = {
+    aiMixTea,
+    aiHealthPlan,
+    getAiHistory,
+    saveAiMixTea,
+    submitAiMixTeaForSale,
+    buyAiMixTeaNow,
+    getAdminAiRecipes,
+    approveAiRecipe,
+};
