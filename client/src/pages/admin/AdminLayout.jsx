@@ -1,17 +1,18 @@
 import { useContext } from 'react';
 import { NavLink, Navigate, Outlet } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import { StatusBadge } from '../../components/admin/AdminUi';
 
 const adminLinks = [
-    { to: '/admin', label: 'Tổng quan', roles: ['Admin', 'Staff'] },
-    { to: '/admin/orders', label: 'Đơn hàng', roles: ['Admin', 'Staff'] },
-    { to: '/admin/ai-recipes', label: 'AI recipes', roles: ['Admin', 'Staff'] },
-    { to: '/admin/posts', label: 'Bài viết', roles: ['Admin', 'Staff'] },
-    { to: '/admin/feedback', label: 'Feedback', roles: ['Admin', 'Staff'] },
-    { to: '/admin/analytics', label: 'Phân tích bán hàng', roles: ['Admin', 'Staff'] },
-    { to: '/admin/teas', label: 'Sản phẩm trà', roles: ['Admin'] },
-    { to: '/admin/ingredients', label: 'Nguyên liệu', roles: ['Admin'] },
-    { to: '/admin/users', label: 'Người dùng', roles: ['Admin'] },
+    { to: '/admin', label: 'Tổng quan', hint: 'Số liệu và việc cần làm', marker: 'OV', roles: ['Admin', 'Staff'] },
+    { to: '/admin/orders', label: 'Đơn hàng', hint: 'Xử lý trạng thái giao hàng', marker: 'OR', roles: ['Admin', 'Staff'] },
+    { to: '/admin/ai-recipes', label: 'Duyệt AI', hint: 'Công thức khách gửi bán', marker: 'AI', roles: ['Admin', 'Staff'] },
+    { to: '/admin/posts', label: 'Bài viết', hint: 'Tạo, sửa, xuất bản nội dung', marker: 'PO', roles: ['Admin', 'Staff'] },
+    { to: '/admin/feedback', label: 'Feedback', hint: 'Phản hồi khách hàng', marker: 'FB', roles: ['Admin', 'Staff'] },
+    { to: '/admin/analytics', label: 'Phân tích', hint: 'Doanh thu và tồn kho', marker: 'AN', roles: ['Admin', 'Staff'] },
+    { to: '/admin/teas', label: 'Sản phẩm trà', hint: 'Giá, tồn kho, hiển thị', marker: 'TE', roles: ['Admin'] },
+    { to: '/admin/ingredients', label: 'Nguyên liệu', hint: 'Giá và mô tả nguyên liệu', marker: 'IN', roles: ['Admin'] },
+    { to: '/admin/users', label: 'Người dùng', hint: 'Phân quyền tài khoản', marker: 'US', roles: ['Admin'] },
 ];
 
 const AdminLayout = () => {
@@ -21,31 +22,44 @@ const AdminLayout = () => {
         return <Navigate to="/" replace />;
     }
 
+    const visibleLinks = adminLinks.filter((item) => item.roles.includes(user.role));
+
     return (
-        <div className="max-w-7xl mx-auto px-4 py-24">
-            <div className="grid grid-cols-1 xl:grid-cols-[260px_1fr] gap-8">
-                <aside className="bg-white rounded-[32px] border border-gray-100 p-5 h-fit sticky top-28">
-                    <p className="text-xs font-extrabold uppercase tracking-[0.25em] text-primary-600 mb-3">Admin Studio</p>
-                    <h1 className="text-2xl font-extrabold text-gray-900 mb-6">Quản trị Hương Thảo Trà</h1>
-                    <nav className="space-y-2">
-                        {adminLinks
-                            .filter((item) => item.roles.includes(user.role))
-                            .map((item) => (
-                                <NavLink
-                                    key={item.to}
-                                    to={item.to}
-                                    end={item.to === '/admin'}
-                                    className={({ isActive }) =>
-                                        `block px-4 py-3 rounded-2xl text-sm font-semibold transition ${
-                                            isActive
-                                                ? 'bg-primary-600 text-white shadow-sm'
-                                                : 'text-gray-600 hover:bg-gray-50 hover:text-primary-700'
-                                        }`
-                                    }
-                                >
-                                    {item.label}
-                                </NavLink>
-                            ))}
+        <div className="min-h-screen bg-[#F4F7F1] px-4 pb-12 pt-24 md:px-6 lg:px-8">
+            <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 xl:grid-cols-[288px_1fr]">
+                <aside className="admin-panel h-fit xl:sticky xl:top-24">
+                    <div className="mb-5 flex items-start justify-between gap-3">
+                        <div>
+                            <p className="admin-eyebrow">Admin Studio</p>
+                            <h1 className="text-xl font-black leading-tight text-slate-950">Hương Thảo Trà</h1>
+                            <p className="mt-1 text-sm text-slate-600">{user.name || user.email}</p>
+                        </div>
+                        <StatusBadge tone={user.role === 'Admin' ? 'purple' : 'green'}>{user.role}</StatusBadge>
+                    </div>
+
+                    <nav className="grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
+                        {visibleLinks.map((item) => (
+                            <NavLink
+                                key={item.to}
+                                to={item.to}
+                                end={item.to === '/admin'}
+                                className={({ isActive }) =>
+                                    `group flex min-h-[64px] items-center gap-3 rounded-lg border px-3 py-2 transition ${
+                                        isActive
+                                            ? 'border-[#58CC02] bg-[#EAF9DE] text-slate-950 shadow-[0_3px_0_#58CC02]'
+                                            : 'border-slate-200 bg-white text-slate-600 hover:border-[#A9E878] hover:bg-[#F7FBF4]'
+                                    }`
+                                }
+                            >
+                                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs font-black text-slate-700">
+                                    {item.marker}
+                                </span>
+                                <span className="min-w-0">
+                                    <span className="block text-sm font-black">{item.label}</span>
+                                    <span className="block truncate text-xs text-slate-500">{item.hint}</span>
+                                </span>
+                            </NavLink>
+                        ))}
                     </nav>
                 </aside>
 

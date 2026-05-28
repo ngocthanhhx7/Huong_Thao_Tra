@@ -29,6 +29,12 @@ import AdminAnalyticsPage from './pages/admin/AdminAnalyticsPage';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import ActivatePro from './pages/ActivatePro';
+import NotFound from './pages/errors/NotFound';
+import ServerError from './pages/errors/ServerError';
+import Forbidden from './pages/errors/Forbidden';
+import Unauthorized from './pages/errors/Unauthorized';
+import Maintenance from './pages/errors/Maintenance';
+import NetworkError from './pages/errors/NetworkError';
 import Navbar from './components/Navbar';
 import ChatbotWidget from './components/ChatbotWidget';
 
@@ -69,6 +75,16 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/activate-pro" element={<ActivatePro />} />
+
+          {/* Error pages */}
+          <Route path="/401" element={<Unauthorized />} />
+          <Route path="/403" element={<Forbidden />} />
+          <Route path="/500" element={<ServerError />} />
+          <Route path="/maintenance" element={<Maintenance />} />
+          <Route path="/network-error" element={<NetworkError />} />
+          <Route path="/404" element={<NotFound />} />
+          {/* Catch-all 404 - phải đặt cuối cùng */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <ChatbotWidget />

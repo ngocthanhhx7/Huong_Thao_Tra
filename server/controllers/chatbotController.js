@@ -1,7 +1,5 @@
-const { GoogleGenerativeAI } = require('@google/generative-ai');
 const ChatHistory = require('../models/ChatHistory');
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const { getGeminiModel } = require('../config/gemini');
 
 // @desc    Process Chatbot Message
 // @route   POST /api/chatbot/message
@@ -123,8 +121,7 @@ KHÔNG BAO GIỜ TRẢ LỜI DẠNG TEXT THUẦN.
 
 LUÔN FORMAT BẰNG MARKDOWN + ICON.`;
 
-        const model = genAI.getGenerativeModel({
-            model: "gemini-2.5-flash",
+        const model = getGeminiModel({
             systemInstruction,
         });
 

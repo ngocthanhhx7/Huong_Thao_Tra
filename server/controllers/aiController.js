@@ -1,11 +1,11 @@
-const { GoogleGenerativeAI, SchemaType } = require('@google/generative-ai');
+const { SchemaType } = require('@google/generative-ai');
 const AISuggestion = require('../models/AISuggestion');
 const Tea = require('../models/Tea');
 const Ingredient = require('../models/Ingredient');
 const Cart = require('../models/Cart');
+const { getGeminiModel } = require('../config/gemini');
 const { createNotification } = require('../utils/notificationHelper');
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY_1);
 const DEFAULT_AI_TEA_IMAGE = 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=900&q=80';
 const LIFECYCLE_STATUS_PRIORITY = {
     draft: 0,
@@ -201,8 +201,7 @@ ${JSON.stringify(userInput, null, 2)}
 
 Trả lời hoàn toàn bằng TIẾNG VIỆT.`;
 
-        const model = genAI.getGenerativeModel({
-            model: 'gemini-3.1-flash-lite-preview',
+        const model = getGeminiModel({
             generationConfig: {
                 responseMimeType: 'application/json',
                 responseSchema: {
@@ -276,8 +275,7 @@ Thông tin người dùng:
 
 Viết tất cả BẰNG TIẾNG VIỆT.`;
 
-        const model = genAI.getGenerativeModel({
-            model: 'gemini-2.5-flash',
+        const model = getGeminiModel({
             generationConfig: {
                 responseMimeType: 'application/json',
                 responseSchema: {
