@@ -15,20 +15,20 @@ const AIHealthPlan = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    if (!user || user.plan !== 'Pro') {
+    if (!user) {
         return (
             <div className="max-w-3xl mx-auto text-center py-20 px-6 bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 mt-12 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-b from-primary-50/50 to-white/0 pointer-events-none"></div>
-                <div className="relative z-10 text-7xl mb-6 flex justify-center drop-shadow-sm">🔒</div>
-                <h2 className="relative z-10 text-3xl md:text-4xl font-extrabold text-gray-900 mb-5 tracking-tight">Tính Năng Độc Quyền Pro</h2>
+                <div className="relative z-10 text-7xl mb-6 flex justify-center drop-shadow-sm">🌿</div>
+                <h2 className="relative z-10 text-3xl md:text-4xl font-extrabold text-gray-900 mb-5 tracking-tight">Đăng nhập để tạo liệu trình AI</h2>
                 <p className="relative z-10 text-gray-500 mb-10 text-lg max-w-xl mx-auto leading-relaxed">
-                    Liệu trình sức khỏe AI hoạt động như một chuyên gia sinh học cá nhân. Chúng tôi thiết kế phác đồ chăm sóc 24/7 đồng bộ hoàn hảo với nhịp sinh học và thể trạng của riêng bạn.
+                    Liệu trình sức khỏe AI hiện mở cho mọi tài khoản. Đăng nhập để hệ thống lưu lại phác đồ và lịch sử tư vấn của bạn.
                 </p>
                 <div className="relative z-10 group inline-block">
-                    <div className="absolute -inset-1 bg-gradient-to-r from-primary-600 to-amber-500 rounded-full blur opacity-40 group-hover:opacity-60 transition duration-500"></div>
-                    <button className="relative bg-gradient-to-r from-gray-900 to-gray-800 text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 ring-1 ring-white/20">
-                        Nâng cấp Plan Pro (99.000đ/tháng)
-                    </button>
+                    <div className="absolute -inset-1 bg-gradient-to-r from-primary-600 to-emerald-400 rounded-full blur opacity-40 group-hover:opacity-60 transition duration-500"></div>
+                    <Link to="/login" className="relative inline-flex bg-gradient-to-r from-gray-900 to-gray-800 text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 ring-1 ring-white/20">
+                        Đăng nhập
+                    </Link>
                 </div>
             </div>
         );
@@ -55,9 +55,9 @@ const AIHealthPlan = () => {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 pb-6 border-b border-gray-100 gap-4">
                 <div>
                     <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 flex items-center gap-3 tracking-tight">
-                        Liệu Trình AI Pro <span className="text-amber-500 text-2xl drop-shadow-sm">👑</span>
+                        Liệu Trình AI
                     </h1>
-                    <p className="text-gray-500 mt-2 text-lg">Phác đồ sinh học 24/7 cá nhân hóa cao cấp</p>
+                    <p className="text-gray-500 mt-2 text-lg">Phác đồ trà thảo mộc cá nhân hóa theo thể trạng và mục tiêu sức khỏe</p>
                 </div>
                 <Link to="/ai-history" className="text-primary-600 hover:text-white font-bold text-sm bg-primary-50 hover:bg-primary-600 px-5 py-2.5 rounded-xl border border-primary-100 hover:border-transparent transition-all shadow-sm">Xem Lịch Sử</Link>
             </div>

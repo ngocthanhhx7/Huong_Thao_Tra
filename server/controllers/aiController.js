@@ -258,7 +258,7 @@ Trả lời hoàn toàn bằng TIẾNG VIỆT.`;
 
 // @desc    AI Health Plan
 // @route   POST /api/ai/health-plan
-// @access  Private/Pro
+// @access  Private
 const aiHealthPlan = async (req, res) => {
     const { age, sleepTime, stressLevel, healthGoal } = req.body;
 

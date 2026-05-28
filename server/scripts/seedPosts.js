@@ -199,7 +199,6 @@ const getOrCreateAuthor = async () => {
         email: 'admin@huongthaotra.local',
         password: process.env.SEED_ADMIN_PASSWORD || 'Admin123!',
         role: 'Admin',
-        plan: 'Pro',
     });
 
     await author.save();

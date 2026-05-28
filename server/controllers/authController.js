@@ -33,7 +33,6 @@ const registerUser = async (req, res) => {
                 username: user.username,
                 email: user.email,
                 role: user.role,
-                plan: user.plan,
                 token: generateToken(user._id),
             });
         } else {
@@ -62,7 +61,6 @@ const loginUser = async (req, res) => {
                 username: user.username,
                 email: user.email,
                 role: user.role,
-                plan: user.plan,
                 token: generateToken(user._id),
             });
         } else {
@@ -106,7 +104,6 @@ const googleLogin = async (req, res) => {
             username: user.username,
             email: user.email,
             role: user.role,
-            plan: user.plan,
             token: generateToken(user._id),
         });
     } catch (err) {
@@ -142,7 +139,6 @@ const getUserProfile = async (req, res) => {
             username: user.username,
             email: user.email,
             role: user.role,
-            plan: user.plan,
             avatar: user.avatar,
             gender: user.gender,
             preferences: user.preferences
@@ -177,7 +173,6 @@ const updateUserProfile = async (req, res) => {
             username: updatedUser.username,
             email: updatedUser.email,
             role: updatedUser.role,
-            plan: updatedUser.plan,
             avatar: updatedUser.avatar,
             gender: updatedUser.gender,
             preferences: updatedUser.preferences,

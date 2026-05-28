@@ -82,8 +82,7 @@ const Navbar = () => {
             title: 'AI & trải nghiệm',
             items: [
                 { to: '/ai-history', label: 'Lịch sử AI' },
-                { to: '/activate-pro', label: 'Nâng cấp Pro', accent: 'text-purple-600' },
-                ...(user?.plan === 'Pro' ? [{ to: '/ai-plan', label: 'Liệu trình VIP', accent: 'text-purple-600' }] : []),
+                { to: '/ai-plan', label: 'Liệu trình AI', accent: 'text-purple-600' },
             ],
         },
         ...(user?.role === 'Admin' || user?.role === 'Staff'
@@ -96,7 +95,7 @@ const Navbar = () => {
                 ],
             }]
             : []),
-    ]), [user?.plan, user?.role]);
+    ]), [user?.role]);
 
     const handleLogout = () => {
         logout();
@@ -154,7 +153,7 @@ const Navbar = () => {
                         </NavLink>
 
                         <NavLink
-                            to={user?.plan === 'Pro' ? '/ai-plan' : '/activate-pro'}
+                            to="/ai-plan"
                             className={({ isActive }) =>
                                 `inline-flex items-center px-5 py-2.5 rounded-full text-sm font-bold transition ${
                                     isActive
@@ -163,7 +162,7 @@ const Navbar = () => {
                                 }`
                             }
                         >
-                            Liệu Trình VIP
+                            Liệu Trình AI
                         </NavLink>
                     </div>
 
@@ -219,7 +218,7 @@ const Navbar = () => {
                                     </div>
                                     <div className="flex flex-col items-start leading-tight">
                                         <span className="text-sm font-bold text-gray-900">{user.name}</span>
-                                        <span className={`text-[10px] font-extrabold uppercase tracking-[0.25em] ${user.plan === 'Pro' ? 'text-purple-600' : 'text-primary-600'}`}>{user.plan}</span>
+                                        <span className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-primary-600">{user.role || 'Customer'}</span>
                                     </div>
                                 </button>
                                 {activeDropdown === 'user' && (
@@ -272,8 +271,8 @@ const Navbar = () => {
                             <NavLink to="/ai-mix" onClick={closeAllMenus} className="block px-4 py-3 rounded-2xl text-sm font-bold bg-emerald-50 text-emerald-700">
                                 ✧ Pha Trà AI
                             </NavLink>
-                            <NavLink to={user?.plan === 'Pro' ? '/ai-plan' : '/activate-pro'} onClick={closeAllMenus} className="block px-4 py-3 rounded-2xl text-sm font-bold bg-purple-50 text-purple-700">
-                                Liệu Trình VIP
+                            <NavLink to="/ai-plan" onClick={closeAllMenus} className="block px-4 py-3 rounded-2xl text-sm font-bold bg-purple-50 text-purple-700">
+                                Liệu Trình AI
                             </NavLink>
 
                             <div className="rounded-2xl border border-gray-100 overflow-hidden">

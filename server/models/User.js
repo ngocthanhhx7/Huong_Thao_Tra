@@ -15,11 +15,6 @@ const userSchema = new mongoose.Schema(
         avatar: { type: String, default: '' },
         gender: { type: String, enum: ['Nam', 'Nữ', 'Khác'], default: 'Khác' },
         preferences: [{ type: String }],
-        plan: {
-            type: String,
-            enum: ['Free', 'Pro'],
-            default: 'Free',
-        },
         // For health plans (optional initially)
         age: { type: Number },
         sleepTime: { type: String },

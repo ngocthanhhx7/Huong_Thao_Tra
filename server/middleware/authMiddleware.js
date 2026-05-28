@@ -57,12 +57,4 @@ const staff = (req, res, next) => {
     }
 };
 
-const proPlan = (req, res, next) => {
-    if (req.user && req.user.plan === 'Pro') {
-        next();
-    } else {
-        res.status(403).json({ message: 'Pro plan required for this action' });
-    }
-};
-
-module.exports = { protect, optionalProtect, admin, staff, proPlan };
+module.exports = { protect, optionalProtect, admin, staff };

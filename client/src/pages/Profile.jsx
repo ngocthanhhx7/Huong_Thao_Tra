@@ -151,9 +151,8 @@ const Profile = () => {
                                 <p className="text-gray-500 font-medium text-lg mt-1">@{user.username}</p>
                             </div>
                             <div className="flex flex-wrap gap-3">
-                                <span className={`px-5 py-2 rounded-full text-xs font-extrabold tracking-widest uppercase flex items-center gap-1.5 shadow-sm ${user.plan === 'Pro' ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-gray-50 text-gray-600 border border-gray-200'
-                                    }`}>
-                                    {user.plan === 'Pro' ? <><span className="text-sm">👑</span> PRO MEMBER</> : 'FREE ACCOUNT'}
+                                <span className="px-5 py-2 rounded-full text-xs font-extrabold tracking-widest uppercase flex items-center gap-1.5 shadow-sm bg-gray-50 text-gray-600 border border-gray-200">
+                                    {user.role || 'Customer'}
                                 </span>
                                 {user.role === 'Admin' && (
                                     <span className="px-5 py-2 rounded-full text-xs font-extrabold tracking-widest uppercase bg-rose-50 text-rose-700 border border-rose-200 shadow-sm flex items-center gap-1.5">
@@ -310,13 +309,10 @@ const Profile = () => {
                                     <p className="font-extrabold text-gray-900 text-lg mb-1 group-hover:text-primary-600 transition-colors">Lịch sử AI</p>
                                     <p className="text-sm font-medium text-gray-500">Xem lại và quản lý các công thức, liệu trình đã tạo</p>
                                 </a>
-                                {user.plan !== 'Pro' && (
-                                    <a href="/activate-pro" className="relative overflow-hidden bg-gradient-to-br from-amber-50 to-orange-50 p-6 rounded-2xl border border-amber-200 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                                        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-amber-200/50 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-700"></div>
-                                        <p className="relative z-10 font-extrabold text-amber-900 text-lg mb-1 group-hover:text-amber-700 transition-colors">Kích hoạt PRO 👑</p>
-                                        <p className="relative z-10 text-sm font-medium text-amber-700/80">Mở khóa toàn bộ trải nghiệm trí tuệ nhân tạo cao cấp</p>
-                                    </a>
-                                )}
+                                <a href="/ai-plan" className="bg-white p-6 rounded-2xl border border-gray-200 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_-6px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 group">
+                                    <p className="font-extrabold text-gray-900 text-lg mb-1 group-hover:text-primary-600 transition-colors">Liệu trình AI</p>
+                                    <p className="text-sm font-medium text-gray-500">Tạo phác đồ trà cá nhân hóa theo giấc ngủ, stress và mục tiêu sức khỏe</p>
+                                </a>
                             </div>
                         </div>
                     </div>

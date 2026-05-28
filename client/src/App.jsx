@@ -28,7 +28,6 @@ import AdminIngredientsPage from './pages/admin/AdminIngredientsPage';
 import AdminAnalyticsPage from './pages/admin/AdminAnalyticsPage';
 import About from './pages/About';
 import Contact from './pages/Contact';
-import ActivatePro from './pages/ActivatePro';
 import NotFound from './pages/errors/NotFound';
 import ServerError from './pages/errors/ServerError';
 import Forbidden from './pages/errors/Forbidden';
@@ -74,8 +73,6 @@ function App() {
           </Route>
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/activate-pro" element={<ActivatePro />} />
-
           {/* Error pages */}
           <Route path="/401" element={<Unauthorized />} />
           <Route path="/403" element={<Forbidden />} />
