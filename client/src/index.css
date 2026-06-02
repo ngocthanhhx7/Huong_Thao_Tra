@@ -2,13 +2,97 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Nunito';
+  src: url('/fonts/Nunito-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('/fonts/Nunito-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('/fonts/Nunito-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('/fonts/Nunito-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('/fonts/Nunito-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('/fonts/Nunito-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'FC Coldwell Bridges';
+  src: url('/fonts/FC-Coldwell-Bridges.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-display-h1 {
+  font-family: 'FC Coldwell Bridges', 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  background: #f7faf4;
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: #dcefd0;
+  color: #17351f;
+}
+
+.wellness-surface {
+  background: #ffffff;
+  border: 1px solid #e2e8dc;
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(39, 67, 42, 0.06);
+}
+
+.wellness-muted-surface {
+  background: #f8fbf3;
+  border: 1px solid #e4edda;
+  border-radius: 12px;
+}
+
+.wellness-focus:focus-visible {
+  outline: 3px solid rgba(47, 125, 50, 0.24);
+  outline-offset: 2px;
 }
 
 .chatbot-markdown p { margin: 0.3em 0; line-height: 1.5; }
@@ -36,7 +120,7 @@ body {
   background: #ffffff;
   border: 1px solid #dfe8df;
   border-radius: 8px;
-  box-shadow: 0 4px 0 #d7f5c3, 8px 8px 20px rgba(31, 41, 55, 0.08), -6px -6px 18px rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 24px rgba(39, 67, 42, 0.06);
 }
 
 .admin-page-header {
@@ -55,12 +139,12 @@ body {
   padding: 1rem;
 }
 
-.admin-metric-green { box-shadow: 0 4px 0 #58cc02, 8px 8px 20px rgba(31, 41, 55, 0.08), -6px -6px 18px rgba(255, 255, 255, 0.9); }
-.admin-metric-purple { box-shadow: 0 4px 0 #ce82ff, 8px 8px 20px rgba(31, 41, 55, 0.08), -6px -6px 18px rgba(255, 255, 255, 0.9); }
-.admin-metric-yellow { box-shadow: 0 4px 0 #ffc800, 8px 8px 20px rgba(31, 41, 55, 0.08), -6px -6px 18px rgba(255, 255, 255, 0.9); }
-.admin-metric-red { box-shadow: 0 4px 0 #ff4b4b, 8px 8px 20px rgba(31, 41, 55, 0.08), -6px -6px 18px rgba(255, 255, 255, 0.9); }
-.admin-metric-blue { box-shadow: 0 4px 0 #62a1ff, 8px 8px 20px rgba(31, 41, 55, 0.08), -6px -6px 18px rgba(255, 255, 255, 0.9); }
-.admin-metric-slate { box-shadow: 0 4px 0 #cbd5e1, 8px 8px 20px rgba(31, 41, 55, 0.08), -6px -6px 18px rgba(255, 255, 255, 0.9); }
+.admin-metric-green { border-top: 4px solid #58a947; }
+.admin-metric-purple { border-top: 4px solid #8b5cf6; }
+.admin-metric-yellow { border-top: 4px solid #d99b25; }
+.admin-metric-red { border-top: 4px solid #dc4b4b; }
+.admin-metric-blue { border-top: 4px solid #3b82f6; }
+.admin-metric-slate { border-top: 4px solid #94a3b8; }
 
 .admin-eyebrow {
   margin-bottom: 0.5rem;
@@ -79,7 +163,6 @@ body {
   gap: 0.5rem;
   border-radius: 8px;
   border: 1px solid transparent;
-  border-bottom-width: 4px;
   padding: 0.625rem 1rem;
   font-size: 0.875rem;
   font-weight: 900;
@@ -87,14 +170,8 @@ body {
   transition: transform 140ms ease, border-bottom-width 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
 }
 
-.admin-btn:hover {
-  transform: translateY(-1px);
-}
-
-.admin-btn:active {
-  border-bottom-width: 1px;
-  transform: translateY(3px);
-}
+.admin-btn:hover { transform: translateY(-1px); }
+.admin-btn:active { transform: translateY(0); }
 
 .admin-btn:focus-visible,
 .admin-input:focus-visible {
@@ -140,7 +217,6 @@ body {
   background: #f7faf5;
   padding: 0.75rem 0.875rem;
   color: #1f2937;
-  box-shadow: inset 3px 3px 8px rgba(30, 41, 59, 0.08), inset -3px -3px 8px rgba(255, 255, 255, 0.9);
 }
 
 .admin-input::placeholder {

@@ -16,9 +16,20 @@ const exploreLinks = [
     { to: '/feedback', label: 'Feedback' },
 ];
 
+const Icon = ({ children, className = 'h-5 w-5' }) => (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        {children}
+    </svg>
+);
+
+Icon.propTypes = {
+    children: PropTypes.node.isRequired,
+    className: PropTypes.string,
+};
+
 const DropdownPanel = ({ children, align = 'right' }) => (
     <div className={`absolute top-full ${align === 'right' ? 'right-0' : 'left-0'} pt-3`}>
-        <div className="min-w-[240px] rounded-[28px] border border-gray-100 bg-white shadow-[0_20px_50px_-18px_rgba(15,23,42,0.18)] p-3">
+        <div className="min-w-[240px] rounded-xl border border-leaf-100 bg-white p-2 shadow-[0_18px_40px_rgba(39,67,42,0.12)]">
             {children}
         </div>
     </div>
@@ -28,6 +39,11 @@ DropdownPanel.propTypes = {
     children: PropTypes.node.isRequired,
     align: PropTypes.oneOf(['left', 'right']),
 };
+
+const linkClass = ({ isActive }) =>
+    `wellness-focus inline-flex min-h-10 items-center rounded-lg px-3 py-2 text-sm font-bold transition ${
+        isActive ? 'bg-primary-50 text-primary-700' : 'text-gray-700 hover:bg-leaf-50 hover:text-primary-700'
+    }`;
 
 const Navbar = () => {
     const { user, logout } = useContext(AuthContext);
@@ -42,6 +58,7 @@ const Navbar = () => {
     useEffect(() => {
         const handleScroll = () => setIsScrolled(window.scrollY > 0);
         window.addEventListener('scroll', handleScroll);
+        handleScroll();
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
@@ -82,7 +99,6 @@ const Navbar = () => {
             title: 'AI & trải nghiệm',
             items: [
                 { to: '/ai-history', label: 'Lịch sử AI' },
-                { to: '/ai-plan', label: 'Liệu trình AI', accent: 'text-purple-600' },
             ],
         },
         ...(user?.role === 'Admin' || user?.role === 'Staff'
@@ -111,29 +127,17 @@ const Navbar = () => {
     };
 
     return (
-        <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/92 backdrop-blur-xl shadow-[0_10px_35px_-18px_rgba(15,23,42,0.25)]' : 'bg-white shadow-[0_1px_6px_rgba(15,23,42,0.08)]'}`}>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-20 gap-4">
-                    <Link to="/" className="flex items-center gap-3 shrink-0" onClick={closeAllMenus}>
-                        <img src="/logo.png" alt="Hương Thảo Trà Logo" className="h-11 w-11 object-cover rounded-full ring-2 ring-primary-100" />
-                        <span className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary-700 to-primary-500 tracking-tight">
-                            Hương Thảo Trà
-                        </span>
+        <nav className={`fixed top-0 z-50 w-full border-b border-leaf-100 transition ${isScrolled ? 'bg-white/95 shadow-[0_8px_26px_rgba(39,67,42,0.08)] backdrop-blur' : 'bg-white'}`}>
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div className="flex h-20 items-center justify-between gap-4">
+                    <Link to="/" className="wellness-focus flex min-w-0 shrink-0 items-center gap-3 rounded-lg" onClick={closeAllMenus}>
+                        <img src="/logo.png" alt="Hương Thảo Trà" className="h-11 w-11 rounded-lg object-cover ring-1 ring-primary-100" />
+                        <span className="hidden text-xl font-black text-leaf-800 sm:block lg:text-2xl">Hương Thảo Trà</span>
                     </Link>
 
-                    <div className="hidden md:flex items-center justify-center gap-2 flex-1">
+                    <div className="hidden flex-1 items-center justify-center gap-1 md:flex">
                         {mainLinks.map((item) => (
-                            <NavLink
-                                key={item.to}
-                                to={item.to}
-                                className={({ isActive }) =>
-                                    `px-4 py-2.5 rounded-full text-sm font-semibold transition ${
-                                        isActive
-                                            ? 'text-gray-900'
-                                            : 'text-gray-700 hover:text-primary-700'
-                                    }`
-                                }
-                            >
+                            <NavLink key={item.to} to={item.to} className={linkClass}>
                                 {item.label}
                             </NavLink>
                         ))}
@@ -141,48 +145,35 @@ const Navbar = () => {
                         <NavLink
                             to="/ai-mix"
                             className={({ isActive }) =>
-                                `ml-2 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition ${
-                                    isActive
-                                        ? 'bg-emerald-100 text-emerald-800'
-                                        : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                                `wellness-focus ml-2 inline-flex min-h-10 items-center gap-2 rounded-lg px-4 py-2 text-sm font-extrabold transition ${
+                                    isActive ? 'bg-primary-700 text-white' : 'bg-primary-50 text-primary-700 hover:bg-primary-100'
                                 }`
                             }
                         >
-                            <span className="text-base">✧</span>
-                            <span>Pha Trà AI</span>
-                        </NavLink>
-
-                        <NavLink
-                            to="/ai-plan"
-                            className={({ isActive }) =>
-                                `inline-flex items-center px-5 py-2.5 rounded-full text-sm font-bold transition ${
-                                    isActive
-                                        ? 'bg-purple-100 text-purple-800'
-                                        : 'bg-purple-50 text-purple-700 hover:bg-purple-100'
-                                }`
-                            }
-                        >
-                            Liệu Trình AI
+                            <Icon className="h-4 w-4">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18M6 7c4 0 6 2 6 6-4 0-6-2-6-6ZM18 7c-4 0-6 2-6 6 4 0 6-2 6-6Z" />
+                            </Icon>
+                            Pha Trà AI
                         </NavLink>
                     </div>
 
-                    <div className="hidden md:flex items-center gap-3">
+                    <div className="hidden items-center gap-2 md:flex">
                         <div
                             className="relative"
                             onMouseEnter={() => setActiveDropdown('explore')}
                             onMouseLeave={() => setActiveDropdown('')}
                         >
-                            <button className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-semibold transition ${activeDropdown === 'explore' ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}`}>
-                                <span>Thêm</span>
-                                <svg className={`w-4 h-4 transition ${activeDropdown === 'explore' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                                </svg>
+                            <button type="button" className="wellness-focus inline-flex min-h-10 items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold text-gray-700 transition hover:bg-leaf-50 hover:text-primary-700">
+                                Thêm
+                                <Icon className={`h-4 w-4 transition ${activeDropdown === 'explore' ? 'rotate-180' : ''}`}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" />
+                                </Icon>
                             </button>
                             {activeDropdown === 'explore' && (
                                 <DropdownPanel align="right">
                                     <div className="space-y-1">
                                         {exploreLinks.map((item) => (
-                                            <Link key={item.to} to={item.to} onClick={closeAllMenus} className="block px-4 py-3 rounded-2xl text-sm font-semibold text-gray-700 hover:bg-gray-50">
+                                            <Link key={item.to} to={item.to} onClick={closeAllMenus} className="wellness-focus block rounded-lg px-4 py-3 text-sm font-bold text-gray-700 hover:bg-leaf-50 hover:text-primary-700">
                                                 {item.label}
                                             </Link>
                                         ))}
@@ -194,11 +185,13 @@ const Navbar = () => {
                         {user && (
                             <Link
                                 to="/notifications"
-                                className="relative w-11 h-11 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-50 shadow-sm shrink-0"
+                                className="wellness-focus relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-leaf-100 bg-white text-leaf-800 transition hover:bg-leaf-50"
                                 aria-label="Thông báo"
                             >
-                                <span className="text-lg">🔔</span>
-                                {unreadCount > 0 && <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-white" />}
+                                <Icon>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2a2 2 0 0 1-.6 1.4L4 17h5M10 20h4" />
+                                </Icon>
+                                {unreadCount > 0 && <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white" />}
                             </Link>
                         )}
 
@@ -208,81 +201,94 @@ const Navbar = () => {
                                 onMouseEnter={() => setActiveDropdown('user')}
                                 onMouseLeave={() => setActiveDropdown('')}
                             >
-                                <button className={`flex items-center gap-3 p-1.5 pr-5 rounded-full border shadow-sm transition ${activeDropdown === 'user' ? 'border-gray-200 bg-gray-50' : 'border-gray-200 bg-white hover:bg-gray-50'}`}>
-                                    <div className="w-10 h-10 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-lg border border-purple-200">
+                                <button type="button" className="wellness-focus flex min-h-11 items-center gap-3 rounded-lg border border-leaf-100 bg-white p-1.5 pr-4 transition hover:bg-leaf-50">
+                                    <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg bg-primary-50 text-primary-700">
                                         {user.avatar ? (
-                                            <img src={user.avatar} alt="Avatar" className="w-full h-full rounded-full object-cover" />
+                                            <img src={user.avatar} alt="Avatar" className="h-full w-full object-cover" />
                                         ) : (
-                                            <span>👤</span>
+                                            <Icon className="h-5 w-5">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M20 21a8 8 0 1 0-16 0M12 13a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
+                                            </Icon>
                                         )}
                                     </div>
-                                    <div className="flex flex-col items-start leading-tight">
-                                        <span className="text-sm font-bold text-gray-900">{user.name}</span>
-                                        <span className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-primary-600">{user.role || 'Customer'}</span>
+                                    <div className="flex min-w-0 flex-col items-start leading-tight">
+                                        <span className="max-w-[120px] truncate text-sm font-extrabold text-leaf-800">{user.name}</span>
+                                        <span className="text-[11px] font-black uppercase text-primary-700">{user.role || 'Customer'}</span>
                                     </div>
                                 </button>
                                 {activeDropdown === 'user' && (
                                     <DropdownPanel align="right">
-                                        <div className="px-4 py-3 border-b border-gray-100 mb-2">
-                                            <p className="text-sm font-bold text-gray-900 truncate">{user.name}</p>
-                                            <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                                        <div className="mb-2 border-b border-leaf-100 px-4 py-3">
+                                            <p className="truncate text-sm font-extrabold text-leaf-800">{user.name}</p>
+                                            <p className="truncate text-xs text-gray-500">{user.email}</p>
                                         </div>
                                         <div className="space-y-3">
                                             {userGroups.map((group) => (
                                                 <div key={group.title}>
-                                                    <p className="px-4 pb-1 text-[11px] font-extrabold uppercase tracking-[0.22em] text-gray-400">{group.title}</p>
+                                                    <p className="px-4 pb-1 text-[11px] font-black uppercase text-gray-400">{group.title}</p>
                                                     {group.items.map((item) => (
-                                                        <Link key={item.to} to={item.to} onClick={closeAllMenus} className={`block px-4 py-2.5 rounded-2xl text-sm font-semibold hover:bg-gray-50 ${item.accent || 'text-gray-700'}`}>
+                                                        <Link key={item.to} to={item.to} onClick={closeAllMenus} className={`wellness-focus block rounded-lg px-4 py-2.5 text-sm font-bold hover:bg-leaf-50 ${item.accent || 'text-gray-700'}`}>
                                                             {item.label}
                                                         </Link>
                                                     ))}
                                                 </div>
                                             ))}
                                         </div>
-                                        <div className="h-px bg-gray-100 my-2" />
-                                        <button onClick={handleLogout} className="w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold text-red-600 hover:bg-red-50">
+                                        <div className="my-2 h-px bg-leaf-100" />
+                                        <button type="button" onClick={handleLogout} className="wellness-focus w-full rounded-lg px-4 py-3 text-left text-sm font-bold text-red-600 hover:bg-red-50">
                                             Đăng xuất
                                         </button>
                                     </DropdownPanel>
                                 )}
                             </div>
                         ) : (
-                            <div className="flex items-center gap-3">
-                                <Link to="/login" className="text-gray-700 hover:text-primary-700 px-4 py-2.5 rounded-full text-sm font-bold hover:bg-primary-50">Đăng nhập</Link>
-                                <Link to="/register" className="bg-gradient-to-r from-primary-600 to-primary-500 text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-sm">Đăng ký</Link>
+                            <div className="flex items-center gap-2">
+                                <Link to="/login" className="wellness-focus rounded-lg px-4 py-2.5 text-sm font-extrabold text-gray-700 hover:bg-leaf-50 hover:text-primary-700">Đăng nhập</Link>
+                                <Link to="/register" className="wellness-focus rounded-lg bg-primary-700 px-4 py-2.5 text-sm font-extrabold text-white hover:bg-primary-600">Đăng ký</Link>
                             </div>
                         )}
                     </div>
 
-                    <button onClick={() => setIsMobileMenuOpen((prev) => !prev)} className="md:hidden w-11 h-11 rounded-full border border-gray-200 flex items-center justify-center bg-white">
-                        <span className="text-xl">☰</span>
+                    <button
+                        type="button"
+                        onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+                        className="wellness-focus flex h-11 w-11 items-center justify-center rounded-lg border border-leaf-100 bg-white text-leaf-800 md:hidden"
+                        aria-label="Mở menu"
+                    >
+                        <Icon>
+                            {isMobileMenuOpen ? (
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                            ) : (
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 7h16M4 12h16M4 17h16" />
+                            )}
+                        </Icon>
                     </button>
                 </div>
 
                 {isMobileMenuOpen && (
-                    <div className="md:hidden pb-5">
-                        <div className="rounded-[28px] border border-gray-100 bg-white shadow-sm p-4 space-y-3">
+                    <div className="pb-5 md:hidden">
+                        <div className="space-y-3 rounded-xl border border-leaf-100 bg-white p-3 shadow-sm">
                             {mainLinks.map((item) => (
-                                <NavLink key={item.to} to={item.to} onClick={closeAllMenus} className={({ isActive }) => `block px-4 py-3 rounded-2xl text-sm font-semibold ${isActive || item.highlighted ? 'bg-primary-50 text-primary-700' : 'text-gray-700 bg-gray-50'}`}>
+                                <NavLink key={item.to} to={item.to} onClick={closeAllMenus} className={({ isActive }) => `wellness-focus block rounded-lg px-4 py-3 text-sm font-bold ${isActive ? 'bg-primary-50 text-primary-700' : 'bg-leaf-50 text-gray-700'}`}>
                                     {item.label}
                                 </NavLink>
                             ))}
 
-                            <NavLink to="/ai-mix" onClick={closeAllMenus} className="block px-4 py-3 rounded-2xl text-sm font-bold bg-emerald-50 text-emerald-700">
-                                ✧ Pha Trà AI
-                            </NavLink>
-                            <NavLink to="/ai-plan" onClick={closeAllMenus} className="block px-4 py-3 rounded-2xl text-sm font-bold bg-purple-50 text-purple-700">
-                                Liệu Trình AI
+                            <NavLink to="/ai-mix" onClick={closeAllMenus} className="wellness-focus block rounded-lg bg-primary-50 px-4 py-3 text-sm font-extrabold text-primary-700">
+                                Pha Trà AI
                             </NavLink>
 
-                            <div className="rounded-2xl border border-gray-100 overflow-hidden">
-                                <button onClick={() => setIsMobileExploreOpen((prev) => !prev)} className="w-full px-4 py-3 text-left text-sm font-semibold text-gray-700 bg-gray-50">
+                            <div className="overflow-hidden rounded-lg border border-leaf-100">
+                                <button type="button" onClick={() => setIsMobileExploreOpen((prev) => !prev)} className="wellness-focus flex w-full items-center justify-between bg-leaf-50 px-4 py-3 text-left text-sm font-bold text-gray-700">
                                     Thêm
+                                    <Icon className={`h-4 w-4 transition ${isMobileExploreOpen ? 'rotate-180' : ''}`}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" />
+                                    </Icon>
                                 </button>
                                 {isMobileExploreOpen && (
-                                    <div className="p-2 space-y-2 bg-white">
+                                    <div className="space-y-2 bg-white p-2">
                                         {exploreLinks.map((item) => (
-                                            <Link key={item.to} to={item.to} onClick={closeAllMenus} className="block px-4 py-3 rounded-2xl text-sm font-semibold text-gray-700 hover:bg-gray-50">
+                                            <Link key={item.to} to={item.to} onClick={closeAllMenus} className="wellness-focus block rounded-lg px-4 py-3 text-sm font-bold text-gray-700 hover:bg-leaf-50">
                                                 {item.label}
                                             </Link>
                                         ))}
@@ -291,21 +297,24 @@ const Navbar = () => {
                             </div>
 
                             {user ? (
-                                <div className="rounded-2xl border border-gray-100 overflow-hidden">
-                                    <button onClick={() => setIsMobileUserOpen((prev) => !prev)} className="w-full px-4 py-3 text-left text-sm font-semibold text-gray-700 bg-gray-50">
+                                <div className="overflow-hidden rounded-lg border border-leaf-100">
+                                    <button type="button" onClick={() => setIsMobileUserOpen((prev) => !prev)} className="wellness-focus flex w-full items-center justify-between bg-leaf-50 px-4 py-3 text-left text-sm font-bold text-gray-700">
                                         {user.name}
+                                        <Icon className={`h-4 w-4 transition ${isMobileUserOpen ? 'rotate-180' : ''}`}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" />
+                                        </Icon>
                                     </button>
                                     {isMobileUserOpen && (
-                                        <div className="p-2 space-y-2 bg-white">
-                                            <Link to="/notifications" onClick={closeAllMenus} className="block px-4 py-3 rounded-2xl text-sm font-semibold text-gray-700 bg-gray-50">
-                                                Thông báo {unreadCount > 0 ? '• Mới' : ''}
+                                        <div className="space-y-2 bg-white p-2">
+                                            <Link to="/notifications" onClick={closeAllMenus} className="wellness-focus block rounded-lg bg-leaf-50 px-4 py-3 text-sm font-bold text-gray-700">
+                                                Thông báo {unreadCount > 0 ? 'mới' : ''}
                                             </Link>
                                             {userGroups.flatMap((group) => group.items).map((item) => (
-                                                <Link key={item.to} to={item.to} onClick={closeAllMenus} className={`block px-4 py-3 rounded-2xl text-sm font-semibold bg-gray-50 ${item.accent || 'text-gray-700'}`}>
+                                                <Link key={item.to} to={item.to} onClick={closeAllMenus} className={`wellness-focus block rounded-lg bg-leaf-50 px-4 py-3 text-sm font-bold ${item.accent || 'text-gray-700'}`}>
                                                     {item.label}
                                                 </Link>
                                             ))}
-                                            <button onClick={handleLogout} className="w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold text-red-600 bg-red-50">
+                                            <button type="button" onClick={handleLogout} className="wellness-focus w-full rounded-lg bg-red-50 px-4 py-3 text-left text-sm font-bold text-red-600">
                                                 Đăng xuất
                                             </button>
                                         </div>
@@ -313,8 +322,8 @@ const Navbar = () => {
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-2 gap-3">
-                                    <Link to="/login" onClick={closeAllMenus} className="text-center px-4 py-3 rounded-2xl text-sm font-bold text-gray-700 bg-gray-50">Đăng nhập</Link>
-                                    <Link to="/register" onClick={closeAllMenus} className="text-center px-4 py-3 rounded-2xl text-sm font-bold text-white bg-primary-600">Đăng ký</Link>
+                                    <Link to="/login" onClick={closeAllMenus} className="wellness-focus rounded-lg bg-leaf-50 px-4 py-3 text-center text-sm font-extrabold text-gray-700">Đăng nhập</Link>
+                                    <Link to="/register" onClick={closeAllMenus} className="wellness-focus rounded-lg bg-primary-700 px-4 py-3 text-center text-sm font-extrabold text-white">Đăng ký</Link>
                                 </div>
                             )}
                         </div>

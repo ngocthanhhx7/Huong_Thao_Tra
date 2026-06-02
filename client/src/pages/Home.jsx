@@ -24,8 +24,8 @@ const Home = () => {
                     id: tea._id,
                     name: tea.name,
                     category: tea.mixGoal || tea.caffeineLevel || 'Thảo mộc',
-                    description: tea.description,
-                    price: tea.price,
+                    description: tea.description || 'Công thức trà thảo mộc đang được Hương Thảo Trà cập nhật thông tin chi tiết.',
+                    price: tea.price || 0,
                     rating: tea.rating || 0,
                     reviews: tea.numReviews || 0,
                     image: tea.image,
@@ -48,19 +48,19 @@ const Home = () => {
             name: 'Nguyễn Thị A',
             avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka',
             rating: 5,
-            review: 'Trà của Hương Thảo Trà thực sự tuyệt vời! AI pha trà rất chính xác với sở thích của tôi.',
+            review: 'Trà của Hương Thảo Trà có hương vị nhẹ, dễ uống. Công cụ AI giúp tôi chọn đúng công thức phù hợp với thói quen buổi tối.',
         },
         {
             name: 'Trần Văn B',
             avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
             rating: 5,
-            review: 'Liệu trình AI giúp tôi cải thiện sức khỏe đáng kể. Rất đáng tin cậy!',
+            review: 'Tôi thích cách sản phẩm mô tả rõ công dụng và thành phần. Việc đặt hàng cũng đơn giản, không phải tìm quá nhiều.',
         },
         {
             name: 'Lê Thị C',
             avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Luna',
             rating: 4,
-            review: 'Sản phẩm chất lượng cao, giao hàng nhanh. Sẽ tiếp tục ủng hộ!',
+            review: 'Sản phẩm chất lượng, giao hàng nhanh. Các gợi ý từ AI giúp tôi thử được nhiều vị trà mới mà vẫn hợp khẩu vị.',
         },
     ];
 
@@ -69,25 +69,28 @@ const Home = () => {
     );
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen bg-white">
             <HeroBanner />
 
-            <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gray-50/50">
-                <div className="max-w-7xl mx-auto">
-                    <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+            <section className="bg-white px-4 py-16 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-7xl">
+                    <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
                         <div>
-                            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">Các Công Thức AI Phổ Biến</h2>
-                            <p className="text-gray-500 mt-3 text-lg">Được cộng đồng đánh giá cao và lưu trữ nhiều nhất</p>
+                            <p className="mb-3 text-sm font-extrabold uppercase text-primary-700">Công thức nổi bật</p>
+                            <h2 className="text-3xl font-black text-leaf-800 md:text-4xl">Các công thức AI phổ biến</h2>
+                            <p className="mt-3 max-w-2xl text-base leading-7 text-gray-600">
+                                Những lựa chọn được cộng đồng đánh giá cao và phù hợp với nhiều nhu cầu chăm sóc sức khỏe hằng ngày.
+                            </p>
                         </div>
-                        <Link to="/teas" className="group flex items-center gap-2 text-primary-600 font-bold hover:text-primary-800 transition-colors">
-                            Xem tất cả cửa hàng <span className="transform group-hover:translate-x-1 transition-transform">&rarr;</span>
+                        <Link to="/teas" className="wellness-focus inline-flex min-h-11 items-center justify-center rounded-lg border border-leaf-100 px-4 py-2 text-sm font-extrabold text-primary-700 transition hover:bg-leaf-50">
+                            Xem tất cả cửa hàng
                         </Link>
                     </div>
 
-                    <div className="mb-10 relative max-w-lg">
-                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    <div className="relative mb-8 max-w-lg">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
                             </svg>
                         </div>
                         <input
@@ -95,24 +98,24 @@ const Home = () => {
                             placeholder="Tìm kiếm công thức trà..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl shadow-sm focus:ring-2 focus:ring-primary-100 focus:border-primary-500 transition-all outline-none"
+                            className="wellness-focus min-h-12 w-full rounded-lg border border-leaf-100 bg-leaf-50 py-3 pl-11 pr-4 font-semibold text-leaf-800 transition focus:bg-white"
                         />
                     </div>
 
                     {loading ? (
-                        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-10 text-center text-gray-500">
+                        <div className="wellness-muted-surface p-10 text-center font-semibold text-gray-600">
                             Đang tải sản phẩm nổi bật...
                         </div>
                     ) : errorMessage ? (
-                        <div className="bg-white rounded-3xl border border-red-100 shadow-sm p-10 text-center text-red-500">
+                        <div className="rounded-xl border border-red-100 bg-red-50 p-10 text-center font-semibold text-red-700">
                             {errorMessage}
                         </div>
                     ) : filteredProducts.length === 0 ? (
-                        <div className="bg-white rounded-3xl border border-dashed border-gray-200 shadow-sm p-10 text-center text-gray-500">
+                        <div className="wellness-muted-surface p-10 text-center font-semibold text-gray-600">
                             Chưa có sản phẩm phù hợp để hiển thị.
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                             {filteredProducts.map((product) => (
                                 <ProductCard key={product.id} product={product} />
                             ))}
@@ -121,57 +124,57 @@ const Home = () => {
                 </div>
             </section>
 
-            <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white">
-                <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h2 className="text-sm font-bold tracking-widest text-primary-600 uppercase mb-3">Triết lý của chúng tôi</h2>
-                        <h3 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-6 tracking-tight">Về Hương Thảo Trà</h3>
-                        <p className="text-gray-500 max-w-2xl mx-auto text-lg leading-relaxed">
-                            Chúng tôi kết hợp sức mạnh của công nghệ AI tiên tiến với tri thức hàng ngàn năm về thảo mộc tự nhiên để mang đến những trải nghiệm chăm sóc sức khỏe cá nhân hóa đỉnh cao.
+            <section className="bg-leaf-50 px-4 py-16 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-7xl">
+                    <div className="mx-auto mb-12 max-w-3xl text-center">
+                        <p className="mb-3 text-sm font-extrabold uppercase text-primary-700">Triết lý của chúng tôi</p>
+                        <h2 className="text-3xl font-black text-leaf-800 md:text-4xl">Trà thảo mộc rõ nguồn gốc, dễ chọn, dễ dùng</h2>
+                        <p className="mt-4 text-base leading-8 text-gray-600">
+                            Hương Thảo Trà kết hợp kiến thức thảo mộc với công nghệ AI để giúp mỗi người tìm được công thức phù hợp với mục tiêu và thói quen riêng.
                         </p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
-                        <div className="text-center group">
-                            <div className="w-20 h-20 bg-primary-50 rounded-3xl flex items-center justify-center mx-auto mb-6 transform group-hover:-translate-y-2 transition-all duration-300 shadow-sm border border-primary-100/50">
-                                <svg className="w-10 h-10 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                </svg>
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-3">Sứ mệnh</h3>
-                            <p className="text-gray-500 leading-relaxed">Đem đến sức khỏe tự nhiên thông qua trà thảo mộc được thiết kế chuyên biệt bởi phân tích AI.</p>
-                        </div>
-                        <div className="text-center group">
-                            <div className="w-20 h-20 bg-primary-50 rounded-3xl flex items-center justify-center mx-auto mb-6 transform group-hover:-translate-y-2 transition-all duration-300 shadow-sm border border-primary-100/50">
-                                <svg className="w-10 h-10 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                                </svg>
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-3">Tầm nhìn</h3>
-                            <p className="text-gray-500 leading-relaxed">Trở thành nền tảng toàn cầu tiên phong về chăm sóc sức khỏe tĩnh tại với công nghệ thông minh.</p>
-                        </div>
-                        <div className="text-center group">
-                            <div className="w-20 h-20 bg-primary-50 rounded-3xl flex items-center justify-center mx-auto mb-6 transform group-hover:-translate-y-2 transition-all duration-300 shadow-sm border border-primary-100/50">
-                                <svg className="w-10 h-10 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                                </svg>
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-3">Nguyên liệu tự nhiên</h3>
-                            <p className="text-gray-500 leading-relaxed">100% thảo mộc hữu cơ nguyên bản, được chọn lọc khắt khe từ các nông trại sinh thái.</p>
-                        </div>
+
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                        {[
+                            {
+                                title: 'Sứ mệnh',
+                                description: 'Đưa trà thảo mộc đến gần hơn với đời sống hằng ngày bằng trải nghiệm tư vấn dễ hiểu.',
+                            },
+                            {
+                                title: 'Tầm nhìn',
+                                description: 'Trở thành nền tảng trà thảo mộc cá nhân hóa đáng tin cậy cho người dùng Việt.',
+                            },
+                            {
+                                title: 'Nguyên liệu tự nhiên',
+                                description: 'Ưu tiên thành phần rõ ràng, dễ nhận biết và phù hợp với từng mục tiêu sử dụng.',
+                            },
+                        ].map((item) => (
+                            <article key={item.title} className="wellness-surface p-6">
+                                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-primary-50 text-primary-700">
+                                    <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18M6 7c4 0 6 2 6 6-4 0-6-2-6-6ZM18 7c-4 0-6 2-6 6 4 0 6-2 6-6Z" />
+                                    </svg>
+                                </div>
+                                <h3 className="mb-3 text-xl font-black text-leaf-800">{item.title}</h3>
+                                <p className="text-sm leading-7 text-gray-600">{item.description}</p>
+                            </article>
+                        ))}
                     </div>
                 </div>
             </section>
 
-            <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gray-50/50">
-                <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h2 className="text-sm font-bold tracking-widest text-primary-600 uppercase mb-3">Đánh giá thực tế</h2>
-                        <h3 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">Khách hàng nói gì về chúng tôi</h3>
-                        <p className="text-gray-500 text-lg">Hàng ngàn người dùng đã cải thiện sức khỏe thể chất lẫn tinh thần</p>
+            <section className="bg-white px-4 py-16 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-7xl">
+                    <div className="mx-auto mb-12 max-w-3xl text-center">
+                        <p className="mb-3 text-sm font-extrabold uppercase text-primary-700">Đánh giá thực tế</p>
+                        <h2 className="text-3xl font-black text-leaf-800 md:text-4xl">Khách hàng nói gì về chúng tôi</h2>
+                        <p className="mt-4 text-base leading-8 text-gray-600">
+                            Những phản hồi giúp chúng tôi cải thiện sản phẩm, tư vấn AI và trải nghiệm mua sắm mỗi ngày.
+                        </p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {reviews.map((review, index) => (
-                            <ReviewCard key={index} review={review} />
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                        {reviews.map((review) => (
+                            <ReviewCard key={review.name} review={review} />
                         ))}
                     </div>
                 </div>
@@ -179,33 +182,41 @@ const Home = () => {
 
             <StatsSection />
 
-            <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[300px] bg-primary-50 blur-[100px] rounded-full pointer-events-none"></div>
-
-                <div className="max-w-4xl mx-auto text-center relative z-10 bg-white/60 backdrop-blur-md p-10 md:p-14 rounded-3xl border border-primary-100/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-                    <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-5 tracking-tight">Cần hỗ trợ?</h2>
-                    <p className="text-gray-500 mb-10 text-lg max-w-xl mx-auto">Đội ngũ chuyên gia của chúng tôi luôn sẵn sàng lắng nghe và giải đáp mọi thắc mắc của bạn.</p>
-                    <div className="flex flex-col sm:flex-row gap-6 md:gap-12 justify-center items-center">
-                        <div className="flex items-center gap-4 bg-white px-6 py-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                            <div className="w-12 h-12 bg-primary-50 rounded-full flex items-center justify-center flex-shrink-0">
-                                <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                </svg>
-                            </div>
-                            <div className="text-left">
-                                <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Hotline</div>
-                                <span className="text-gray-900 font-bold text-lg">0876785504</span>
-                            </div>
+            <section className="bg-white px-4 py-16 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-5xl">
+                    <div className="wellness-surface p-6 md:p-8">
+                        <div className="mb-8 text-center">
+                            <p className="mb-3 text-sm font-extrabold uppercase text-primary-700">Cần hỗ trợ?</p>
+                            <h2 className="text-3xl font-black text-leaf-800 md:text-4xl">Đội ngũ Hương Thảo Trà luôn sẵn sàng lắng nghe</h2>
+                            <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-gray-600">
+                                Liên hệ với chúng tôi nếu bạn cần tư vấn sản phẩm, đơn hàng hoặc công thức trà phù hợp.
+                            </p>
                         </div>
-                        <div className="flex items-center gap-4 bg-white px-6 py-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                            <div className="w-12 h-12 bg-primary-50 rounded-full flex items-center justify-center flex-shrink-0">
-                                <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
+
+                        <div className="grid gap-4 md:grid-cols-2">
+                            <div className="wellness-muted-surface flex items-center gap-4 p-4">
+                                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white text-primary-700">
+                                    <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 5.5A2.5 2.5 0 0 1 5.5 3h2L10 8l-2 1.5A12 12 0 0 0 14.5 16l1.5-2 5 2.5v2A2.5 2.5 0 0 1 18.5 21 15.5 15.5 0 0 1 3 5.5Z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p className="text-sm font-bold text-gray-500">Hotline</p>
+                                    <p className="text-lg font-black text-leaf-800">0876785504</p>
+                                </div>
                             </div>
-                            <div className="text-left">
-                                <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Email hỗ trợ</div>
-                                <span className="text-gray-900 font-bold text-lg">thanhnnhe186491@fpt.edu.vn</span>
+
+                            <div className="wellness-muted-surface flex items-center gap-4 p-4">
+                                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white text-primary-700">
+                                    <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16v12H4z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="m4 7 8 6 8-6" />
+                                    </svg>
+                                </div>
+                                <div className="min-w-0">
+                                    <p className="text-sm font-bold text-gray-500">Email hỗ trợ</p>
+                                    <p className="break-all text-lg font-black text-leaf-800">thanhnnhe186491@fpt.edu.vn</p>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -2,31 +2,70 @@ import { Link } from 'react-router-dom';
 
 const HeroBanner = () => {
     return (
-        <section className="relative overflow-hidden bg-gradient-to-b from-primary-50/50 via-white to-white py-24 px-4 sm:px-6 lg:px-8">
-            {/* Decorative background blur elements */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-primary-200/20 blur-[100px] rounded-full pointer-events-none"></div>
-            
-            <div className="max-w-4xl mx-auto text-center relative z-10">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-primary-100 shadow-sm mb-8 animate-fade-in-up">
-                    <span className="text-primary-600">✨</span>
-                    <span className="text-sm font-semibold text-primary-800 tracking-wide uppercase">Công nghệ AI độc quyền</span>
+        <section className="bg-leaf-50 px-4 pb-16 pt-28 sm:px-6 lg:px-8">
+            <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+                <div>
+                    <p className="mb-4 inline-flex rounded-lg bg-white px-4 py-2 text-sm font-extrabold uppercase text-primary-700 ring-1 ring-primary-100">
+                        Công thức trà thảo mộc cá nhân hóa
+                    </p>
+                    <h1 className="max-w-3xl text-4xl font-black leading-tight text-leaf-800 md:text-6xl">
+                        Trà thảo mộc cho nhịp sống khỏe và dễ cân bằng hơn
+                    </h1>
+                    <p className="mt-6 max-w-2xl text-base leading-8 text-gray-600 md:text-lg">
+                        Hương Thảo Trà kết hợp nguyên liệu tự nhiên với AI tư vấn để gợi ý hương vị, công dụng và cách dùng phù hợp với thói quen của bạn.
+                    </p>
+
+                    <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                        <Link to="/ai-mix" className="wellness-focus inline-flex min-h-12 items-center justify-center rounded-lg bg-primary-700 px-6 py-3 text-base font-extrabold text-white transition hover:bg-primary-600">
+                            Thử AI Pha Trà
+                        </Link>
+                        <Link to="/teas" className="wellness-focus inline-flex min-h-12 items-center justify-center rounded-lg border border-leaf-100 bg-white px-6 py-3 text-base font-extrabold text-leaf-800 transition hover:bg-leaf-50">
+                            Khám phá cửa hàng
+                        </Link>
+                    </div>
                 </div>
-                
-                <h1 className="text-5xl md:text-7xl font-extrabold text-gray-900 mb-6 tracking-tight leading-tight">
-                    Khám phá tương lai của <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-emerald-500">Trà Thảo Mộc</span>
-                </h1>
-                
-                <p className="text-lg md:text-xl text-gray-500 mb-10 max-w-2xl mx-auto leading-relaxed">
-                    Trải nghiệm các liệu trình và công thức trà cá nhân hóa từ AI chuyên gia. Phân tích chi tiết dựa trên thể trạng sức khỏe, thói quen và sở thích của riêng bạn.
-                </p>
-                
-                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <Link to="/ai-mix" className="w-full sm:w-auto bg-gradient-to-r from-primary-600 to-primary-500 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:shadow-xl hover:shadow-primary-500/30 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2">
-                        <span>🌿</span> Thử AI Pha Trà
-                    </Link>
-                    <Link to="/teas" className="w-full sm:w-auto bg-white text-gray-800 border-2 border-gray-100 px-8 py-4 rounded-2xl font-bold text-lg hover:border-gray-200 hover:bg-gray-50 active:scale-95 transition-all duration-200 shadow-sm flex items-center justify-center">
-                        Khám phá cửa hàng
-                    </Link>
+
+                <div className="wellness-surface overflow-hidden p-5">
+                    <div className="rounded-xl bg-gradient-to-br from-cream via-white to-leaf-50 p-6">
+                        <div className="mb-6 flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-black uppercase text-primary-700">Gợi ý hôm nay</p>
+                                <h2 className="mt-1 text-2xl font-black text-leaf-800">Trà thư giãn buổi tối</h2>
+                            </div>
+                            <span className="rounded-lg bg-white px-3 py-2 text-sm font-extrabold text-primary-700 ring-1 ring-primary-100">AI</span>
+                        </div>
+
+                        <div className="grid gap-4 sm:grid-cols-2">
+                            <div className="rounded-xl border border-leaf-100 bg-white p-4">
+                                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-primary-50 text-primary-700">
+                                    <svg className="h-9 w-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 8h14l-1.2 10.1A2 2 0 0 1 15.8 20H8.2a2 2 0 0 1-2-1.9L5 8Z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 8V6a4 4 0 0 1 8 0v2M9 13h6" />
+                                    </svg>
+                                </div>
+                                <p className="text-sm font-bold text-gray-500">Mục tiêu</p>
+                                <p className="mt-1 text-lg font-black text-leaf-800">Ngủ ngon hơn</p>
+                            </div>
+                            <div className="rounded-xl border border-leaf-100 bg-white p-4">
+                                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
+                                    <svg className="h-9 w-9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18M6 7c4 0 6 2 6 6-4 0-6-2-6-6ZM18 7c-4 0-6 2-6 6 4 0 6-2 6-6Z" />
+                                    </svg>
+                                </div>
+                                <p className="text-sm font-bold text-gray-500">Hương vị</p>
+                                <p className="mt-1 text-lg font-black text-leaf-800">Thanh mát dịu</p>
+                            </div>
+                        </div>
+
+                        <div className="mt-4 rounded-xl border border-leaf-100 bg-white p-4">
+                            <p className="text-sm font-bold text-gray-500">Thành phần gợi ý</p>
+                            <div className="mt-3 flex flex-wrap gap-2">
+                                {['Hoa cúc', 'Táo đỏ', 'Lá bạc hà', 'Cam thảo'].map((item) => (
+                                    <span key={item} className="rounded-lg bg-leaf-50 px-3 py-2 text-sm font-extrabold text-primary-700">{item}</span>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
