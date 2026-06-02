@@ -16,6 +16,7 @@ server/.env
 
 # Local Copilot/agent workspace metadata
 .agent/
+.superpowers/
 
 # Logs
 logs/
