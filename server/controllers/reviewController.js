@@ -147,4 +147,16 @@ const getTeaReviews = async (req, res) => {
     }
 };
 
-module.exports = { createReview, createReviewReply, getTeaReviews };
+// @desc    Check if current user has purchased a tea
+// @route   GET /api/reviews/check-purchase/:id
+// @access  Private
+const checkPurchaseStatus = async (req, res) => {
+    try {
+        const hasPurchased = await hasUserPurchasedTea(req.user._id, req.params.id);
+        res.json({ hasPurchased });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { createReview, createReviewReply, getTeaReviews, checkPurchaseStatus };

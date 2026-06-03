@@ -256,57 +256,7 @@ Trả lời hoàn toàn bằng TIẾNG VIỆT.`;
     }
 };
 
-// @desc    AI Health Plan
-// @route   POST /api/ai/health-plan
-// @access  Private
-const aiHealthPlan = async (req, res) => {
-    const { age, sleepTime, stressLevel, healthGoal } = req.body;
 
-    try {
-        const prompt = `${HERBAL_EXPERT_SYSTEM}
-
-Nhiệm vụ: Xây dựng liệu trình uống trà thảo mộc hằng ngày cá nhân hóa.
-
-Thông tin người dùng:
-- Tuổi: ${age}
-- Thời gian ngủ hiện tại: ${sleepTime}
-- Mức độ stress: ${stressLevel}
-- Mục tiêu sức khỏe: ${healthGoal}
-
-Viết tất cả BẰNG TIẾNG VIỆT.`;
-
-        const model = getGeminiModel({
-            generationConfig: {
-                responseMimeType: 'application/json',
-                responseSchema: {
-                    type: SchemaType.OBJECT,
-                    properties: {
-                        morningTea: { type: SchemaType.OBJECT, properties: { name: { type: SchemaType.STRING }, reason: { type: SchemaType.STRING } } },
-                        afternoonTea: { type: SchemaType.OBJECT, properties: { name: { type: SchemaType.STRING }, reason: { type: SchemaType.STRING } } },
-                        nightTea: { type: SchemaType.OBJECT, properties: { name: { type: SchemaType.STRING }, reason: { type: SchemaType.STRING } } },
-                        sleepSchedule: { type: SchemaType.STRING },
-                        dietSuggestion: { type: SchemaType.STRING },
-                    },
-                },
-            },
-        });
-
-        const completion = await model.generateContent(prompt);
-        const result = JSON.parse(completion.response.text());
-
-        await AISuggestion.create({
-            user: req.user._id,
-            type: 'HealthPlan',
-            inputParams: { age: age.toString(), sleepTime, stressLevel, healthGoal },
-            result,
-        });
-
-        res.json(result);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'AI Health Plan failed', error: error.message });
-    }
-};
 
 // @desc    Get AI History
 // @route   GET /api/ai/history
@@ -497,7 +447,6 @@ const approveAiRecipe = async (req, res) => {
 
 module.exports = {
     aiMixTea,
-    aiHealthPlan,
     getAiHistory,
     saveAiMixTea,
     submitAiMixTeaForSale,

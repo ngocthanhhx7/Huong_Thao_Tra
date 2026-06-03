@@ -1,18 +1,18 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
+﻿import { useContext, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 
 const mainLinks = [
-    { to: '/', label: 'Trang chủ' },
-    { to: '/teas', label: 'Cửa hàng' },
-    { to: '/posts', label: 'Bảng tin' },
+    { to: '/', label: 'Trang chá»§' },
+    { to: '/teas', label: 'Cá»­a hÃ ng' },
+    { to: '/posts', label: 'Báº£ng tin' },
 ];
 
 const exploreLinks = [
-    { to: '/about', label: 'Giới thiệu' },
-    { to: '/contact', label: 'Liên hệ' },
+    { to: '/about', label: 'Giá»›i thiá»‡u' },
+    { to: '/contact', label: 'LiÃªn há»‡' },
     { to: '/feedback', label: 'Feedback' },
 ];
 
@@ -82,32 +82,32 @@ const Navbar = () => {
 
     const userGroups = useMemo(() => ([
         {
-            title: 'Tài khoản',
+            title: 'TÃ i khoáº£n',
             items: [
-                { to: '/profile', label: 'Hồ sơ cá nhân' },
+                { to: '/profile', label: 'Há»“ sÆ¡ cÃ¡ nhÃ¢n' },
             ],
         },
         {
-            title: 'Mua sắm',
+            title: 'Mua sáº¯m',
             items: [
-                { to: '/cart', label: 'Giỏ hàng' },
-                { to: '/orders', label: 'Đơn hàng' },
+                { to: '/cart', label: 'Giá» hÃ ng' },
+                { to: '/orders', label: 'ÄÆ¡n hÃ ng' },
                 { to: '/feedback', label: 'Feedback' },
             ],
         },
         {
-            title: 'AI & trải nghiệm',
+            title: 'AI & tráº£i nghiá»‡m',
             items: [
-                { to: '/ai-history', label: 'Lịch sử AI' },
+                { to: '/ai-history', label: 'Lá»‹ch sá»­ AI' },
             ],
         },
         ...(user?.role === 'Admin' || user?.role === 'Staff'
             ? [{
-                title: 'Quản trị',
+                title: 'Quáº£n trá»‹',
                 items: [
-                    { to: '/admin', label: 'Tổng quan admin', accent: 'text-amber-700' },
-                    { to: '/admin/orders', label: 'Đơn hàng', accent: 'text-amber-700' },
-                    { to: '/admin/analytics', label: 'Phân tích bán hàng', accent: 'text-amber-700' },
+                    { to: '/admin', label: 'Tá»•ng quan admin', accent: 'text-amber-700' },
+                    { to: '/admin/orders', label: 'ÄÆ¡n hÃ ng', accent: 'text-amber-700' },
+                    { to: '/admin/analytics', label: 'PhÃ¢n tÃ­ch bÃ¡n hÃ ng', accent: 'text-amber-700' },
                 ],
             }]
             : []),
@@ -131,8 +131,8 @@ const Navbar = () => {
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-20 items-center justify-between gap-4">
                     <Link to="/" className="wellness-focus flex min-w-0 shrink-0 items-center gap-3 rounded-lg" onClick={closeAllMenus}>
-                        <img src="/logo.png" alt="Hương Thảo Trà" className="h-11 w-11 rounded-lg object-cover ring-1 ring-primary-100" />
-                        <span className="hidden text-xl font-black text-leaf-800 sm:block lg:text-2xl">Hương Thảo Trà</span>
+                        <img src="/logo.png" alt="Trà Hoa Việt" className="h-11 w-11 rounded-lg object-cover ring-1 ring-primary-100" />
+                        <span className="hidden text-xl font-black text-leaf-800 sm:block lg:text-2xl">Trà Hoa Việt</span>
                     </Link>
 
                     <div className="hidden flex-1 items-center justify-center gap-1 md:flex">
@@ -153,7 +153,7 @@ const Navbar = () => {
                             <Icon className="h-4 w-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18M6 7c4 0 6 2 6 6-4 0-6-2-6-6ZM18 7c-4 0-6 2-6 6 4 0 6-2 6-6Z" />
                             </Icon>
-                            Pha Trà AI
+                            Pha TrÃ  AI
                         </NavLink>
                     </div>
 
@@ -164,7 +164,7 @@ const Navbar = () => {
                             onMouseLeave={() => setActiveDropdown('')}
                         >
                             <button type="button" className="wellness-focus inline-flex min-h-10 items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold text-gray-700 transition hover:bg-leaf-50 hover:text-primary-700">
-                                Thêm
+                                ThÃªm
                                 <Icon className={`h-4 w-4 transition ${activeDropdown === 'explore' ? 'rotate-180' : ''}`}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" />
                                 </Icon>
@@ -186,7 +186,7 @@ const Navbar = () => {
                             <Link
                                 to="/notifications"
                                 className="wellness-focus relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-leaf-100 bg-white text-leaf-800 transition hover:bg-leaf-50"
-                                aria-label="Thông báo"
+                                aria-label="ThÃ´ng bÃ¡o"
                             >
                                 <Icon>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2a2 2 0 0 1-.6 1.4L4 17h5M10 20h4" />
@@ -236,15 +236,15 @@ const Navbar = () => {
                                         </div>
                                         <div className="my-2 h-px bg-leaf-100" />
                                         <button type="button" onClick={handleLogout} className="wellness-focus w-full rounded-lg px-4 py-3 text-left text-sm font-bold text-red-600 hover:bg-red-50">
-                                            Đăng xuất
+                                            ÄÄƒng xuáº¥t
                                         </button>
                                     </DropdownPanel>
                                 )}
                             </div>
                         ) : (
                             <div className="flex items-center gap-2">
-                                <Link to="/login" className="wellness-focus rounded-lg px-4 py-2.5 text-sm font-extrabold text-gray-700 hover:bg-leaf-50 hover:text-primary-700">Đăng nhập</Link>
-                                <Link to="/register" className="wellness-focus rounded-lg bg-primary-700 px-4 py-2.5 text-sm font-extrabold text-white hover:bg-primary-600">Đăng ký</Link>
+                                <Link to="/login" className="wellness-focus rounded-lg px-4 py-2.5 text-sm font-extrabold text-gray-700 hover:bg-leaf-50 hover:text-primary-700">ÄÄƒng nháº­p</Link>
+                                <Link to="/register" className="wellness-focus rounded-lg bg-primary-700 px-4 py-2.5 text-sm font-extrabold text-white hover:bg-primary-600">ÄÄƒng kÃ½</Link>
                             </div>
                         )}
                     </div>
@@ -253,7 +253,7 @@ const Navbar = () => {
                         type="button"
                         onClick={() => setIsMobileMenuOpen((prev) => !prev)}
                         className="wellness-focus flex h-11 w-11 items-center justify-center rounded-lg border border-leaf-100 bg-white text-leaf-800 md:hidden"
-                        aria-label="Mở menu"
+                        aria-label="Má»Ÿ menu"
                     >
                         <Icon>
                             {isMobileMenuOpen ? (
@@ -275,12 +275,12 @@ const Navbar = () => {
                             ))}
 
                             <NavLink to="/ai-mix" onClick={closeAllMenus} className="wellness-focus block rounded-lg bg-primary-50 px-4 py-3 text-sm font-extrabold text-primary-700">
-                                Pha Trà AI
+                                Pha TrÃ  AI
                             </NavLink>
 
                             <div className="overflow-hidden rounded-lg border border-leaf-100">
                                 <button type="button" onClick={() => setIsMobileExploreOpen((prev) => !prev)} className="wellness-focus flex w-full items-center justify-between bg-leaf-50 px-4 py-3 text-left text-sm font-bold text-gray-700">
-                                    Thêm
+                                    ThÃªm
                                     <Icon className={`h-4 w-4 transition ${isMobileExploreOpen ? 'rotate-180' : ''}`}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" />
                                     </Icon>
@@ -307,7 +307,7 @@ const Navbar = () => {
                                     {isMobileUserOpen && (
                                         <div className="space-y-2 bg-white p-2">
                                             <Link to="/notifications" onClick={closeAllMenus} className="wellness-focus block rounded-lg bg-leaf-50 px-4 py-3 text-sm font-bold text-gray-700">
-                                                Thông báo {unreadCount > 0 ? 'mới' : ''}
+                                                ThÃ´ng bÃ¡o {unreadCount > 0 ? 'má»›i' : ''}
                                             </Link>
                                             {userGroups.flatMap((group) => group.items).map((item) => (
                                                 <Link key={item.to} to={item.to} onClick={closeAllMenus} className={`wellness-focus block rounded-lg bg-leaf-50 px-4 py-3 text-sm font-bold ${item.accent || 'text-gray-700'}`}>
@@ -315,15 +315,15 @@ const Navbar = () => {
                                                 </Link>
                                             ))}
                                             <button type="button" onClick={handleLogout} className="wellness-focus w-full rounded-lg bg-red-50 px-4 py-3 text-left text-sm font-bold text-red-600">
-                                                Đăng xuất
+                                                ÄÄƒng xuáº¥t
                                             </button>
                                         </div>
                                     )}
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-2 gap-3">
-                                    <Link to="/login" onClick={closeAllMenus} className="wellness-focus rounded-lg bg-leaf-50 px-4 py-3 text-center text-sm font-extrabold text-gray-700">Đăng nhập</Link>
-                                    <Link to="/register" onClick={closeAllMenus} className="wellness-focus rounded-lg bg-primary-700 px-4 py-3 text-center text-sm font-extrabold text-white">Đăng ký</Link>
+                                    <Link to="/login" onClick={closeAllMenus} className="wellness-focus rounded-lg bg-leaf-50 px-4 py-3 text-center text-sm font-extrabold text-gray-700">ÄÄƒng nháº­p</Link>
+                                    <Link to="/register" onClick={closeAllMenus} className="wellness-focus rounded-lg bg-primary-700 px-4 py-3 text-center text-sm font-extrabold text-white">ÄÄƒng kÃ½</Link>
                                 </div>
                             )}
                         </div>
@@ -335,3 +335,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

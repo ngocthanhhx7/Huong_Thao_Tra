@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+﻿import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import api from '../services/api';
 
@@ -6,7 +6,7 @@ const ChatbotWidget = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([{
         role: 'assistant',
-        content: 'Xin chào! Tôi là chuyên gia thảo mộc của Hương Thảo Trà. Tôi có thể gợi ý công thức trà, tư vấn nguyên liệu và hỗ trợ bạn chọn hương vị phù hợp. Bạn muốn bắt đầu từ đâu?',
+        content: 'Xin chÃ o! TÃ´i lÃ  chuyÃªn gia tháº£o má»™c cá»§a Trà Hoa Việt. TÃ´i cÃ³ thá»ƒ gá»£i Ã½ cÃ´ng thá»©c trÃ , tÆ° váº¥n nguyÃªn liá»‡u vÃ  há»— trá»£ báº¡n chá»n hÆ°Æ¡ng vá»‹ phÃ¹ há»£p. Báº¡n muá»‘n báº¯t Ä‘áº§u tá»« Ä‘Ã¢u?',
     }]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -34,7 +34,7 @@ const ChatbotWidget = () => {
             }
         } catch (error) {
             console.error('Chatbot message error:', error);
-            setMessages((prev) => [...prev, { role: 'assistant', content: 'Xin lỗi, kết nối tư vấn AI đang gián đoạn. Bạn thử gửi lại sau ít phút nhé.' }]);
+            setMessages((prev) => [...prev, { role: 'assistant', content: 'Xin lá»—i, káº¿t ná»‘i tÆ° váº¥n AI Ä‘ang giÃ¡n Ä‘oáº¡n. Báº¡n thá»­ gá»­i láº¡i sau Ã­t phÃºt nhÃ©.' }]);
         } finally {
             setIsLoading(false);
         }
@@ -46,7 +46,7 @@ const ChatbotWidget = () => {
                 type="button"
                 onClick={() => setIsOpen(true)}
                 className="wellness-focus fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-xl bg-primary-700 text-white shadow-[0_14px_34px_rgba(47,101,40,0.22)] transition hover:bg-primary-600 active:scale-95"
-                aria-label="Mở tư vấn AI"
+                aria-label="Má»Ÿ tÆ° váº¥n AI"
             >
                 <svg className="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18M6 7c4 0 6 2 6 6-4 0-6-2-6-6ZM18 7c-4 0-6 2-6 6 4 0 6-2 6-6Z" />
@@ -65,15 +65,15 @@ const ChatbotWidget = () => {
                         </svg>
                     </div>
                     <div>
-                        <h3 className="text-sm font-extrabold">AI Chuyên Gia</h3>
-                        <p className="text-xs font-semibold text-primary-100">Sẵn sàng tư vấn trà thảo mộc</p>
+                        <h3 className="text-sm font-extrabold">AI ChuyÃªn Gia</h3>
+                        <p className="text-xs font-semibold text-primary-100">Sáºµn sÃ ng tÆ° váº¥n trÃ  tháº£o má»™c</p>
                     </div>
                 </div>
                 <button
                     type="button"
                     onClick={() => setIsOpen(false)}
                     className="wellness-focus flex h-9 w-9 items-center justify-center rounded-lg text-white transition hover:bg-white/15"
-                    aria-label="Đóng tư vấn AI"
+                    aria-label="ÄÃ³ng tÆ° váº¥n AI"
                 >
                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18 18 6M6 6l12 12" />
@@ -119,7 +119,7 @@ const ChatbotWidget = () => {
                             sendMessage(e);
                         }
                     }}
-                    placeholder="Hỏi AI về trà thảo mộc..."
+                    placeholder="Há»i AI vá» trÃ  tháº£o má»™c..."
                     className="wellness-focus min-h-11 flex-1 resize-none rounded-lg border border-leaf-100 bg-leaf-50 px-4 py-3 text-sm transition focus:bg-white"
                     style={{ maxHeight: '120px' }}
                 />
@@ -127,7 +127,7 @@ const ChatbotWidget = () => {
                     type="submit"
                     disabled={isLoading || !input.trim()}
                     className="wellness-focus flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary-700 text-white transition hover:bg-primary-600 disabled:bg-gray-300"
-                    aria-label="Gửi tin nhắn"
+                    aria-label="Gá»­i tin nháº¯n"
                 >
                     <svg className="h-5 w-5 translate-x-px" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10.894 2.553a1 1 0 0 0-1.788 0l-7 14a1 1 0 0 0 1.169 1.409l5-1.429A1 1 0 0 0 9 15.571V11a1 1 0 1 1 2 0v4.571a1 1 0 0 0 .725.962l5 1.428a1 1 0 0 0 1.17-1.408l-7-14Z" />
@@ -139,3 +139,4 @@ const ChatbotWidget = () => {
 };
 
 export default ChatbotWidget;
+

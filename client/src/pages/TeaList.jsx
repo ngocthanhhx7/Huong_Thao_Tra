@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import api from '../services/api';
+import ProductCard from '../components/ProductCard';
 
 const TeaList = () => {
     const [teas, setTeas] = useState([]);
@@ -57,48 +57,7 @@ const TeaList = () => {
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                     {teas.map((tea) => (
-                        <div key={tea._id} className="bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_30px_-10px_rgba(0,180,100,0.15)] transition-all duration-300 flex flex-col group hover:-translate-y-1.5 h-full">
-                            <Link to={`/teas/${tea._id}`} className="h-56 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center relative overflow-hidden">
-                                <img
-                                    src={tea.image || 'https://images.unsplash.com/photo-1576092762791-dd9e2220cad1?q=80&w=800&auto=format&fit=crop'}
-                                    alt={tea.name}
-                                    className="object-cover w-full h-full transform group-hover:scale-105 transition duration-500 ease-out"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                {tea.isAIMixture && (
-                                    <span className="absolute top-4 right-4 bg-primary-600 text-white text-[10px] font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-sm z-10 flex items-center gap-1">
-                                        ✨ Công Thức AI
-                                    </span>
-                                )}
-                            </Link>
-                            <div className="p-6 flex flex-col flex-grow">
-                                <div className="flex justify-between items-start mb-2 gap-3">
-                                    <Link to={`/teas/${tea._id}`} className="text-xl font-bold text-gray-900 line-clamp-2 leading-tight group-hover:text-primary-600 transition-colors">
-                                        {tea.name}
-                                    </Link>
-                                    <span className="shrink-0 text-sm font-semibold text-amber-500">
-                                        {Number(tea.rating || 0).toFixed(1)}★
-                                    </span>
-                                </div>
-                                <p className="text-[11px] font-bold text-primary-600 uppercase tracking-widest mb-2">Caffeine: {tea.caffeineLevel}</p>
-                                <p className="text-xs text-gray-400 mb-4">{tea.numReviews || 0} đánh giá</p>
-                                <p className="text-sm text-gray-500 mb-6 line-clamp-2 flex-grow leading-relaxed">{tea.description}</p>
-                                <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-100">
-                                    <span className="font-extrabold text-xl text-gray-900">{Number(tea.price).toLocaleString('vi-VN')}đ</span>
-                                    <div className="flex gap-2">
-                                        <Link to={`/teas/${tea._id}`} className="bg-white text-gray-700 border border-gray-200 px-4 py-2.5 rounded-xl text-sm font-bold">
-                                            Chi tiết
-                                        </Link>
-                                        <button
-                                            onClick={() => addToCart(tea._id)}
-                                            className="bg-gray-100 text-gray-800 hover:bg-gradient-to-r hover:from-primary-600 hover:to-primary-500 hover:text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm hover:shadow-primary-500/30 active:scale-95 transition-all duration-200 flex items-center gap-2"
-                                        >
-                                            <span>🛒</span> Mua
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <ProductCard key={tea._id} tea={tea} onAddToCart={addToCart} />
                     ))}
                 </div>
             )}

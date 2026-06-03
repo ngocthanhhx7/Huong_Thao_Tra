@@ -5,7 +5,6 @@ import Register from './pages/Register';
 import TeaList from './pages/TeaList';
 import TeaDetail from './pages/TeaDetail';
 import AIMixTea from './pages/AIMixTea';
-import AIHealthPlan from './pages/AIHealthPlan';
 import Profile from './pages/Profile';
 import AIHistory from './pages/AIHistory';
 import Cart from './pages/Cart';
@@ -49,7 +48,6 @@ function App() {
           <Route path="/teas" element={<TeaList />} />
           <Route path="/teas/:id" element={<TeaDetail />} />
           <Route path="/ai-mix" element={<AIMixTea />} />
-          <Route path="/ai-plan" element={<AIHealthPlan />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/ai-history" element={<AIHistory />} />
           <Route path="/cart" element={<Cart />} />

@@ -17,6 +17,7 @@ const TeaDetail = () => {
     const [reviewForm, setReviewForm] = useState(emptyReviewForm);
     const [replyDrafts, setReplyDrafts] = useState({});
     const [feedbackForm, setFeedbackForm] = useState(emptyFeedbackForm);
+    const [hasPurchased, setHasPurchased] = useState(false);
 
     const ratingSummary = useMemo(() => {
         const summary = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
@@ -52,6 +53,22 @@ const TeaDetail = () => {
 
         load();
     }, [fetchTeaDetail]);
+
+    useEffect(() => {
+        const checkPurchase = async () => {
+            if (user) {
+                try {
+                    const { data } = await api.get(`/reviews/check-purchase/${id}`);
+                    setHasPurchased(data.hasPurchased);
+                } catch (err) {
+                    console.error('Error checking purchase status:', err);
+                }
+            } else {
+                setHasPurchased(false);
+            }
+        };
+        checkPurchase();
+    }, [id, user]);
 
     const addToCart = async () => {
         try {
@@ -252,7 +269,7 @@ const TeaDetail = () => {
                                             ))}
                                         </div>
 
-                                        {user ? (
+                                        {user && hasPurchased ? (
                                             <div className="mt-5 flex gap-3">
                                                 <input
                                                     value={replyDrafts[review._id] || ''}
@@ -264,6 +281,10 @@ const TeaDetail = () => {
                                                     Trả lời
                                                 </button>
                                             </div>
+                                        ) : user ? (
+                                            <p className="text-xs text-gray-400 mt-4">
+                                                Bạn cần mua sản phẩm này trước khi phản hồi.
+                                            </p>
                                         ) : (
                                             <p className="text-sm text-gray-500 mt-4">
                                                 <Link to="/login" className="text-primary-600 font-bold">Đăng nhập</Link> để trả lời đánh giá này.
@@ -277,25 +298,41 @@ const TeaDetail = () => {
                 </div>
 
                 <div className="space-y-8">
-                    <form onSubmit={submitReview} className="bg-white border border-gray-100 rounded-[32px] p-8 space-y-4">
-                        <h2 className="text-2xl font-extrabold text-gray-900">Viết đánh giá</h2>
-                        {!user && <p className="text-sm text-gray-500">Bạn cần đăng nhập và đã mua sản phẩm để gửi đánh giá.</p>}
-                        <select value={reviewForm.rating} onChange={(e) => setReviewForm((prev) => ({ ...prev, rating: Number(e.target.value) }))} className="w-full px-4 py-3 rounded-2xl border border-gray-200">
-                            {[5, 4, 3, 2, 1].map((score) => (
-                                <option key={score} value={score}>{score} sao</option>
-                            ))}
-                        </select>
-                        <textarea
-                            value={reviewForm.comment}
-                            onChange={(e) => setReviewForm((prev) => ({ ...prev, comment: e.target.value }))}
-                            rows="5"
-                            placeholder="Chia sẻ cảm nhận thật của bạn về sản phẩm..."
-                            className="w-full px-4 py-3 rounded-2xl border border-gray-200"
-                        />
-                        <button className="w-full bg-gradient-to-r from-primary-600 to-primary-500 text-white py-4 rounded-2xl font-bold">
-                            Gửi đánh giá
-                        </button>
-                    </form>
+                    {user && hasPurchased ? (
+                        <form onSubmit={submitReview} className="bg-white border border-gray-100 rounded-[32px] p-8 space-y-4">
+                            <h2 className="text-2xl font-extrabold text-gray-900">Viết đánh giá</h2>
+                            <select value={reviewForm.rating} onChange={(e) => setReviewForm((prev) => ({ ...prev, rating: Number(e.target.value) }))} className="w-full px-4 py-3 rounded-2xl border border-gray-200">
+                                {[5, 4, 3, 2, 1].map((score) => (
+                                    <option key={score} value={score}>{score} sao</option>
+                                ))}
+                            </select>
+                            <textarea
+                                value={reviewForm.comment}
+                                onChange={(e) => setReviewForm((prev) => ({ ...prev, comment: e.target.value }))}
+                                rows="5"
+                                placeholder="Chia sẻ cảm nhận thật của bạn về sản phẩm..."
+                                className="w-full px-4 py-3 rounded-2xl border border-gray-200"
+                            />
+                            <button className="w-full bg-gradient-to-r from-primary-600 to-primary-500 text-white py-4 rounded-2xl font-bold">
+                                Gửi đánh giá
+                            </button>
+                        </form>
+                    ) : (
+                        <div className="bg-white border border-gray-100 rounded-[32px] p-8 text-center space-y-3">
+                            <h2 className="text-2xl font-extrabold text-gray-900">Viết đánh giá</h2>
+                            <p className="text-gray-500 text-sm">
+                                {user 
+                                    ? "Bạn chưa mua sản phẩm này. Chỉ khách đã mua sản phẩm mới có thể đánh giá." 
+                                    : "Vui lòng đăng nhập và mua sản phẩm để viết đánh giá."
+                                }
+                            </p>
+                            {!user && (
+                                <Link to="/login" className="inline-block bg-primary-600 hover:bg-primary-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-colors">
+                                    Đăng nhập
+                                </Link>
+                            )}
+                        </div>
+                    )}
 
                     <form onSubmit={submitProductFeedback} className="bg-white border border-gray-100 rounded-[32px] p-8 space-y-4">
                         <h2 className="text-2xl font-extrabold text-gray-900">Gửi feedback về sản phẩm</h2>

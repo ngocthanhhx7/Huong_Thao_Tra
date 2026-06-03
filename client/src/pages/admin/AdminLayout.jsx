@@ -1,18 +1,18 @@
-import { useContext } from 'react';
+﻿import { useContext } from 'react';
 import { NavLink, Navigate, Outlet } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { StatusBadge } from '../../components/admin/AdminUi';
 
 const adminLinks = [
-    { to: '/admin', label: 'Tổng quan', hint: 'Số liệu và việc cần làm', marker: 'OV', roles: ['Admin', 'Staff'] },
-    { to: '/admin/orders', label: 'Đơn hàng', hint: 'Xử lý trạng thái giao hàng', marker: 'OR', roles: ['Admin', 'Staff'] },
-    { to: '/admin/ai-recipes', label: 'Duyệt AI', hint: 'Công thức khách gửi bán', marker: 'AI', roles: ['Admin', 'Staff'] },
-    { to: '/admin/posts', label: 'Bài viết', hint: 'Tạo, sửa, xuất bản nội dung', marker: 'PO', roles: ['Admin', 'Staff'] },
-    { to: '/admin/feedback', label: 'Feedback', hint: 'Phản hồi khách hàng', marker: 'FB', roles: ['Admin', 'Staff'] },
-    { to: '/admin/analytics', label: 'Phân tích', hint: 'Doanh thu và tồn kho', marker: 'AN', roles: ['Admin', 'Staff'] },
-    { to: '/admin/teas', label: 'Sản phẩm trà', hint: 'Giá, tồn kho, hiển thị', marker: 'TE', roles: ['Admin'] },
-    { to: '/admin/ingredients', label: 'Nguyên liệu', hint: 'Giá và mô tả nguyên liệu', marker: 'IN', roles: ['Admin'] },
-    { to: '/admin/users', label: 'Người dùng', hint: 'Phân quyền tài khoản', marker: 'US', roles: ['Admin'] },
+    { to: '/admin', label: 'Tá»•ng quan', hint: 'Sá»‘ liá»‡u vÃ  viá»‡c cáº§n lÃ m', marker: 'OV', roles: ['Admin', 'Staff'] },
+    { to: '/admin/orders', label: 'ÄÆ¡n hÃ ng', hint: 'Xá»­ lÃ½ tráº¡ng thÃ¡i giao hÃ ng', marker: 'OR', roles: ['Admin', 'Staff'] },
+    { to: '/admin/ai-recipes', label: 'Duyá»‡t AI', hint: 'CÃ´ng thá»©c khÃ¡ch gá»­i bÃ¡n', marker: 'AI', roles: ['Admin', 'Staff'] },
+    { to: '/admin/posts', label: 'BÃ i viáº¿t', hint: 'Táº¡o, sá»­a, xuáº¥t báº£n ná»™i dung', marker: 'PO', roles: ['Admin', 'Staff'] },
+    { to: '/admin/feedback', label: 'Feedback', hint: 'Pháº£n há»“i khÃ¡ch hÃ ng', marker: 'FB', roles: ['Admin', 'Staff'] },
+    { to: '/admin/analytics', label: 'PhÃ¢n tÃ­ch', hint: 'Doanh thu vÃ  tá»“n kho', marker: 'AN', roles: ['Admin', 'Staff'] },
+    { to: '/admin/teas', label: 'Sáº£n pháº©m trÃ ', hint: 'GiÃ¡, tá»“n kho, hiá»ƒn thá»‹', marker: 'TE', roles: ['Admin'] },
+    { to: '/admin/ingredients', label: 'NguyÃªn liá»‡u', hint: 'GiÃ¡ vÃ  mÃ´ táº£ nguyÃªn liá»‡u', marker: 'IN', roles: ['Admin'] },
+    { to: '/admin/users', label: 'NgÆ°á»i dÃ¹ng', hint: 'PhÃ¢n quyá»n tÃ i khoáº£n', marker: 'US', roles: ['Admin'] },
 ];
 
 const AdminLayout = () => {
@@ -31,7 +31,7 @@ const AdminLayout = () => {
                     <div className="mb-5 flex items-start justify-between gap-3">
                         <div>
                             <p className="admin-eyebrow">Admin Studio</p>
-                            <h1 className="text-xl font-black leading-tight text-slate-950">Hương Thảo Trà</h1>
+                            <h1 className="text-xl font-black leading-tight text-slate-950">Trà Hoa Việt</h1>
                             <p className="mt-1 text-sm text-slate-600">{user.name || user.email}</p>
                         </div>
                         <StatusBadge tone={user.role === 'Admin' ? 'purple' : 'green'}>{user.role}</StatusBadge>
@@ -72,3 +72,4 @@ const AdminLayout = () => {
 };
 
 export default AdminLayout;
+

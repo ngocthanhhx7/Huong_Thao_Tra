@@ -304,14 +304,10 @@ const Profile = () => {
                                 </div>
                                 Trợ Lý AI Cá Nhân
                             </h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div className="grid grid-cols-1 gap-5">
                                 <a href="/ai-history" className="bg-white p-6 rounded-2xl border border-gray-200 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_-6px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 group">
                                     <p className="font-extrabold text-gray-900 text-lg mb-1 group-hover:text-primary-600 transition-colors">Lịch sử AI</p>
-                                    <p className="text-sm font-medium text-gray-500">Xem lại và quản lý các công thức, liệu trình đã tạo</p>
-                                </a>
-                                <a href="/ai-plan" className="bg-white p-6 rounded-2xl border border-gray-200 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_-6px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 group">
-                                    <p className="font-extrabold text-gray-900 text-lg mb-1 group-hover:text-primary-600 transition-colors">Liệu trình AI</p>
-                                    <p className="text-sm font-medium text-gray-500">Tạo phác đồ trà cá nhân hóa theo giấc ngủ, stress và mục tiêu sức khỏe</p>
+                                    <p className="text-sm font-medium text-gray-500">Xem lại và quản lý các công thức đã tạo</p>
                                 </a>
                             </div>
                         </div>
