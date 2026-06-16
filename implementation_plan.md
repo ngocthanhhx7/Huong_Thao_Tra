@@ -113,5 +113,25 @@ Project dùng **Express + MongoDB (Mongoose)** backend và **React (Vite) + Tail
 4. Đăng nhập → vào Cart → kiểm tra giỏ hàng lấy từ API
 5. Vào Orders → kiểm tra đơn hàng lấy từ API
 
+## UI/UX Cinematic Enhancements Plan
+
+### 1. Welcoming Curtain Reveal
+- Set `showCurtain` in `Home.jsx` to `true` by default so the cinematic overlay covers the screen on first load.
+- Click "Bắt đầu thước phim" to trigger a transition that slides the curtain up/out, initializes Web Audio API, and fades in the main content.
+
+### 2. Live Dynamic HUD
+- Add a React `useEffect` timer in `Home.jsx` that runs a small random walk fluctuation (+/- 1% stress, +/- 2 heart rate bpm) every 1.5 seconds.
+- Ensure the live biological indexes feel active and moving even when stationary.
+
+### 3. Busy vs. Healing City 2.5D Overlays
+- Define arrays of 2.5D holographic tag coordinates in `StoryCityScene.jsx`.
+- When `mood === 'busy'`, render stress tags ("Tăng ca 23:00", "KPI / Deadline", "Thiếu ngủ (4h)") using reverse rotation transforms to face the camera.
+- When `mood === 'healing'`, render peaceful tags ("Thư giãn sâu", "Ngủ ngon 8h", "Thân tâm cân bằng").
+- Add CSS animations for micro cars in `index.css` to make them drive along the roads.
+
+### 4. Continuity Trail
+- Update the `.home-continuity-trail` height in `index.css` to `480rem` to connect all sections of the landing page as a single cohesive narrative.
+
 > [!NOTE]
 > Nếu DB trống, các trang sẽ hiển thị trạng thái "trống" — đó là hành vi đúng. Cần seed data hoặc dùng admin API để tạo sản phẩm.
+

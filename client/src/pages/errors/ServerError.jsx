@@ -1,4 +1,4 @@
-﻿import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const ServerError = () => {
     const navigate = useNavigate();
@@ -9,15 +9,15 @@ const ServerError = () => {
                 <div className="text-[120px] md:text-[180px] font-black leading-none bg-clip-text text-transparent bg-gradient-to-br from-red-500 to-amber-400 select-none">
                     500
                 </div>
-                <div className="text-5xl mb-4">ðŸ”§</div>
+                <div className="text-5xl mb-4">🔧</div>
 
                 <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-3">
-                    MÃ¡y chá»§ Ä‘ang gáº·p sá»± cá»‘
+                    Máy chủ đang gặp sự cố
                 </h1>
                 <p className="text-gray-600 mb-8 leading-relaxed max-w-md mx-auto">
-                    ChÃºng tÃ´i Ä‘ang gáº·p lá»—i táº¡m thá»i tá»« phÃ­a mÃ¡y chá»§. Äá»™i ká»¹ thuáº­t
-                    cá»§a Trà Hoa Việt Ä‘Ã£ Ä‘Æ°á»£c thÃ´ng bÃ¡o vÃ  Ä‘ang kháº¯c phá»¥c. Báº¡n
-                    vui lÃ²ng thá»­ láº¡i sau Ã­t phÃºt.
+                    Chúng tôi đang gặp lỗi tạm thời từ phía máy chủ. Đội kỹ thuật
+                    của Trà Hoa Việt đã được thông báo và đang khắc phục. Bạn
+                    vui lòng thử lại sau ít phút.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -25,19 +25,19 @@ const ServerError = () => {
                         onClick={() => window.location.reload()}
                         className="px-6 py-3 rounded-full bg-gradient-to-r from-red-500 to-amber-500 text-white font-bold shadow hover:opacity-95"
                     >
-                        Thá»­ láº¡i
+                        Thử lại
                     </button>
                     <button
                         onClick={() => navigate(-1)}
                         className="px-6 py-3 rounded-full bg-gray-100 text-gray-700 font-bold hover:bg-gray-200"
                     >
-                        â† Quay láº¡i
+                        ← Quay lại
                     </button>
                     <Link
                         to="/"
                         className="px-6 py-3 rounded-full bg-white border border-gray-200 text-gray-700 font-bold hover:bg-gray-50"
                     >
-                        Vá» trang chá»§
+                        Về trang chủ
                     </Link>
                 </div>
             </div>

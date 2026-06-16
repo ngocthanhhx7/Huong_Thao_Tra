@@ -1,18 +1,19 @@
-﻿import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 
 const mainLinks = [
-    { to: '/', label: 'Trang chá»§' },
-    { to: '/teas', label: 'Cá»­a hÃ ng' },
-    { to: '/posts', label: 'Báº£ng tin' },
+    { to: '/', label: 'Trang chủ' },
+    { to: '/teas', label: 'Cửa hàng' },
+    { to: '/posts', label: 'Bảng tin' },
 ];
 
 const exploreLinks = [
-    { to: '/about', label: 'Giá»›i thiá»‡u' },
-    { to: '/contact', label: 'LiÃªn há»‡' },
+    { to: '/ingredients', label: 'Trà liệu' },
+    { to: '/about', label: 'Giới thiệu' },
+    { to: '/contact', label: 'Liên hệ' },
     { to: '/feedback', label: 'Feedback' },
 ];
 
@@ -54,6 +55,7 @@ const Navbar = () => {
     const [isMobileExploreOpen, setIsMobileExploreOpen] = useState(false);
     const [isMobileUserOpen, setIsMobileUserOpen] = useState(false);
     const [unreadCount, setUnreadCount] = useState(0);
+    const [cartCount, setCartCount] = useState(0);
 
     useEffect(() => {
         const handleScroll = () => setIsScrolled(window.scrollY > 0);
@@ -80,34 +82,61 @@ const Navbar = () => {
         fetchNotifications();
     }, [user]);
 
+    useEffect(() => {
+        const fetchCartCount = async () => {
+            if (!user) {
+                setCartCount(0);
+                return;
+            }
+
+            try {
+                const { data } = await api.get('/cart');
+                const count = (data?.items || []).reduce((total, item) => total + (Number(item.qty) || 0), 0);
+                setCartCount(count);
+            } catch {
+                setCartCount(0);
+            }
+        };
+
+        fetchCartCount();
+
+        const handleCartUpdated = () => fetchCartCount();
+        window.addEventListener('cart:updated', handleCartUpdated);
+        window.addEventListener('focus', handleCartUpdated);
+
+        return () => {
+            window.removeEventListener('cart:updated', handleCartUpdated);
+            window.removeEventListener('focus', handleCartUpdated);
+        };
+    }, [user]);
+
     const userGroups = useMemo(() => ([
         {
-            title: 'TÃ i khoáº£n',
+            title: 'Tài khoản',
             items: [
-                { to: '/profile', label: 'Há»“ sÆ¡ cÃ¡ nhÃ¢n' },
+                { to: '/profile', label: 'Hồ sơ cá nhân' },
             ],
         },
         {
-            title: 'Mua sáº¯m',
+            title: 'Mua sắm',
             items: [
-                { to: '/cart', label: 'Giá» hÃ ng' },
-                { to: '/orders', label: 'ÄÆ¡n hÃ ng' },
+                { to: '/orders', label: 'Đơn hàng' },
                 { to: '/feedback', label: 'Feedback' },
             ],
         },
         {
-            title: 'AI & tráº£i nghiá»‡m',
+            title: 'AI & trải nghiệm',
             items: [
-                { to: '/ai-history', label: 'Lá»‹ch sá»­ AI' },
+                { to: '/ai-history', label: 'Lịch sử AI' },
             ],
         },
         ...(user?.role === 'Admin' || user?.role === 'Staff'
             ? [{
-                title: 'Quáº£n trá»‹',
+                title: 'Quản trị',
                 items: [
-                    { to: '/admin', label: 'Tá»•ng quan admin', accent: 'text-amber-700' },
-                    { to: '/admin/orders', label: 'ÄÆ¡n hÃ ng', accent: 'text-amber-700' },
-                    { to: '/admin/analytics', label: 'PhÃ¢n tÃ­ch bÃ¡n hÃ ng', accent: 'text-amber-700' },
+                    { to: '/admin', label: 'Tổng quan admin', accent: 'text-amber-700' },
+                    { to: '/admin/orders', label: 'Đơn hàng', accent: 'text-amber-700' },
+                    { to: '/admin/analytics', label: 'Phân tích bán hàng', accent: 'text-amber-700' },
                 ],
             }]
             : []),
@@ -153,7 +182,7 @@ const Navbar = () => {
                             <Icon className="h-4 w-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18M6 7c4 0 6 2 6 6-4 0-6-2-6-6ZM18 7c-4 0-6 2-6 6 4 0 6-2 6-6Z" />
                             </Icon>
-                            Pha TrÃ  AI
+                            Pha Trà AI
                         </NavLink>
                     </div>
 
@@ -164,7 +193,7 @@ const Navbar = () => {
                             onMouseLeave={() => setActiveDropdown('')}
                         >
                             <button type="button" className="wellness-focus inline-flex min-h-10 items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold text-gray-700 transition hover:bg-leaf-50 hover:text-primary-700">
-                                ThÃªm
+                                Tìm hiểu thêm
                                 <Icon className={`h-4 w-4 transition ${activeDropdown === 'explore' ? 'rotate-180' : ''}`}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" />
                                 </Icon>
@@ -183,16 +212,36 @@ const Navbar = () => {
                         </div>
 
                         {user && (
-                            <Link
-                                to="/notifications"
-                                className="wellness-focus relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-leaf-100 bg-white text-leaf-800 transition hover:bg-leaf-50"
-                                aria-label="ThÃ´ng bÃ¡o"
-                            >
-                                <Icon>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2a2 2 0 0 1-.6 1.4L4 17h5M10 20h4" />
-                                </Icon>
-                                {unreadCount > 0 && <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white" />}
-                            </Link>
+                            <>
+                                <Link
+                                    to="/cart"
+                                    className="wellness-focus relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-leaf-100 bg-white text-leaf-800 transition hover:bg-leaf-50"
+                                    aria-label="Giỏ hàng"
+                                    title="Giỏ hàng"
+                                >
+                                    <Icon>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h15l-1.5 8.5a2 2 0 0 1-2 1.5H9a2 2 0 0 1-2-1.6L5 3H2" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 20h.01M18 20h.01" />
+                                    </Icon>
+                                    {cartCount > 0 && (
+                                        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary-700 px-1 text-[10px] font-black text-white ring-2 ring-white">
+                                            {cartCount > 99 ? '99+' : cartCount}
+                                        </span>
+                                    )}
+                                </Link>
+
+                                <Link
+                                    to="/notifications"
+                                    className="wellness-focus relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-leaf-100 bg-white text-leaf-800 transition hover:bg-leaf-50"
+                                    aria-label="Thông báo"
+                                    title="Thông báo"
+                                >
+                                    <Icon>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2a2 2 0 0 1-.6 1.4L4 17h5M10 20h4" />
+                                    </Icon>
+                                    {unreadCount > 0 && <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white" />}
+                                </Link>
+                            </>
                         )}
 
                         {user ? (
@@ -236,15 +285,15 @@ const Navbar = () => {
                                         </div>
                                         <div className="my-2 h-px bg-leaf-100" />
                                         <button type="button" onClick={handleLogout} className="wellness-focus w-full rounded-lg px-4 py-3 text-left text-sm font-bold text-red-600 hover:bg-red-50">
-                                            ÄÄƒng xuáº¥t
+                                            Đăng xuất
                                         </button>
                                     </DropdownPanel>
                                 )}
                             </div>
                         ) : (
                             <div className="flex items-center gap-2">
-                                <Link to="/login" className="wellness-focus rounded-lg px-4 py-2.5 text-sm font-extrabold text-gray-700 hover:bg-leaf-50 hover:text-primary-700">ÄÄƒng nháº­p</Link>
-                                <Link to="/register" className="wellness-focus rounded-lg bg-primary-700 px-4 py-2.5 text-sm font-extrabold text-white hover:bg-primary-600">ÄÄƒng kÃ½</Link>
+                                <Link to="/login" className="wellness-focus rounded-lg px-4 py-2.5 text-sm font-extrabold text-gray-700 hover:bg-leaf-50 hover:text-primary-700">Đăng nhập</Link>
+                                <Link to="/register" className="wellness-focus rounded-lg bg-primary-700 px-4 py-2.5 text-sm font-extrabold text-white hover:bg-primary-600">Đăng ký</Link>
                             </div>
                         )}
                     </div>
@@ -253,7 +302,7 @@ const Navbar = () => {
                         type="button"
                         onClick={() => setIsMobileMenuOpen((prev) => !prev)}
                         className="wellness-focus flex h-11 w-11 items-center justify-center rounded-lg border border-leaf-100 bg-white text-leaf-800 md:hidden"
-                        aria-label="Má»Ÿ menu"
+                        aria-label="Mở menu"
                     >
                         <Icon>
                             {isMobileMenuOpen ? (
@@ -275,12 +324,12 @@ const Navbar = () => {
                             ))}
 
                             <NavLink to="/ai-mix" onClick={closeAllMenus} className="wellness-focus block rounded-lg bg-primary-50 px-4 py-3 text-sm font-extrabold text-primary-700">
-                                Pha TrÃ  AI
+                                Pha Trà AI
                             </NavLink>
 
                             <div className="overflow-hidden rounded-lg border border-leaf-100">
                                 <button type="button" onClick={() => setIsMobileExploreOpen((prev) => !prev)} className="wellness-focus flex w-full items-center justify-between bg-leaf-50 px-4 py-3 text-left text-sm font-bold text-gray-700">
-                                    ThÃªm
+                                    Tìm hiểu thêm
                                     <Icon className={`h-4 w-4 transition ${isMobileExploreOpen ? 'rotate-180' : ''}`}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" />
                                     </Icon>
@@ -306,8 +355,12 @@ const Navbar = () => {
                                     </button>
                                     {isMobileUserOpen && (
                                         <div className="space-y-2 bg-white p-2">
+                                            <Link to="/cart" onClick={closeAllMenus} className="wellness-focus flex items-center justify-between rounded-lg bg-leaf-50 px-4 py-3 text-sm font-bold text-gray-700">
+                                                <span>Giỏ hàng</span>
+                                                {cartCount > 0 && <span className="rounded-full bg-primary-700 px-2 py-0.5 text-xs font-black text-white">{cartCount > 99 ? '99+' : cartCount}</span>}
+                                            </Link>
                                             <Link to="/notifications" onClick={closeAllMenus} className="wellness-focus block rounded-lg bg-leaf-50 px-4 py-3 text-sm font-bold text-gray-700">
-                                                ThÃ´ng bÃ¡o {unreadCount > 0 ? 'má»›i' : ''}
+                                                Thông báo {unreadCount > 0 ? 'mới' : ''}
                                             </Link>
                                             {userGroups.flatMap((group) => group.items).map((item) => (
                                                 <Link key={item.to} to={item.to} onClick={closeAllMenus} className={`wellness-focus block rounded-lg bg-leaf-50 px-4 py-3 text-sm font-bold ${item.accent || 'text-gray-700'}`}>
@@ -315,15 +368,15 @@ const Navbar = () => {
                                                 </Link>
                                             ))}
                                             <button type="button" onClick={handleLogout} className="wellness-focus w-full rounded-lg bg-red-50 px-4 py-3 text-left text-sm font-bold text-red-600">
-                                                ÄÄƒng xuáº¥t
+                                                Đăng xuất
                                             </button>
                                         </div>
                                     )}
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-2 gap-3">
-                                    <Link to="/login" onClick={closeAllMenus} className="wellness-focus rounded-lg bg-leaf-50 px-4 py-3 text-center text-sm font-extrabold text-gray-700">ÄÄƒng nháº­p</Link>
-                                    <Link to="/register" onClick={closeAllMenus} className="wellness-focus rounded-lg bg-primary-700 px-4 py-3 text-center text-sm font-extrabold text-white">ÄÄƒng kÃ½</Link>
+                                    <Link to="/login" onClick={closeAllMenus} className="wellness-focus rounded-lg bg-leaf-50 px-4 py-3 text-center text-sm font-extrabold text-gray-700">Đăng nhập</Link>
+                                    <Link to="/register" onClick={closeAllMenus} className="wellness-focus rounded-lg bg-primary-700 px-4 py-3 text-center text-sm font-extrabold text-white">Đăng ký</Link>
                                 </div>
                             )}
                         </div>

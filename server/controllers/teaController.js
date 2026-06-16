@@ -6,7 +6,7 @@ const Tea = require('../models/Tea');
 const getTeas = async (req, res) => {
     try {
         const filter = ['Admin', 'Staff'].includes(req.user?.role) ? {} : { isPublished: true };
-        const teas = await Tea.find(filter).sort({ createdAt: -1 });
+        const teas = await Tea.find(filter).populate('ingredients', 'name image').sort({ createdAt: -1 });
         res.json(teas);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -18,7 +18,7 @@ const getTeas = async (req, res) => {
 // @access  Public
 const getTeaById = async (req, res) => {
     try {
-        const tea = await Tea.findById(req.params.id).populate('ingredients', 'name description flavorProfile benefits');
+        const tea = await Tea.findById(req.params.id).populate('ingredients', 'name image description flavorProfile benefits');
 
         if (tea) {
             if (!tea.isPublished && !['Admin', 'Staff'].includes(req.user?.role)) {

@@ -148,7 +148,7 @@ const AdminPostsPage = () => {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <MetricCard label="Tổng bài viết" value={posts.length} caption="Tất cả trạng thái" tone="green" />
-                <MetricCard label="Đã xuất bản" value={publishedCount} caption="Hiển thị ngoài blog" tone="purple" />
+                <MetricCard label="Đã xuất bản" value={publishedCount} caption="Hiển thị ngoài blog" tone="teal" />
                 <MetricCard label="Bản nháp" value={draftCount} caption="Cần hoàn thiện" tone="yellow" />
             </div>
 

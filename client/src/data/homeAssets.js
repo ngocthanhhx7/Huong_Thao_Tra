@@ -1,0 +1,43 @@
+export const homeAssets = {
+  heroPack: '/assets/home/products/tra-hoa-viet-pack-hero.svg',
+  cup: '/assets/home/products/tea-cup-steam.svg',
+  products: {
+    nguNgon: '/assets/home/products/pack-ngu-ngon.svg',
+    giamCangThang: '/assets/home/products/pack-giam-cang-thang.svg',
+    thanhLoc: '/assets/home/products/pack-thanh-loc.svg',
+    nangLuong: '/assets/home/products/pack-nang-luong.svg',
+  },
+  herbs: {
+    hoaCuc: '/assets/home/herbs/hoa-cuc.svg',
+    tamSen: '/assets/home/herbs/tam-sen.svg',
+    bacHa: '/assets/home/herbs/bac-ha.svg',
+    oaiHuong: '/assets/home/herbs/oai-huong.svg',
+    atiso: '/assets/home/herbs/atiso.svg',
+    laSen: '/assets/home/herbs/la-sen.svg',
+    gung: '/assets/home/herbs/gung.svg',
+    sa: '/assets/home/herbs/sa.svg',
+    traXanh: '/assets/home/herbs/tra-xanh.svg',
+  },
+  textures: {
+    paper: '/assets/home/textures/paper-grain.svg',
+    hologram: '/assets/home/textures/hologram-noise.svg',
+    mist: '/assets/home/textures/herbal-mist.svg',
+  },
+  icons: {
+    sleep: '/assets/home/icons/sleep.svg',
+    stress: '/assets/home/icons/stress.svg',
+    energy: '/assets/home/icons/energy.svg',
+    detox: '/assets/home/icons/detox.svg',
+    scan: '/assets/home/icons/scan.svg',
+    leaf: '/assets/home/icons/leaf.svg',
+    score: '/assets/home/icons/score.svg',
+    seal: '/assets/home/icons/seal.svg',
+  },
+  cityDetailed: {
+    busy: '/assets/home/city-busy-detailed.png',
+    healing: '/assets/home/city-healing-detailed.png',
+    charBusy: '/assets/home/character-busy-detailed.png',
+    charHealing: '/assets/home/character-healing-detailed.png',
+    teapotCup: '/assets/home/products/teapot-cup-detailed.png',
+  },
+};

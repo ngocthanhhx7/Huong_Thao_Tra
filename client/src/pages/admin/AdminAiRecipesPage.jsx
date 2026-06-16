@@ -128,7 +128,7 @@ const AdminAiRecipesPage = () => {
             {error && <ErrorState message={error} onRetry={fetchRecipes} />}
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <MetricCard label="Tổng công thức" value={recipes.length} caption="Tất cả vòng đời" tone="purple" />
+                <MetricCard label="Tổng công thức" value={recipes.length} caption="Tất cả vòng đời" tone="teal" />
                 <MetricCard label="Chờ duyệt bán" value={submittedCount} caption="Cần admin/staff xử lý" tone={submittedCount > 0 ? 'yellow' : 'slate'} />
                 <MetricCard label="Đã duyệt" value={approvedCount} caption="Đã tạo sản phẩm trong catalog" tone="green" />
             </div>

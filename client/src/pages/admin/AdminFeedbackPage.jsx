@@ -28,7 +28,7 @@ const statusLabels = {
 
 const statusTones = {
     new: 'yellow',
-    in_review: 'purple',
+    in_review: 'teal',
     resolved: 'green',
     closed: 'slate',
 };
@@ -114,7 +114,7 @@ const AdminFeedbackPage = () => {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <MetricCard label="Tổng feedback" value={feedback.length} caption="Tất cả danh mục" tone="green" />
                 <MetricCard label="Đang mở" value={openCount} caption="new hoặc in_review" tone={openCount > 0 ? 'yellow' : 'slate'} />
-                <MetricCard label="Gắn sản phẩm" value={productCount} caption="Có tea liên quan" tone="purple" />
+                <MetricCard label="Gắn sản phẩm" value={productCount} caption="Có tea liên quan" tone="teal" />
             </div>
 
             <AdminPanel

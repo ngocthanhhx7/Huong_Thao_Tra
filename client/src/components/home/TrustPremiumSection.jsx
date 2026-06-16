@@ -6,7 +6,7 @@ const TrustPremiumSection = () => (
 
     <div className="relative z-10 mx-auto max-w-7xl">
       <div className="reveal mx-auto mb-14 max-w-4xl text-center">
-        <span className="chapter-kicker chapter-kicker-herbal">
+        <span className="reveal chapter-kicker chapter-kicker-herbal">
           {storyChapters.trust.label}
         </span>
         <h2 className="mt-6 font-display-h1 text-4xl leading-[1.1] text-[#17351f] md:text-6xl">

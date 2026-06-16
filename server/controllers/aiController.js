@@ -2,6 +2,7 @@ const { SchemaType } = require('@google/generative-ai');
 const AISuggestion = require('../models/AISuggestion');
 const Tea = require('../models/Tea');
 const Ingredient = require('../models/Ingredient');
+const AiMixConfig = require('../models/AiMixConfig');
 const Cart = require('../models/Cart');
 const { getGeminiModel } = require('../config/gemini');
 const { createNotification } = require('../utils/notificationHelper');
@@ -194,7 +195,32 @@ const getOrCreateCart = async (userId) => {
 const aiMixTea = async (req, res) => {
     try {
         const userInput = normalizeAiInput(req.body);
-        const prompt = `${MIX_TEA_SYSTEM}
+
+        // Fetch AI Mix Config from database or fallback to defaults
+        let config = await AiMixConfig.findOne({});
+        const systemInstruction = config?.systemInstruction || HERBAL_EXPERT_SYSTEM;
+        const formulaRules = config?.formulaRules || 
+            `LOGIC TẠO CÔNG THỨC TRÀ:
+Mỗi công thức phải tuân theo cấu trúc: 1-2 Core Herb + 1-3 Support Herb + 1 Flavor Herb. Tổng cộng tối thiểu 5 nguyên liệu. Danh sách thảo mộc trong cấu trúc PHẢI trùng khớp 100% với danh sách nguyên liệu pha trà.
+
+QUY TẮC DỊ ỨNG: Nếu người dùng liệt kê nguyên liệu cần tránh/dị ứng, TUYỆT ĐỐI không đưa nguyên liệu đó vào công thức.
+
+ƯU TIÊN AN TOÀN: Thảo mộc an toàn, liều lượng hợp lý, kết hợp hài hòa.`;
+
+        // Fetch active ingredients for AI Mix
+        const activeIngredients = await Ingredient.find({ isUsedInAIMix: true }).select('name');
+        const allowedIngredientsList = activeIngredients.map((i) => i.name).join(', ');
+
+        const dynamicSystemPrompt = `${systemInstruction}
+
+${formulaRules}
+
+DANH SÁCH NGUYÊN LIỆU ĐƯỢC PHÉP SỬ DỤNG:
+[${allowedIngredientsList}]
+
+LƯU Ý QUAN TRỌNG: Bạn CHỈ ĐƯỢC PHÉP chọn nguyên liệu nằm trong danh sách được phép sử dụng ở trên để tạo công thức trà. Tuyệt đối không tự ý thêm các nguyên liệu khác không có trong danh sách này.`;
+
+        const prompt = `${dynamicSystemPrompt}
 
 INPUT TỪ NGƯỜI DÙNG:
 ${JSON.stringify(userInput, null, 2)}

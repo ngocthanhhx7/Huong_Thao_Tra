@@ -25,8 +25,11 @@ import AdminUsersPage from './pages/admin/AdminUsersPage';
 import AdminTeasPage from './pages/admin/AdminTeasPage';
 import AdminIngredientsPage from './pages/admin/AdminIngredientsPage';
 import AdminAnalyticsPage from './pages/admin/AdminAnalyticsPage';
+import AdminHomeSettingsPage from './pages/admin/AdminHomeSettingsPage';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Ingredients from './pages/Ingredients';
+import IngredientDetail from './pages/IngredientDetail';
 import NotFound from './pages/errors/NotFound';
 import ServerError from './pages/errors/ServerError';
 import Forbidden from './pages/errors/Forbidden';
@@ -47,6 +50,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/teas" element={<TeaList />} />
           <Route path="/teas/:id" element={<TeaDetail />} />
+          <Route path="/ingredients" element={<Ingredients />} />
+          <Route path="/ingredients/:id" element={<IngredientDetail />} />
           <Route path="/ai-mix" element={<AIMixTea />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/ai-history" element={<AIHistory />} />
@@ -68,7 +73,9 @@ function App() {
             <Route path="teas" element={<AdminTeasPage />} />
             <Route path="ingredients" element={<AdminIngredientsPage />} />
             <Route path="analytics" element={<AdminAnalyticsPage />} />
+            <Route path="home-settings" element={<AdminHomeSettingsPage />} />
           </Route>
+
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           {/* Error pages */}

@@ -5,10 +5,16 @@ import StoryCityScene from './StoryCityScene';
 import { heroContent } from '../../data/homeStoryData';
 import { useMouseParallax } from '../../hooks/useMouseParallax';
 
-const HeroCinematic = ({ mood = 'busy', growth = 0 }) => {
+const HeroCinematic = ({
+  mood = 'busy',
+  growth = 0,
+  featuredTea = null,
+}) => {
   const containerRef = useRef(null);
   const mouseOffset = useMouseParallax(true);
   const [glowStyle, setGlowStyle] = useState({ left: '50%', top: '35%', opacity: 0 });
+
+
 
   useEffect(() => {
     const container = containerRef.current;
@@ -62,7 +68,7 @@ const HeroCinematic = ({ mood = 'busy', growth = 0 }) => {
           <div className="hero-sequence mt-8 flex flex-col gap-3 sm:flex-row">
             <Link to="/ai-mix" className="wellness-focus home-btn home-btn-primary">
               {heroContent.primaryCta}
-              <span aria-hidden="true">→</span>
+              <span className="ml-1" aria-hidden="true">→</span>
             </Link>
             <Link to="/teas" className="wellness-focus home-btn home-btn-secondary">
               {heroContent.secondaryCta}
@@ -90,7 +96,12 @@ const HeroCinematic = ({ mood = 'busy', growth = 0 }) => {
         </div>
 
         <div className="city-sequence relative">
-          <StoryCityScene mouseOffset={mouseOffset} mood={mood} growth={growth} />
+          <StoryCityScene
+            mouseOffset={mouseOffset}
+            mood={mood}
+            growth={growth}
+            featuredTea={featuredTea}
+          />
         </div>
       </div>
     </section>
@@ -100,6 +111,7 @@ const HeroCinematic = ({ mood = 'busy', growth = 0 }) => {
 HeroCinematic.propTypes = {
   mood: PropTypes.oneOf(['busy', 'healing']),
   growth: PropTypes.number,
+  featuredTea: PropTypes.object,
 };
 
 export default HeroCinematic;

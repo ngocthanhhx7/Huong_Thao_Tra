@@ -10,7 +10,7 @@ const buttonVariants = {
 
 const badgeTones = {
     green: 'bg-[#E5F8D7] text-[#2F7D14] border-[#A9E878]',
-    purple: 'bg-[#F3E6FF] text-[#7A28A9] border-[#DDB7FF]',
+    teal: 'bg-[#E6FFFA] text-[#0D9488] border-[#B2F5EA]',
     yellow: 'bg-[#FFF4BF] text-[#8A5A00] border-[#FFE06B]',
     red: 'bg-[#FFE5E5] text-[#A62929] border-[#FFB6B6]',
     blue: 'bg-[#E5F0FF] text-[#2455A6] border-[#BBD3FF]',
@@ -72,7 +72,7 @@ MetricCard.propTypes = {
     label: PropTypes.string.isRequired,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     caption: PropTypes.string,
-    tone: PropTypes.oneOf(['green', 'purple', 'yellow', 'red', 'blue', 'slate']),
+    tone: PropTypes.oneOf(['green', 'teal', 'yellow', 'red', 'blue', 'slate']),
 };
 
 export const StatusBadge = ({ children, tone = 'slate' }) => (

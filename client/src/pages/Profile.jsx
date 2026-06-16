@@ -119,9 +119,9 @@ const Profile = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-5xl mx-auto">
-                <div className="bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden border border-gray-100">
+        <div className="luxury-page py-12 px-4 sm:px-6 lg:px-8">
+            <div className="luxury-container max-w-5xl mx-auto">
+                <div className="luxury-card overflow-hidden animate-soft-rise">
                     <div className="h-40 bg-gradient-to-r from-primary-700 via-primary-600 to-primary-500 relative">
                         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 mix-blend-overlay"></div>
                         <div className="absolute -bottom-16 left-8 sm:left-12 z-10">
@@ -166,7 +166,7 @@ const Profile = () => {
                             <div className={`mb-8 p-4 rounded-2xl flex items-center gap-3 animate-in fade-in slide-in-from-top-2 font-medium ${updateMsg.includes('thành công') ? 'bg-green-50/50 text-green-700 border border-green-100' : 'bg-red-50/50 text-red-700 border border-red-100'
                                 }`}>
                                 <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    {updateMsg.includes('thành công') 
+                                    {updateMsg.includes('thành công')
                                         ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                         : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     }
@@ -260,7 +260,7 @@ const Profile = () => {
                                             <button
                                                 type="button"
                                                 onClick={() => setIsEditing(true)}
-                                                className="flex-1 bg-gradient-to-r from-gray-900 to-gray-800 text-white py-4 px-6 rounded-2xl font-bold hover:shadow-xl shadow-gray-900/20 active:scale-[0.98] transition-all duration-300"
+                                                className="luxury-btn luxury-btn-primary flex-1 py-4 px-6 rounded-2xl"
                                             >
                                                 Chỉnh Sửa Hồ Sơ
                                             </button>
@@ -269,14 +269,14 @@ const Profile = () => {
                                                 <button
                                                     type="button"
                                                     onClick={() => setIsEditing(false)}
-                                                    className="flex-1 bg-white text-gray-700 py-4 px-6 rounded-2xl font-bold border-2 border-gray-200 hover:bg-gray-50 active:scale-[0.98] transition-all duration-300"
+                                                    className="luxury-btn luxury-btn-soft flex-1 py-4 px-6 rounded-2xl"
                                                 >
                                                     Hủy
                                                 </button>
                                                 <button
                                                     type="submit"
                                                     disabled={loading}
-                                                    className="flex-1 bg-gradient-to-r from-primary-600 to-primary-500 text-white py-4 px-6 rounded-2xl font-bold hover:shadow-xl shadow-primary-500/30 active:scale-[0.98] transition-all duration-300 disabled:opacity-70 flex justify-center items-center"
+                                                    className="luxury-btn luxury-btn-primary flex-1 py-4 px-6 rounded-2xl disabled:opacity-70"
                                                 >
                                                     {loading ? (
                                                         <span className="flex items-center gap-2">

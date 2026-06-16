@@ -1,4 +1,4 @@
-﻿import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const HeroBanner = () => {
     return (
@@ -9,26 +9,26 @@ const HeroBanner = () => {
             <div className="relative mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
                 <div>
                     <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-white/85 px-4 py-2 text-sm font-extrabold text-emerald-800 shadow-sm">
-                        <span>ðŸŒ¿</span> Wellness tea powered by AI
+                        <span>🌿</span> Wellness tea powered by AI
                     </p>
                     <h1 className="font-display-h1 max-w-4xl text-5xl leading-[0.95] text-[#27451f] md:text-7xl">
-                        TrÃ  tháº£o má»™c Ä‘Æ°á»£c mix riÃªng cho nhá»‹p sá»‘ng cá»§a báº¡n
+                        Trà thảo mộc được mix riêng cho nhịp sống của bạn
                     </h1>
                     <p className="mt-6 max-w-2xl text-base leading-8 text-gray-600 md:text-lg">
-                        Trà Hoa Việt káº¿t há»£p nguyÃªn liá»‡u tá»± nhiÃªn, gu thÆ°á»Ÿng trÃ  vÃ  AI tÆ° váº¥n Ä‘á»ƒ táº¡o cÃ´ng thá»©c cÃ¢n báº±ng cho giáº¥c ngá»§, tinh tháº§n, tiÃªu hÃ³a vÃ  thÃ³i quen háº±ng ngÃ y.
+                        Trà Hoa Việt kết hợp nguyên liệu tự nhiên, gu thưởng trà và AI tư vấn để tạo công thức cân bằng cho giấc ngủ, tinh thần, tiêu hóa và thói quen hằng ngày.
                     </p>
 
                     <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                         <Link to="/ai-mix" className="wellness-focus inline-flex min-h-14 items-center justify-center rounded-2xl bg-gradient-to-r from-emerald-800 to-lime-600 px-7 py-4 text-base font-extrabold text-white shadow-lg shadow-emerald-200 transition hover:-translate-y-0.5">
-                            Thá»­ AI Mix TrÃ  ngay
+                            Thử AI Mix Trà ngay
                         </Link>
                         <Link to="/teas" className="wellness-focus inline-flex min-h-14 items-center justify-center rounded-2xl border border-emerald-100 bg-white/90 px-7 py-4 text-base font-extrabold text-[#27451f] transition hover:bg-emerald-50">
-                            KhÃ¡m phÃ¡ cá»­a hÃ ng
+                            Khám phá cửa hàng
                         </Link>
                     </div>
 
                     <div className="mt-8 grid max-w-2xl grid-cols-3 gap-3">
-                        {[['2 phÃºt', 'tráº£ lá»i nhanh'], ['13+', 'tiÃªu chÃ­ cÃ¡ nhÃ¢n'], ['100%', 'trÃ¡nh nguyÃªn liá»‡u ká»µ']].map(([value, label]) => (
+                        {[['2 phút', 'trả lời nhanh'], ['13+', 'tiêu chí cá nhân'], ['100%', 'tránh nguyên liệu kỵ']].map(([value, label]) => (
                             <div key={value} className="rounded-3xl border border-white/80 bg-white/70 p-4 shadow-sm backdrop-blur">
                                 <p className="text-2xl font-black text-emerald-800">{value}</p>
                                 <p className="mt-1 text-xs font-bold text-gray-500">{label}</p>
@@ -40,18 +40,18 @@ const HeroBanner = () => {
                 <div className="relative">
                     <div className="absolute -left-12 -top-10 hidden rounded-3xl bg-white/90 p-4 shadow-xl shadow-emerald-100 md:block z-10">
                         <p className="text-xs font-extrabold uppercase text-gray-400">Step 01</p>
-                        <p className="font-black text-emerald-800">Chá»n má»¥c tiÃªu</p>
+                        <p className="font-black text-emerald-800">Chọn mục tiêu</p>
                     </div>
                     <div className="absolute -right-12 bottom-12 hidden rounded-3xl bg-[#fff8e6] p-4 shadow-xl shadow-amber-100 md:block z-10">
                         <p className="text-xs font-extrabold uppercase text-amber-600">AI result</p>
-                        <p className="font-black text-[#6f4b16]">CÃ´ng thá»©c cÃ¢n báº±ng</p>
+                        <p className="font-black text-[#6f4b16]">Công thức cân bằng</p>
                     </div>
                     <div className="overflow-hidden rounded-[40px] border border-white/80 bg-white/75 p-5 shadow-2xl shadow-emerald-100/60 backdrop-blur">
                     <div className="rounded-[32px] bg-gradient-to-br from-[#edf8df] via-white to-[#fff3d8] p-6">
                         <div className="mb-6 flex items-center justify-between gap-4">
                             <div>
-                                <p className="text-sm font-black uppercase text-emerald-700">Gá»£i Ã½ hÃ´m nay</p>
-                                <h2 className="font-display-h1 mt-1 text-4xl text-[#27451f]">TrÃ  ngá»§ ngon dá»‹u nháº¹</h2>
+                                <p className="text-sm font-black uppercase text-emerald-700">Gợi ý hôm nay</p>
+                                <h2 className="font-display-h1 mt-1 text-4xl text-[#27451f]">Trà ngủ ngon dịu nhẹ</h2>
                             </div>
                             <span className="rounded-2xl bg-white px-4 py-3 text-sm font-extrabold text-emerald-700 ring-1 ring-emerald-100">AI</span>
                         </div>
@@ -64,8 +64,8 @@ const HeroBanner = () => {
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M8 8V6a4 4 0 0 1 8 0v2M9 13h6" />
                                     </svg>
                                 </div>
-                                <p className="text-sm font-bold text-gray-500">Má»¥c tiÃªu</p>
-                                <p className="mt-1 text-lg font-black text-[#27451f]">Ngá»§ ngon hÆ¡n</p>
+                                <p className="text-sm font-bold text-gray-500">Mục tiêu</p>
+                                <p className="mt-1 text-lg font-black text-[#27451f]">Ngủ ngon hơn</p>
                             </div>
                             <div className="rounded-3xl border border-amber-100 bg-white/90 p-4">
                                 <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
@@ -73,15 +73,15 @@ const HeroBanner = () => {
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18M6 7c4 0 6 2 6 6-4 0-6-2-6-6ZM18 7c-4 0-6 2-6 6 4 0 6-2 6-6Z" />
                                     </svg>
                                 </div>
-                                <p className="text-sm font-bold text-gray-500">HÆ°Æ¡ng vá»‹</p>
-                                <p className="mt-1 text-lg font-black text-[#27451f]">Hoa cÃºc Â· tÃ¡o Ä‘á»</p>
+                                <p className="text-sm font-bold text-gray-500">Hương vị</p>
+                                <p className="mt-1 text-lg font-black text-[#27451f]">Hoa cúc · táo đỏ</p>
                             </div>
                         </div>
 
                         <div className="mt-4 rounded-3xl border border-emerald-100 bg-white/90 p-4">
-                            <p className="text-sm font-bold text-gray-500">ThÃ nh pháº§n gá»£i Ã½</p>
+                            <p className="text-sm font-bold text-gray-500">Thành phần gợi ý</p>
                             <div className="mt-3 flex flex-wrap gap-2">
-                                {['Hoa cÃºc', 'TÃ¡o Ä‘á»', 'LÃ¡ báº¡c hÃ ', 'Cam tháº£o'].map((item) => (
+                                {['Hoa cúc', 'Táo đỏ', 'Lá bạc hà', 'Cam thảo'].map((item) => (
                                     <span key={item} className="rounded-full bg-emerald-50 px-3 py-2 text-sm font-extrabold text-emerald-700">{item}</span>
                                 ))}
                             </div>

@@ -29,7 +29,7 @@ const ProblemChapter = () => (
 
         <div className="diagnostic-core">
           <div>
-            <span>Trạng thái đô thị</span>
+            <span>Trạng thái cơ thể</span>
             <strong>Quá tải</strong>
           </div>
           <div>

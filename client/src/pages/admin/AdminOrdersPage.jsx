@@ -31,7 +31,7 @@ const statusLabels = {
 const statusTones = {
     Pending: 'yellow',
     Confirmed: 'blue',
-    Processing: 'purple',
+    Processing: 'teal',
     Shipping: 'green',
     Delivered: 'slate',
 };
@@ -107,7 +107,7 @@ const AdminOrdersPage = () => {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <MetricCard label="Tổng đơn" value={orders.length} caption="Tất cả trạng thái" tone="green" />
-                <MetricCard label="Đã thanh toán" value={paidCount} caption={formatCurrency(revenue)} tone="purple" />
+                <MetricCard label="Đã thanh toán" value={paidCount} caption={formatCurrency(revenue)} tone="teal" />
                 <MetricCard label="Chờ xác nhận" value={pendingCount} caption="Cần ưu tiên xử lý" tone={pendingCount > 0 ? 'yellow' : 'slate'} />
             </div>
 

@@ -26,7 +26,7 @@ const FinalWellnessCTA = () => (
       <div className="reveal mt-10 flex flex-col justify-center gap-4 sm:flex-row">
         <Link to="/ai-mix" className="wellness-focus home-btn home-btn-primary">
           Dùng AI tư vấn ngay
-          <span aria-hidden="true">→</span>
+          <span className="ml-1" aria-hidden="true">→</span>
         </Link>
         <Link to="/teas" className="wellness-focus home-btn home-btn-secondary">
           Khám phá sản phẩm

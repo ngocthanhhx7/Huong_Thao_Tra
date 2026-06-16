@@ -19,20 +19,30 @@ import {
 
 const AdminTeasPage = () => {
     const [teas, setTeas] = useState([]);
+    const [allIngredients, setAllIngredients] = useState([]);
     const [search, setSearch] = useState('');
     const [publishFilter, setPublishFilter] = useState('all');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [savingId, setSavingId] = useState('');
+    const [editingIngredientsTeaId, setEditingIngredientsTeaId] = useState('');
+    const [ingSearchText, setIngSearchText] = useState('');
 
     const fetchTeas = async () => {
         try {
             setLoading(true);
             setError('');
-            const { data } = await api.get('/admin/teas');
-            setTeas(data || []);
+            
+            // Fetch both teas and catalog ingredients in parallel
+            const [teasRes, ingRes] = await Promise.all([
+                api.get('/admin/teas'),
+                api.get('/admin/ingredients'),
+            ]);
+
+            setTeas(teasRes.data || []);
+            setAllIngredients(ingRes.data || []);
         } catch (err) {
-            setError(err.response?.data?.message || 'Không thể tải sản phẩm trà.');
+            setError(err.response?.data?.message || 'Không thể tải dữ liệu quản trị.');
         } finally {
             setLoading(false);
         }
@@ -49,14 +59,19 @@ const AdminTeasPage = () => {
     const updateTea = async (tea) => {
         try {
             setSavingId(tea._id);
+            const ingredientIds = (tea.ingredients || []).map((ing) =>
+                typeof ing === 'object' ? ing._id : ing
+            );
             await api.patch(`/admin/teas/${tea._id}`, {
                 name: tea.name,
                 image: tea.image,
                 price: tea.price,
                 stock: tea.stock,
                 isPublished: tea.isPublished,
+                ingredients: ingredientIds,
             });
             await fetchTeas();
+            setEditingIngredientsTeaId('');
         } catch (err) {
             setError(err.response?.data?.message || 'Không thể lưu sản phẩm trà.');
         } finally {
@@ -91,7 +106,7 @@ const AdminTeasPage = () => {
             <AdminPageHeader
                 eyebrow="Catalog"
                 title="Quản lý sản phẩm trà"
-                description="Cập nhật tên, ảnh, giá, tồn kho và trạng thái hiển thị của từng sản phẩm trong cửa hàng."
+                description="Cập nhật tên, ảnh, giá, tồn kho, liên kết nguyên liệu và trạng thái hiển thị của từng sản phẩm trong cửa hàng."
                 meta={
                     <>
                         <StatusBadge tone="green">{publishedCount} đang bán</StatusBadge>
@@ -104,7 +119,7 @@ const AdminTeasPage = () => {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <MetricCard label="Tổng sản phẩm" value={teas.length} caption="Bao gồm draft" tone="green" />
-                <MetricCard label="Đang bán" value={publishedCount} caption="Hiển thị ngoài shop" tone="purple" />
+                <MetricCard label="Đang bán" value={publishedCount} caption="Hiển thị ngoài shop" tone="teal" />
                 <MetricCard label="Công thức AI" value={aiCount} caption="Từ luồng duyệt AI" tone="blue" />
             </div>
 
@@ -134,9 +149,77 @@ const AdminTeasPage = () => {
                                         <FormField label="Tên sản phẩm">
                                             <input value={tea.name || ''} onChange={(e) => updateTeaField(tea._id, { name: e.target.value })} className={adminInputClass} />
                                         </FormField>
-                                        <p className="line-clamp-2 text-sm leading-6 text-slate-600">
-                                            {tea.ingredients?.map((item) => item.name).join(', ') || 'Chưa gắn nguyên liệu'}
-                                        </p>
+                                        
+                                        {/* Linked Ingredients Multi-Select Selector */}
+                                        <div className="space-y-1">
+                                            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Nguyên liệu liên kết</span>
+                                            <div className="flex flex-wrap gap-1.5 mb-2">
+                                                {tea.ingredients && tea.ingredients.length > 0 ? (
+                                                    tea.ingredients.map((ing) => (
+                                                        <StatusBadge key={ing._id} tone="slate">
+                                                            {ing.name}
+                                                        </StatusBadge>
+                                                    ))
+                                                ) : (
+                                                    <span className="text-xs text-slate-500 italic">Chưa gắn nguyên liệu</span>
+                                                )}
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setEditingIngredientsTeaId(editingIngredientsTeaId === tea._id ? '' : tea._id);
+                                                    setIngSearchText('');
+                                                }}
+                                                className="text-xs text-primary-700 hover:text-primary-900 font-extrabold flex items-center gap-1 bg-primary-50 px-2.5 py-1 rounded-lg"
+                                            >
+                                                {editingIngredientsTeaId === tea._id ? '✕ Đóng bảng chọn' : '⚙ Liên kết nguyên liệu'}
+                                            </button>
+
+                                            {editingIngredientsTeaId === tea._id && (
+                                                <div className="mt-3 bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2 animate-soft-rise max-w-md shadow-sm">
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Tìm nhanh nguyên liệu..."
+                                                        value={ingSearchText}
+                                                        onChange={(e) => setIngSearchText(e.target.value)}
+                                                        className="w-full text-xs p-2 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-primary-700"
+                                                    />
+                                                    <div className="max-h-40 overflow-y-auto divide-y divide-slate-100 pr-1 text-xs">
+                                                        {allIngredients
+                                                            .filter((ing) => ing.name?.toLowerCase().includes(ingSearchText.toLowerCase()))
+                                                            .map((ing) => {
+                                                                const isLinked = tea.ingredients?.some(
+                                                                    (linked) => (typeof linked === 'object' ? linked._id : linked) === ing._id
+                                                                );
+                                                                return (
+                                                                    <label
+                                                                        key={ing._id}
+                                                                        className="flex items-center gap-2 py-2 cursor-pointer hover:bg-slate-100 px-1 rounded transition-colors"
+                                                                    >
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            checked={!!isLinked}
+                                                                            onChange={() => {
+                                                                                let updatedIngredients = [...(tea.ingredients || [])];
+                                                                                if (isLinked) {
+                                                                                    updatedIngredients = updatedIngredients.filter(
+                                                                                        (linked) => (typeof linked === 'object' ? linked._id : linked) !== ing._id
+                                                                                    );
+                                                                                } else {
+                                                                                    updatedIngredients.push(ing);
+                                                                                }
+                                                                                updateTeaField(tea._id, { ingredients: updatedIngredients });
+                                                                            }}
+                                                                            className="w-3.5 h-3.5 rounded text-primary-600 border-slate-300 focus:ring-primary-500"
+                                                                        />
+                                                                        <span className="font-bold text-slate-700">{ing.name}</span>
+                                                                    </label>
+                                                                );
+                                                            })}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
 

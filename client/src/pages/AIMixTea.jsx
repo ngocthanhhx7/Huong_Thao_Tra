@@ -286,6 +286,7 @@ const AIMixTea = () => {
         try {
             const res = await api.post('/ai/mix-tea/buy-now', { result, inputParams: buildInputParams(), suggestionId: savedSuggestionId || undefined });
             setSavedSuggestionId(res.data.suggestion?._id || savedSuggestionId);
+            window.dispatchEvent(new Event('cart:updated'));
             navigate('/cart');
         } catch (err) { setError(err.response?.data?.message || 'Không thể thêm công thức AI vào giỏ hàng.'); } finally { setActionLoading(''); }
     };

@@ -45,7 +45,7 @@ const AdminDashboard = () => {
 
     const quickLinks = [
         { to: '/admin/orders', label: 'Xử lý đơn hàng', note: 'Cập nhật trạng thái vận chuyển', tone: 'green' },
-        { to: '/admin/ai-recipes', label: 'Duyệt công thức AI', note: 'Định giá và xuất bản blend', tone: 'purple' },
+        { to: '/admin/ai-recipes', label: 'Duyệt công thức AI', note: 'Định giá và xuất bản blend', tone: 'teal' },
         { to: '/admin/posts', label: 'Quản lý bài viết', note: 'Soạn nội dung cho cộng đồng', tone: 'blue' },
         { to: '/admin/feedback', label: 'Xử lý feedback', note: 'Trả lời và đóng yêu cầu', tone: 'yellow' },
         { to: '/admin/analytics', label: 'Xem phân tích', note: 'Doanh thu, top bán chạy, tồn kho', tone: 'slate' },
@@ -61,7 +61,7 @@ const AdminDashboard = () => {
                 meta={
                     <>
                         <StatusBadge tone="green">Live API</StatusBadge>
-                        {overview?.role && <StatusBadge tone="purple">{overview.role}</StatusBadge>}
+                        {overview?.role && <StatusBadge tone="teal">{overview.role}</StatusBadge>}
                     </>
                 }
             />
@@ -73,7 +73,7 @@ const AdminDashboard = () => {
             ) : (
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
                     <MetricCard label="Người dùng" value={overview?.totalUsers || 0} caption={`${overview?.totalTeas || 0} sản phẩm đang quản lý`} tone="green" />
-                    <MetricCard label="Đơn đã thanh toán" value={analytics?.totalOrders || 0} caption="Chỉ tính đơn đã paid" tone="purple" />
+                    <MetricCard label="Đơn đã thanh toán" value={analytics?.totalOrders || 0} caption="Chỉ tính đơn đã paid" tone="teal" />
                     <MetricCard label="Doanh thu" value={formatCurrency(analytics?.totalRevenue)} caption="Theo dữ liệu thanh toán" tone="yellow" />
                     <MetricCard label="Tồn kho thấp" value={analytics?.lowStockTeas || 0} caption={`${overview?.totalAITeas || 0} công thức AI`} tone={(analytics?.lowStockTeas || 0) > 0 ? 'red' : 'blue'} />
                 </div>
@@ -105,7 +105,7 @@ const AdminDashboard = () => {
                 <AdminPanel title="Đi nhanh đến module" description="Các luồng admin thường dùng được tách rõ để thao tác nhanh.">
                     <div className="space-y-3">
                         {quickLinks.map((item) => (
-                            <AdminLinkButton key={item.to} to={item.to} variant={item.tone === 'purple' ? 'secondary' : 'neutral'} className="w-full justify-start">
+                            <AdminLinkButton key={item.to} to={item.to} variant={item.tone === 'teal' ? 'secondary' : 'neutral'} className="w-full justify-start">
                                 <span className="text-left">
                                     <span className="block">{item.label}</span>
                                     <span className="block text-xs font-bold opacity-75">{item.note}</span>

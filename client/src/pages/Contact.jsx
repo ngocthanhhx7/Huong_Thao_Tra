@@ -32,7 +32,7 @@ const Contact = () => {
     };
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="luxury-page">
             {/* Hero Section */}
             <section className="relative pt-28 pb-20 px-4 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-amber-50 -z-10"></div>
@@ -40,8 +40,8 @@ const Contact = () => {
                 <div className="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-[600px] h-[600px] bg-amber-400/10 rounded-full blur-[100px] -z-10"></div>
 
                 <div className="max-w-4xl mx-auto text-center relative z-10">
-                    <span className="inline-block py-1.5 px-4 rounded-full bg-primary-50 text-primary-700 font-bold text-sm tracking-wide uppercase mb-6 border border-primary-100">HỖ TRỢ TRỰC TUYẾN</span>
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6 tracking-tight">
+                    <span className="luxury-kicker mb-6">HỖ TRỢ TRỰC TUYẾN</span>
+                    <h1 className="font-display-h1 text-5xl md:text-7xl text-[#27451f] mb-6 tracking-tight animate-soft-rise">
                         Liên hệ với chúng tôi
                     </h1>
                     <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed">
@@ -52,11 +52,11 @@ const Contact = () => {
             </section>
 
             {/* Contact Section */}
-            <section className="py-24 px-4 bg-gray-50/50">
-                <div className="max-w-6xl mx-auto">
+            <section className="py-24 px-4">
+                <div className="luxury-container max-w-6xl mx-auto">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
                         {/* Contact Info */}
-                        <div className="bg-white rounded-[2rem] p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 h-full">
+                        <div className="luxury-card p-10 h-full animate-soft-rise">
                             <h2 className="text-3xl font-extrabold text-gray-900 mb-8 tracking-tight">Thông tin liên hệ</h2>
 
                             <div className="space-y-8">
@@ -120,7 +120,7 @@ const Contact = () => {
                         </div>
 
                         {/* Contact Form */}
-                        <div className="bg-white rounded-[2rem] p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 h-full">
+                        <div className="luxury-card p-10 h-full animate-soft-rise-delay">
                             <h2 className="text-3xl font-extrabold text-gray-900 mb-8 tracking-tight">Gửi tin nhắn</h2>
 
                             <form onSubmit={handleSubmit} className="space-y-6">
@@ -187,7 +187,7 @@ const Contact = () => {
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="w-full bg-gradient-to-r from-primary-600 to-primary-500 text-white py-4 px-6 rounded-2xl font-bold text-lg hover:from-primary-700 hover:to-primary-600 shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 transform hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
+                                    className="luxury-btn luxury-btn-primary w-full py-4 px-6 rounded-2xl text-lg disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
                                 >
                                     {isSubmitting ? (
                                         <>

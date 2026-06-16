@@ -18,7 +18,7 @@ import {
 } from '../../components/admin/adminUtils';
 
 const roleTones = {
-    Admin: 'purple',
+    Admin: 'teal',
     Staff: 'green',
     Customer: 'slate',
 };
@@ -87,7 +87,7 @@ const AdminUsersPage = () => {
                 description="Phân quyền tài khoản giữa Customer, Staff và Admin. Tài khoản hiện tại được khóa để tránh tự hạ quyền ngoài ý muốn."
                 meta={
                     <>
-                        <StatusBadge tone="purple">{adminCount} Admin</StatusBadge>
+                        <StatusBadge tone="teal">{adminCount} Admin</StatusBadge>
                         <StatusBadge tone="green">{staffCount} Staff</StatusBadge>
                     </>
                 }
@@ -97,7 +97,7 @@ const AdminUsersPage = () => {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <MetricCard label="Tổng người dùng" value={users.length} caption="Tất cả role" tone="green" />
-                <MetricCard label="Staff/Admin" value={adminCount + staffCount} caption="Có quyền vận hành" tone="purple" />
+                <MetricCard label="Staff/Admin" value={adminCount + staffCount} caption="Có quyền vận hành" tone="teal" />
                 <MetricCard label="Customer" value={customerCount} caption="Tài khoản mua hàng" tone="blue" />
             </div>
 

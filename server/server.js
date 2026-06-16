@@ -34,6 +34,7 @@ const postRoutes = require('./routes/postRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const ingredientRoutes = require('./routes/ingredientRoutes');
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -51,6 +52,7 @@ app.use('/api/posts', postRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/ingredients', ingredientRoutes);
 
 app.get('/', (req, res) => {
     res.send('Huong Thao Tea API is running...');

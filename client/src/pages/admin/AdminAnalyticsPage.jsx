@@ -63,7 +63,7 @@ const AdminAnalyticsPage = () => {
             ) : (
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
                     <MetricCard label="Đơn đã thanh toán" value={summary?.totalOrders || 0} caption="Nguồn revenue" tone="green" />
-                    <MetricCard label="Doanh thu" value={formatCurrency(summary?.totalRevenue)} caption="Tổng đã paid" tone="purple" />
+                    <MetricCard label="Doanh thu" value={formatCurrency(summary?.totalRevenue)} caption="Tổng đã paid" tone="teal" />
                     <MetricCard label="Tổng sản phẩm" value={summary?.totalTeas || 0} caption="Trong catalog" tone="blue" />
                     <MetricCard label="Tồn thấp" value={summary?.lowStockTeas || 0} caption="Cần nhập thêm" tone={(summary?.lowStockTeas || 0) > 0 ? 'red' : 'slate'} />
                 </div>
@@ -101,7 +101,7 @@ const AdminAnalyticsPage = () => {
                                 <div key={item._id} className="py-4 first:pt-0 last:pb-0">
                                     <div className="flex flex-wrap items-center justify-between gap-2">
                                         <p className="font-black text-slate-950">{item.name}</p>
-                                        <StatusBadge tone="purple">Score {item.demandUnits}</StatusBadge>
+                                        <StatusBadge tone="teal">Score {item.demandUnits}</StatusBadge>
                                     </div>
                                     <p className="mt-2 text-sm leading-6 text-slate-600">{item.relatedTeaNames?.slice(0, 3).join(', ') || 'Chưa có sản phẩm liên quan'}</p>
                                 </div>
@@ -141,7 +141,7 @@ const AdminAnalyticsPage = () => {
                                         <p className="font-black text-slate-950">{item.name}</p>
                                         <p className="mt-1 text-sm text-slate-600">Giá/gram: {formatCurrency(item.pricePerGram)}</p>
                                     </div>
-                                    <StatusBadge tone="purple">Score {item.demandScore}</StatusBadge>
+                                    <StatusBadge tone="teal">Score {item.demandScore}</StatusBadge>
                                 </div>
                             ))}
                         </div>

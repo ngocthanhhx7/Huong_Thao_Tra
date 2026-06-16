@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
 const FloatingHerbs = ({ count = 6 }) => {
-  const herbs = ['🍃', '🌿', '🌱', '🌼', '🍀'];
+  const herbs = ['<C', '<?', '<1', '<<', '<@'];
   
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">
