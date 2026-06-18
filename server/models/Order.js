@@ -30,9 +30,14 @@ const orderSchema = new mongoose.Schema(
             },
         ],
         shippingAddress: {
+            receiverName: { type: String, required: true },
+            receiverPhone: { type: String, required: true },
             address: { type: String, required: true },
             city: { type: String, required: true },
-            postalCode: { type: String, required: true },
+            district: { type: String },
+            ward: { type: String },
+            postalCode: { type: String, required: true, default: '100000' },
+            note: { type: String },
         },
         paymentMethod: { type: String, required: true, enum: ['PayOS', 'COD', 'VNPay', 'Stripe'] },
         paymentResult: {

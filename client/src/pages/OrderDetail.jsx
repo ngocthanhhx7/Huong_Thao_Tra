@@ -77,11 +77,28 @@ const OrderDetail = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="bg-white rounded-3xl border border-gray-100 p-8">
                     <h2 className="text-xl font-bold text-gray-900 mb-4">Thông tin giao hàng</h2>
-                    <p className="text-gray-700">{order.shippingAddress?.address}</p>
-                    <p className="text-gray-700">{order.shippingAddress?.city}</p>
-                    <p className="text-gray-700">{order.shippingAddress?.postalCode}</p>
-                    <div className="text-gray-500 mt-4 flex items-center gap-3 flex-wrap">
-                        <span>Thanh toán: {order.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</span>
+                    <div className="space-y-2 text-gray-700 text-sm">
+                        <p><span className="font-semibold text-gray-600">Người nhận:</span> {order.shippingAddress?.receiverName || order.user?.name}</p>
+                        <p><span className="font-semibold text-gray-600">Số điện thoại:</span> {order.shippingAddress?.receiverPhone || 'Chưa cung cấp'}</p>
+                        <p>
+                            <span className="font-semibold text-gray-600">Địa chỉ giao hàng:</span>{' '}
+                            {[
+                                order.shippingAddress?.address,
+                                order.shippingAddress?.ward,
+                                order.shippingAddress?.district,
+                                order.shippingAddress?.city
+                            ].filter(Boolean).join(', ')}
+                        </p>
+                        {order.shippingAddress?.note && (
+                            <p><span className="font-semibold text-gray-600">Ghi chú giao nhận:</span> <span className="italic text-gray-500">"{order.shippingAddress.note}"</span></p>
+                        )}
+                        <p><span className="font-semibold text-gray-600">Phương thức:</span> {order.paymentMethod === 'PayOS' ? 'Thanh toán qua PayOS (Cổng thật)' : order.paymentMethod === 'COD' ? 'Thanh toán khi nhận hàng (COD)' : order.paymentMethod}</p>
+                    </div>
+                    <div className="text-gray-500 mt-6 flex items-center gap-3 flex-wrap border-t border-gray-50 pt-4">
+                        <span className="font-medium text-sm">Trạng thái thanh toán:</span>
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold ${order.isPaid ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>
+                            {order.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}
+                        </span>
                         {!order.isPaid && order.paymentMethod === 'PayOS' && (
                             <button onClick={handlePayNow} disabled={paying} className="px-4 py-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold transition-all shadow-sm">
                                 {paying ? 'Đang kết nối...' : 'Thanh toán ngay bằng PayOS'}
