@@ -34,7 +34,7 @@ const orderSchema = new mongoose.Schema(
             city: { type: String, required: true },
             postalCode: { type: String, required: true },
         },
-        paymentMethod: { type: String, required: true, enum: ['VNPay', 'Stripe'] },
+        paymentMethod: { type: String, required: true, enum: ['PayOS', 'COD', 'VNPay', 'Stripe'] },
         paymentResult: {
             id: { type: String },
             status: { type: String },

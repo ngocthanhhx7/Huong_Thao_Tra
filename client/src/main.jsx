@@ -10,7 +10,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <GoogleOAuthProvider clientId="305154487924-6pf8fvuf0665l12pgldtd3t5snfh4uvs.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId="177562373099-f449jq4hufb4uclcujvkfpuekgekitrg.apps.googleusercontent.com">
         <BrowserRouter>
           <AuthProvider>
             <App />

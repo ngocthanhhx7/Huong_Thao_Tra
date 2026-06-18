@@ -7,7 +7,8 @@
     "dev": "nodemon server.js",
     "seed:teas": "node scripts/seedTeas.js",
     "seed:catalog": "node scripts/seedTeas.js",
-    "seed:posts": "node scripts/seedPosts.js"
+    "seed:posts": "node scripts/seedPosts.js",
+    "import:trahoaviet": "node scripts/importTraHoaVietCatalog.js"
   },
   "keywords": [],
   "author": "",
