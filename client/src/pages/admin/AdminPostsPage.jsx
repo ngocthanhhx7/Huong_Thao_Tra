@@ -17,6 +17,7 @@ import {
     adminTextareaClass,
     formatDateTime,
 } from '../../components/admin/adminUtils';
+import AdminImageUploadField from '../../components/admin/AdminImageUploadField';
 
 const initialPost = { title: '', summary: '', content: '', coverImage: '', tags: '', status: 'draft' };
 
@@ -165,9 +166,13 @@ const AdminPostsPage = () => {
                         <FormField label="Tóm tắt">
                             <input value={form.summary} onChange={(e) => setForm((prev) => ({ ...prev, summary: e.target.value }))} required placeholder="Mô tả ngắn" className={adminInputClass} />
                         </FormField>
-                        <FormField label="Ảnh cover">
-                            <input value={form.coverImage} onChange={(e) => setForm((prev) => ({ ...prev, coverImage: e.target.value }))} placeholder="https://..." className={adminInputClass} />
-                        </FormField>
+                        <AdminImageUploadField
+                            label="Ảnh cover"
+                            hint="Dán URL hiện có hoặc chọn file cover để upload lên S3."
+                            value={form.coverImage}
+                            folder="posts"
+                            onChange={(url) => setForm((prev) => ({ ...prev, coverImage: url }))}
+                        />
                         <FormField label="Tags" hint="Phân tách bằng dấu phẩy. Ví dụ: trà ngủ ngon, thảo mộc">
                             <input value={form.tags} onChange={(e) => setForm((prev) => ({ ...prev, tags: e.target.value }))} placeholder="tag1, tag2" className={adminInputClass} />
                         </FormField>

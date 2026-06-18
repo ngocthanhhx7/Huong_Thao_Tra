@@ -16,6 +16,7 @@ import {
     adminTextareaClass,
     formatCurrency,
 } from '../../components/admin/adminUtils';
+import AdminImageUploadField from '../../components/admin/AdminImageUploadField';
 
 const emptyIngredient = {
     name: '',
@@ -446,14 +447,13 @@ const AdminIngredientsPage = () => {
                                 </FormField>
                             </div>
 
-                            <FormField label="Ảnh nguyên liệu (URL URL/Unsplash)" hint="Nhập link ảnh cận cảnh thảo mộc.">
-                                <input
-                                    value={ingredientForm.image}
-                                    onChange={(e) => setIngredientForm((p) => ({ ...p, image: e.target.value }))}
-                                    className={adminInputClass}
-                                    placeholder="https://images.unsplash.com/photo-..."
-                                />
-                            </FormField>
+                            <AdminImageUploadField
+                                label="Ảnh nguyên liệu"
+                                hint="Dán URL hiện có hoặc chọn file cận cảnh thảo mộc để upload lên S3."
+                                value={ingredientForm.image}
+                                folder="ingredients"
+                                onChange={(url) => setIngredientForm((p) => ({ ...p, image: url }))}
+                            />
 
                             <FormField label="Mô tả khái quát ngắn" hint="Tóm tắt đặc điểm trong 1-2 câu ngắn">
                                 <input

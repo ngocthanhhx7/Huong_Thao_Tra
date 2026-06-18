@@ -16,6 +16,7 @@ import {
     adminSelectClass,
     formatCurrency,
 } from '../../components/admin/adminUtils';
+import AdminImageUploadField from '../../components/admin/AdminImageUploadField';
 
 const AdminTeasPage = () => {
     const [teas, setTeas] = useState([]);
@@ -236,9 +237,13 @@ const AdminTeasPage = () => {
                                             <option value="draft">Bản nháp</option>
                                         </select>
                                     </FormField>
-                                    <FormField label="Ảnh">
-                                        <input value={tea.image || ''} onChange={(e) => updateTeaField(tea._id, { image: e.target.value })} className={adminInputClass} />
-                                    </FormField>
+                                    <AdminImageUploadField
+                                        label="Ảnh"
+                                        hint="Dán URL hiện có hoặc chọn file để upload lên S3."
+                                        value={tea.image || ''}
+                                        folder="teas"
+                                        onChange={(url) => updateTeaField(tea._id, { image: url })}
+                                    />
                                 </div>
 
                                 <div className="flex flex-wrap gap-2 2xl:block">
