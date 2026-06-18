@@ -114,7 +114,23 @@ const createPayosPaymentLink = async ({ order, user }) => {
     };
 };
 
+const getPayosPaymentStatus = async (orderCode) => {
+    const { clientId, apiKey } = getPayosConfig();
+    const { data } = await axios.get(
+        `${PAYOS_API_BASE_URL}/v2/payment-requests/${orderCode}`,
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-client-id': clientId,
+                'x-api-key': apiKey,
+            },
+        }
+    );
+    return data;
+};
+
 module.exports = {
     createPayosPaymentLink,
     verifyWebhookSignature,
+    getPayosPaymentStatus,
 };

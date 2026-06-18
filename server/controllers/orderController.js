@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const Cart = require('../models/Cart');
 const Order = require('../models/Order');
+const Payment = require('../models/Payment');
 const { createNotification } = require('../utils/notificationHelper');
+const { getPayosPaymentStatus } = require('../utils/payosHelper');
 
 const ORDER_FLOW = ['Pending', 'Confirmed', 'Processing', 'Shipping', 'Delivered'];
 
@@ -168,6 +170,43 @@ const getOrderById = async (req, res) => {
 
         if (!isOwner && !isStaffMember) {
             return res.status(403).json({ message: 'Not authorized to view this order' });
+        }
+
+        // Fallback: Nếu đơn hàng PayOS chưa thanh toán trong DB, chủ động truy vấn trạng thái từ PayOS
+        if (order.paymentMethod === 'PayOS' && !order.isPaid) {
+            try {
+                const payment = await Payment.findOne({ order: order._id, paymentMethod: 'PayOS' });
+                if (payment && payment.transactionId) {
+                    const payosResult = await getPayosPaymentStatus(payment.transactionId);
+                    if (payosResult && payosResult.code === '00' && payosResult.data && payosResult.data.status === 'PAID') {
+                        // Cập nhật bản ghi Payment
+                        payment.status = 'Completed';
+                        await payment.save();
+
+                        // Cập nhật đơn hàng
+                        order.isPaid = true;
+                        order.paidAt = new Date();
+                        order.paymentResult = {
+                            id: payment.transactionId,
+                            status: 'Completed',
+                            update_time: new Date().toISOString(),
+                        };
+                        await order.save();
+
+                        // Gửi thông báo cho khách hàng
+                        await createNotification({
+                            recipient: order.user._id,
+                            type: 'payment_success',
+                            title: 'Thanh toán thành công qua PayOS',
+                            message: `Đơn hàng #${order._id.toString().slice(-6)} đã được thanh toán thành công qua PayOS.`,
+                            link: `/orders/${order._id}`,
+                            actor: order.user._id,
+                        });
+                    }
+                }
+            } catch (payosError) {
+                console.error('Failed to auto-sync PayOS payment status:', payosError.message);
+            }
         }
 
         res.json(order);
