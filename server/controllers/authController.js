@@ -2,7 +2,8 @@ const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
 const { OAuth2Client } = require('google-auth-library');
 
-const client = new OAuth2Client('177562373099-f449jq4hufb4uclcujvkfpuekgekitrg.apps.googleusercontent.com');
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '177562373099-f449jq4hufb4uclcujvkfpuekgekitrg.apps.googleusercontent.com';
+const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -79,7 +80,7 @@ const googleLogin = async (req, res) => {
     try {
         const ticket = await client.verifyIdToken({
             idToken: credential,
-            audience: '305154487924-6pf8fvuf0665l12pgldtd3t5snfh4uvs.apps.googleusercontent.com',
+            audience: GOOGLE_CLIENT_ID,
         });
         const payload = ticket.getPayload();
         const email = payload.email;
