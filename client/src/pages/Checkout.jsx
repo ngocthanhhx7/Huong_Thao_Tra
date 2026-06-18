@@ -15,7 +15,7 @@ const Checkout = () => {
         address: '',
         city: '',
         postalCode: '',
-        paymentMethod: 'VNPay',
+        paymentMethod: 'PayOS',
     });
 
     useEffect(() => {
@@ -54,8 +54,14 @@ const Checkout = () => {
                 },
                 paymentMethod: formData.paymentMethod,
             });
-            const { data: session } = await api.post('/payments/demo/session', { orderId: order._id });
-            setPaymentSession({ ...session, orderId: order._id });
+
+            if (formData.paymentMethod === 'PayOS') {
+                const { data: payosSession } = await api.post('/payment/payos/create-link', { orderId: order._id });
+                window.location.href = payosSession.checkoutUrl;
+            } else {
+                const { data: session } = await api.post('/payments/demo/session', { orderId: order._id });
+                setPaymentSession({ ...session, orderId: order._id });
+            }
         } catch (error) {
             setErrorMessage(error.response?.data?.message || 'Không thể tạo phiên checkout.');
         } finally {
@@ -92,6 +98,7 @@ const Checkout = () => {
                     <input value={formData.city} onChange={(e) => setFormData((prev) => ({ ...prev, city: e.target.value }))} required placeholder="Thành phố" className="w-full px-4 py-3 rounded-2xl border border-gray-200" />
                     <input value={formData.postalCode} onChange={(e) => setFormData((prev) => ({ ...prev, postalCode: e.target.value }))} required placeholder="Mã bưu chính" className="w-full px-4 py-3 rounded-2xl border border-gray-200" />
                     <select value={formData.paymentMethod} onChange={(e) => setFormData((prev) => ({ ...prev, paymentMethod: e.target.value }))} className="w-full px-4 py-3 rounded-2xl border border-gray-200">
+                        <option value="PayOS">Thanh toán qua PayOS (Cổng thật)</option>
                         <option value="VNPay">VNPay Demo</option>
                         <option value="Stripe">Stripe Demo</option>
                     </select>

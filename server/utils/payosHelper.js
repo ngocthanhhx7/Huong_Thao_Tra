@@ -41,10 +41,15 @@ const verifyWebhookSignature = (payload) => {
     const { checksumKey } = getPayosConfig();
     const dataString = buildSortedDataString(payload.data || {});
     const expectedSignature = createHmacSignature(dataString, checksumKey);
+    const signature = payload.signature || '';
+
+    if (expectedSignature.length !== signature.length) {
+        return false;
+    }
 
     return crypto.timingSafeEqual(
-        Buffer.from(expectedSignature),
-        Buffer.from(payload.signature || '')
+        Buffer.from(expectedSignature, 'utf-8'),
+        Buffer.from(signature, 'utf-8')
     );
 };
 
@@ -64,8 +69,13 @@ const createPayosPaymentLink = async ({ order, user }) => {
         quantity: Number(item.qty),
         price: Math.round(Number(item.price)),
     }));
+
+    // Cấu hình URL động chứa mã đơn hàng
+    const dynamicReturnUrl = `${returnUrl.replace(/\/$/, '')}/orders/${order._id}?payment=success`;
+    const dynamicCancelUrl = `${cancelUrl.replace(/\/$/, '')}/orders/${order._id}?payment=cancel`;
+
     const signature = createPaymentRequestSignature(
-        { amount, cancelUrl, description, orderCode, returnUrl },
+        { amount, cancelUrl: dynamicCancelUrl, description, orderCode, returnUrl: dynamicReturnUrl },
         checksumKey
     );
 
@@ -78,8 +88,8 @@ const createPayosPaymentLink = async ({ order, user }) => {
             buyerName: user.name,
             buyerEmail: user.email,
             items,
-            cancelUrl,
-            returnUrl,
+            cancelUrl: dynamicCancelUrl,
+            returnUrl: dynamicReturnUrl,
             signature,
         },
         {

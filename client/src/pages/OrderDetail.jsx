@@ -1,13 +1,28 @@
 import { useContext, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 
 const OrderDetail = () => {
     const { id } = useParams();
     const { user } = useContext(AuthContext);
+    const [searchParams] = useSearchParams();
     const [order, setOrder] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
+    const [paying, setPaying] = useState(false);
+
+    const handlePayNow = async () => {
+        setPaying(true);
+        setErrorMessage('');
+        try {
+            const { data } = await api.post('/payment/payos/create-link', { orderId: order._id });
+            window.location.href = data.checkoutUrl;
+        } catch (error) {
+            setErrorMessage(error.response?.data?.message || 'Không thể khởi tạo thanh toán PayOS.');
+        } finally {
+            setPaying(false);
+        }
+    };
 
     useEffect(() => {
         const fetchOrder = async () => {
@@ -30,6 +45,25 @@ const OrderDetail = () => {
 
     return (
         <div className="max-w-5xl mx-auto px-4 py-24 space-y-6">
+            {searchParams.get('payment') === 'success' && (
+                <div className="bg-green-50 border border-green-200 text-green-700 p-6 rounded-3xl font-medium flex items-center gap-3">
+                    <svg className="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <div>
+                        <p className="font-extrabold text-lg">Thanh toán thành công!</p>
+                        <p className="text-sm text-green-600 mt-1">Cảm ơn bạn đã mua sắm. Đơn hàng của bạn đã được thanh toán và đang chờ nhân viên xác nhận.</p>
+                    </div>
+                </div>
+            )}
+            {searchParams.get('payment') === 'cancel' && (
+                <div className="bg-amber-50 border border-amber-200 text-amber-700 p-6 rounded-3xl font-medium flex items-center gap-3">
+                    <svg className="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                    <div>
+                        <p className="font-extrabold text-lg">Giao dịch đã bị hủy</p>
+                        <p className="text-sm text-amber-600 mt-1">Bạn đã hủy giao dịch thanh toán. Bạn có thể nhấn nút thanh toán lại bên dưới để hoàn tất đơn hàng bất cứ lúc nào.</p>
+                    </div>
+                </div>
+            )}
+
             <div className="bg-white rounded-3xl border border-gray-100 p-8">
                 <div className="flex items-center justify-between gap-4 flex-wrap">
                     <div>
@@ -46,7 +80,14 @@ const OrderDetail = () => {
                     <p className="text-gray-700">{order.shippingAddress?.address}</p>
                     <p className="text-gray-700">{order.shippingAddress?.city}</p>
                     <p className="text-gray-700">{order.shippingAddress?.postalCode}</p>
-                    <p className="text-gray-500 mt-4">Thanh toán: {order.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</p>
+                    <div className="text-gray-500 mt-4 flex items-center gap-3 flex-wrap">
+                        <span>Thanh toán: {order.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</span>
+                        {!order.isPaid && order.paymentMethod === 'PayOS' && (
+                            <button onClick={handlePayNow} disabled={paying} className="px-4 py-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold transition-all shadow-sm">
+                                {paying ? 'Đang kết nối...' : 'Thanh toán ngay bằng PayOS'}
+                            </button>
+                        )}
+                    </div>
                 </div>
 
                 <div className="bg-white rounded-3xl border border-gray-100 p-8">
