@@ -2,7 +2,7 @@ const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
 const { OAuth2Client } = require('google-auth-library');
 
-const client = new OAuth2Client('305154487924-6pf8fvuf0665l12pgldtd3t5snfh4uvs.apps.googleusercontent.com');
+const client = new OAuth2Client('177562373099-f449jq4hufb4uclcujvkfpuekgekitrg.apps.googleusercontent.com');
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
