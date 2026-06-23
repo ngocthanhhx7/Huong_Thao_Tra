@@ -1649,12 +1649,12 @@ const getReportPdf = async (req, res) => {
 // @access  Private
 const checkDrugInteraction = async (req, res) => {
   try {
-    const { drugNames } = req.body;
+    const { drugs } = req.body;
 
-    if (!drugNames || !Array.isArray(drugNames) || drugNames.length === 0) {
+    if (!drugs || !Array.isArray(drugs) || drugs.length === 0) {
       return res
         .status(400)
-        .json({ message: 'drugNames array is required' });
+        .json({ message: 'drugs array is required' });
     }
 
     const teas = await Tea.find({ isPublished: true })
@@ -1678,7 +1678,7 @@ const checkDrugInteraction = async (req, res) => {
     });
 
     const prompt = `Bạn là chuyên gia dược lý và thảo dược học. 
-Kiểm tra tương tác giữa các thuốc sau: ${drugNames.join(', ')} 
+Kiểm tra tương tác giữa các thuốc sau: ${drugs.join(', ')} 
 và các loại trà thảo mộc dưới đây:
 
 ${teaList.join('\n')}
