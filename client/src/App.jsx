@@ -18,6 +18,7 @@ import Notifications from './pages/Notifications';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminOrdersPage from './pages/admin/AdminOrdersPage';
+import AdminOrderDetailPage from './pages/admin/AdminOrderDetailPage';
 import AdminAiRecipesPage from './pages/admin/AdminAiRecipesPage';
 import AdminPostsPage from './pages/admin/AdminPostsPage';
 import AdminFeedbackPage from './pages/admin/AdminFeedbackPage';
@@ -63,9 +64,10 @@ function App() {
           <Route path="/posts/:slug" element={<PostDetail />} />
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/notifications" element={<Notifications />} />
-          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="orders" element={<AdminOrdersPage />} />
+            <Route path="orders/:id" element={<AdminOrderDetailPage />} />
             <Route path="ai-recipes" element={<AdminAiRecipesPage />} />
             <Route path="posts" element={<AdminPostsPage />} />
             <Route path="feedback" element={<AdminFeedbackPage />} />

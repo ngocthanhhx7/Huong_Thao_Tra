@@ -6,6 +6,11 @@ const AiMixConfig = require('../models/AiMixConfig');
 const Cart = require('../models/Cart');
 const { getGeminiModel } = require('../config/gemini');
 const { createNotification } = require('../utils/notificationHelper');
+const {
+    AI_MIX_PRICE,
+    normalizeCaffeineLevel,
+    buildAiRecipeSnapshot,
+} = require('../utils/aiMixHelper');
 
 const DEFAULT_AI_TEA_IMAGE = 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=900&q=80';
 const LIFECYCLE_STATUS_PRIORITY = {
@@ -127,9 +132,9 @@ const buildTeaDraftFromSuggestion = async (suggestion, pricingDraft = {}, extraT
         name: result.teaName || 'AI Tea Formula',
         description: result.useCase || 'AI-generated herbal tea formula for Huong Thao Tra.',
         image: pricingDraft.image || DEFAULT_AI_TEA_IMAGE,
-        price: Number(pricingDraft.price) || 299000,
+        price: AI_MIX_PRICE,
         stock: Number(pricingDraft.stock) || 10,
-        caffeineLevel: suggestion.inputParams?.get('caffeinePreference') || 'Low',
+        caffeineLevel: normalizeCaffeineLevel(suggestion.inputParams?.get('caffeinePreference') || 'Low'),
         ingredients: ingredientIds,
         benefits,
         isAIMixture: true,
@@ -137,7 +142,9 @@ const buildTeaDraftFromSuggestion = async (suggestion, pricingDraft = {}, extraT
         source: 'ai',
         createdFromSuggestion: suggestion._id,
         isPublished: false,
+        aiRecipeSnapshot: buildAiRecipeSnapshot(result),
         ...extraTeaFields,
+        price: AI_MIX_PRICE,
     };
 };
 
@@ -339,7 +346,7 @@ const submitAiMixTeaForSale = async (req, res) => {
 
         suggestion.lifecycleStatus = 'submitted_for_sale';
         suggestion.pricingDraft = {
-            price: req.body.price,
+            price: AI_MIX_PRICE,
             stock: req.body.stock,
             image: req.body.image || DEFAULT_AI_TEA_IMAGE,
         };
@@ -439,7 +446,7 @@ const approveAiRecipe = async (req, res) => {
         }
 
         suggestion.pricingDraft = {
-            price: req.body.price || suggestion.pricingDraft?.price,
+            price: AI_MIX_PRICE,
             stock: req.body.stock || suggestion.pricingDraft?.stock,
             image: req.body.image || suggestion.pricingDraft?.image || DEFAULT_AI_TEA_IMAGE,
         };

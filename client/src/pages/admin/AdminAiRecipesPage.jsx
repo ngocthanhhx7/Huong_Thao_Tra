@@ -43,6 +43,7 @@ const filters = [
 ];
 
 const getIngredientName = (ingredient) => (typeof ingredient === 'object' ? ingredient.name : ingredient);
+const AI_MIX_PRICE = 249000;
 
 const AdminAiRecipesPage = () => {
     const [recipes, setRecipes] = useState([]);
@@ -62,7 +63,7 @@ const AdminAiRecipesPage = () => {
             setApprovalDrafts(
                 (data || []).reduce((acc, recipe) => {
                     acc[recipe._id] = {
-                        price: recipe.pricingDraft?.price || 299000,
+                        price: AI_MIX_PRICE,
                         stock: recipe.pricingDraft?.stock || 10,
                         note: recipe.publishReview?.note || 'Approved in AI module',
                     };
@@ -181,12 +182,9 @@ const AdminAiRecipesPage = () => {
                                     <div className="grid gap-3 rounded-lg bg-slate-50 p-4">
                                         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                                             <FormField label="Giá bán">
-                                                <input
-                                                    type="number"
-                                                    value={approvalDrafts[item._id]?.price || 299000}
-                                                    onChange={(e) => setApprovalDrafts((prev) => ({ ...prev, [item._id]: { ...prev[item._id], price: Number(e.target.value) } }))}
-                                                    className={adminInputClass}
-                                                />
+                                                <div className="admin-input flex items-center bg-white font-black text-slate-950">
+                                                    {formatCurrency(AI_MIX_PRICE)}
+                                                </div>
                                             </FormField>
                                             <FormField label="Tồn kho">
                                                 <input
@@ -197,7 +195,7 @@ const AdminAiRecipesPage = () => {
                                                 />
                                             </FormField>
                                         </div>
-                                        <FormField label="Ghi chú duyệt" hint={`Giá hiện tại: ${formatCurrency(approvalDrafts[item._id]?.price || 299000)}`}>
+                                        <FormField label="Ghi chú duyệt" hint={`AI Mix đồng giá: ${formatCurrency(AI_MIX_PRICE)}`}>
                                             <textarea
                                                 value={approvalDrafts[item._id]?.note || ''}
                                                 onChange={(e) => setApprovalDrafts((prev) => ({ ...prev, [item._id]: { ...prev[item._id], note: e.target.value } }))}

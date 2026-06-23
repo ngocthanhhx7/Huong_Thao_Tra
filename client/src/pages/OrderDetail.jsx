@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
+import OrderRecipeSnapshot from '../components/OrderRecipeSnapshot';
 
 const OrderDetail = () => {
     const { id } = useParams();
@@ -90,7 +91,7 @@ const OrderDetail = () => {
                             ].filter(Boolean).join(', ')}
                         </p>
                         {order.shippingAddress?.note && (
-                            <p><span className="font-semibold text-gray-600">Ghi chú giao nhận:</span> <span className="italic text-gray-500">"{order.shippingAddress.note}"</span></p>
+                            <p><span className="font-semibold text-gray-600">Ghi chú giao nhận:</span> <span className="italic text-gray-500">&quot;{order.shippingAddress.note}&quot;</span></p>
                         )}
                         <p><span className="font-semibold text-gray-600">Phương thức:</span> {order.paymentMethod === 'PayOS' ? 'Thanh toán qua PayOS (Cổng thật)' : order.paymentMethod === 'COD' ? 'Thanh toán khi nhận hàng (COD)' : order.paymentMethod}</p>
                     </div>
@@ -125,12 +126,15 @@ const OrderDetail = () => {
                 <h2 className="text-xl font-bold text-gray-900 mb-4">Sản phẩm</h2>
                 <div className="space-y-4">
                     {(order.orderItems || []).map((item, index) => (
-                        <div key={index} className="flex justify-between items-center bg-gray-50 rounded-2xl p-4">
-                            <div>
-                                <p className="font-bold text-gray-900">{item.name}</p>
-                                <p className="text-sm text-gray-500">Số lượng: {item.qty}</p>
+                        <div key={index} className="bg-gray-50 rounded-2xl p-4">
+                            <div className="flex justify-between items-center gap-4">
+                                <div>
+                                    <p className="font-bold text-gray-900">{item.name}</p>
+                                    <p className="text-sm text-gray-500">Số lượng: {item.qty}</p>
+                                </div>
+                                <p className="font-bold text-gray-900">{(item.qty * item.price).toLocaleString()}đ</p>
                             </div>
-                            <p className="font-bold text-gray-900">{(item.qty * item.price).toLocaleString()}đ</p>
+                            <OrderRecipeSnapshot item={item} />
                         </div>
                     ))}
                 </div>

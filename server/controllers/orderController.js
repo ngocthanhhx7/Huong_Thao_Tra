@@ -2,8 +2,10 @@ const mongoose = require('mongoose');
 const Cart = require('../models/Cart');
 const Order = require('../models/Order');
 const Payment = require('../models/Payment');
+const Tea = require('../models/Tea');
 const { createNotification } = require('../utils/notificationHelper');
 const { getPayosPaymentStatus } = require('../utils/payosHelper');
+const { buildOrderItemFromTea } = require('../utils/aiMixHelper');
 
 const ORDER_FLOW = ['Pending', 'Confirmed', 'Processing', 'Shipping', 'Delivered'];
 
@@ -28,6 +30,27 @@ const buildStatusHistory = (status, userId, note = '') => ([
     },
 ]);
 
+const enrichOrderItems = async (items = []) => {
+    const teaIds = items.map((item) => item.tea).filter(Boolean);
+    const teas = await Tea.find({ _id: { $in: teaIds } });
+    const teaMap = new Map(teas.map((tea) => [tea._id.toString(), tea]));
+
+    return items.map((item) => {
+        const teaId = item.tea?.toString?.() || item.tea;
+        const tea = teaMap.get(teaId);
+
+        if (!tea) {
+            return item;
+        }
+
+        return buildOrderItemFromTea({
+            tea,
+            cartItem: item,
+            qty: item.qty,
+        });
+    });
+};
+
 // @desc    Create new order from raw items
 // @route   POST /api/orders
 // @access  Private
@@ -39,11 +62,12 @@ const createOrder = async (req, res) => {
             return res.status(400).json({ message: 'No order items provided' });
         }
 
-        const pricing = buildOrderPricing(orderItems);
+        const enrichedOrderItems = await enrichOrderItems(orderItems);
+        const pricing = buildOrderPricing(enrichedOrderItems);
 
         const order = await Order.create({
             user: req.user._id,
-            orderItems,
+            orderItems: enrichedOrderItems,
             shippingAddress,
             paymentMethod,
             taxPrice: pricing.taxPrice,
@@ -83,18 +107,15 @@ const createOrder = async (req, res) => {
 const createOrderFromCart = async (req, res) => {
     try {
         const { shippingAddress, paymentMethod } = req.body;
-        const cart = await Cart.findOne({ user: req.user._id });
+        const cart = await Cart.findOne({ user: req.user._id }).populate('items.tea');
 
         if (!cart || !cart.items.length) {
             return res.status(400).json({ message: 'Cart is empty' });
         }
 
-        const orderItems = cart.items.map((item) => ({
-            name: item.name,
-            qty: item.qty,
-            image: item.image,
-            price: item.price,
+        const orderItems = cart.items.map((item) => buildOrderItemFromTea({
             tea: item.tea,
+            cartItem: item,
         }));
 
         const pricing = buildOrderPricing(orderItems);

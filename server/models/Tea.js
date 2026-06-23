@@ -1,5 +1,26 @@
 const mongoose = require('mongoose');
 
+const aiRecipeIngredientSnapshotSchema = new mongoose.Schema(
+    {
+        name: { type: String, default: '' },
+        amount: { type: String, default: '' },
+        role: { type: String, default: '' },
+    },
+    { _id: false }
+);
+
+const aiRecipeSnapshotSchema = new mongoose.Schema(
+    {
+        ingredients: [aiRecipeIngredientSnapshotSchema],
+        ratio: { type: String, default: '' },
+        brewSteps: [{ type: String }],
+        frequency: { type: String, default: '' },
+        warnings: [{ type: String }],
+        useCase: { type: String, default: '' },
+    },
+    { _id: false }
+);
+
 const teaSchema = new mongoose.Schema(
     {
         name: { type: String, required: true },
@@ -17,6 +38,7 @@ const teaSchema = new mongoose.Schema(
         isPublished: { type: Boolean, default: true },
         source: { type: String, enum: ['catalog', 'ai'], default: 'catalog' },
         createdFromSuggestion: { type: mongoose.Schema.Types.ObjectId, ref: 'AISuggestion' },
+        aiRecipeSnapshot: aiRecipeSnapshotSchema,
     },
     { timestamps: true }
 );

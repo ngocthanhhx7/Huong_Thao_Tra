@@ -16,6 +16,7 @@ const AGE_OPTIONS = ['Dưới 18', '18-30', '31-50', 'Trên 50'];
 const LIFESTYLE_OPTIONS = ['Ít vận động', 'Làm việc văn phòng', 'Hay vận động', 'Thường xuyên thức khuya'];
 const ALLERGY_OPTIONS = ['Không có', 'Hoa cúc', 'Hoa hồng', 'Gừng', 'Cam thảo', 'Bạc hà'];
 const AVOID_OPTIONS = ['Hoa cúc vàng', 'Hoa hồng', 'Kỷ tử', 'Táo đỏ', 'Long nhãn Hưng Yên', 'Gừng sấy khô thái lát', 'Hoa atiso', 'Lá bạc hà khô', 'Quế Thanh', 'Cỏ ngọt'];
+const AI_MIX_PRICE = 249000;
 
 const QUESTION_SCREENS = [
     {
@@ -274,7 +275,7 @@ const AIMixTea = () => {
         setActionLoading('submit'); setError(''); setMessage('');
         try {
             const suggestion = savedSuggestionId ? { _id: savedSuggestionId } : await persistRecipe();
-            const submitRes = await api.post(`/ai/mix-tea/${suggestion._id}/submit-for-sale`, { price: 299000, stock: 10, image: '' });
+            const submitRes = await api.post(`/ai/mix-tea/${suggestion._id}/submit-for-sale`, { price: AI_MIX_PRICE, stock: 10, image: '' });
             setSavedSuggestionId(submitRes.data.suggestion?._id || suggestion._id);
             setMessage('Công thức đã được gửi cho admin/staff duyệt.');
         } catch (err) { setError(err.response?.data?.message || 'Không thể gửi công thức AI để duyệt bán.'); } finally { setActionLoading(''); }
@@ -358,6 +359,9 @@ const AIMixTea = () => {
                         <ResultSection result={result} />
                         <div className="rounded-[32px] border border-gray-100 bg-white p-6 shadow-sm">
                             <div className="flex flex-wrap gap-3">
+                                <div className="flex min-w-[180px] flex-1 items-center justify-center rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-4 font-extrabold text-emerald-800">
+                                    {AI_MIX_PRICE.toLocaleString('vi-VN')}đ
+                                </div>
                                 <button type="button" onClick={restartQuestions} className="flex-1 min-w-[180px] py-4 rounded-2xl border border-gray-200 bg-white font-extrabold text-gray-800">Chỉnh câu hỏi</button>
                                 <button type="button" onClick={saveRecipe} disabled={actionLoading === 'save'} className="flex-1 min-w-[180px] py-4 rounded-2xl border border-primary-100 bg-primary-50 font-extrabold text-primary-700 disabled:opacity-70">{actionLoading === 'save' ? 'Đang lưu...' : 'Lưu công thức'}</button>
                                 <button type="button" onClick={buyNow} disabled={actionLoading === 'buy'} className="flex-1 min-w-[180px] py-4 rounded-2xl bg-emerald-900 font-extrabold text-white disabled:opacity-70">{actionLoading === 'buy' ? 'Đang thêm...' : 'Mua ngay'}</button>

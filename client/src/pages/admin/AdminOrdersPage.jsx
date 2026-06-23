@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../../services/api';
 import {
     AdminButton,
@@ -154,16 +155,21 @@ const AdminOrdersPage = () => {
                                 </div>
 
                                 <FormField label="Cập nhật trạng thái">
-                                    <select
-                                        value={order.orderStatus}
-                                        onChange={(e) => updateStatus(order._id, e.target.value)}
-                                        disabled={updatingId === order._id}
-                                        className={adminSelectClass}
-                                    >
-                                        {ORDER_STATUSES.map((status) => (
-                                            <option key={status} value={status}>{statusLabels[status]}</option>
-                                        ))}
-                                    </select>
+                                    <div className="grid gap-2">
+                                        <select
+                                            value={order.orderStatus}
+                                            onChange={(e) => updateStatus(order._id, e.target.value)}
+                                            disabled={updatingId === order._id}
+                                            className={adminSelectClass}
+                                        >
+                                            {ORDER_STATUSES.map((status) => (
+                                                <option key={status} value={status}>{statusLabels[status]}</option>
+                                            ))}
+                                        </select>
+                                        <Link to={`/admin/orders/${order._id}`} className="admin-btn admin-btn-neutral justify-center">
+                                            Xem chi tiết
+                                        </Link>
+                                    </div>
                                 </FormField>
                             </div>
                         ))}

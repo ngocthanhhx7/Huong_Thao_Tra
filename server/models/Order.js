@@ -1,11 +1,35 @@
 const mongoose = require('mongoose');
 
+const aiRecipeIngredientSnapshotSchema = new mongoose.Schema(
+    {
+        name: { type: String, default: '' },
+        amount: { type: String, default: '' },
+        role: { type: String, default: '' },
+    },
+    { _id: false }
+);
+
+const aiRecipeSnapshotSchema = new mongoose.Schema(
+    {
+        ingredients: [aiRecipeIngredientSnapshotSchema],
+        ratio: { type: String, default: '' },
+        brewSteps: [{ type: String }],
+        frequency: { type: String, default: '' },
+        warnings: [{ type: String }],
+        useCase: { type: String, default: '' },
+    },
+    { _id: false }
+);
+
 const orderItemSchema = new mongoose.Schema({
     name: { type: String, required: true },
     qty: { type: Number, required: true },
     image: { type: String, required: true },
     price: { type: Number, required: true },
     tea: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Tea' },
+    isAIMixture: { type: Boolean, default: false },
+    mixGoal: { type: String, default: '' },
+    aiRecipeSnapshot: aiRecipeSnapshotSchema,
 });
 
 const orderSchema = new mongoose.Schema(
