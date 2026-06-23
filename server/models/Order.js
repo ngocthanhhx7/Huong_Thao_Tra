@@ -26,7 +26,7 @@ const orderItemSchema = new mongoose.Schema({
     qty: { type: Number, required: true },
     image: { type: String, required: true },
     price: { type: Number, required: true },
-    tea: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Tea' },
+    tea: { type: mongoose.Schema.Types.ObjectId, ref: 'Tea', default: null },
     isAIMixture: { type: Boolean, default: false },
     mixGoal: { type: String, default: '' },
     aiRecipeSnapshot: aiRecipeSnapshotSchema,
@@ -77,6 +77,11 @@ const orderSchema = new mongoose.Schema(
         paidAt: { type: Date },
         isDelivered: { type: Boolean, required: true, default: false },
         deliveredAt: { type: Date },
+        orderType: {
+            type: String,
+            enum: ['regular', 'pro_subscription'],
+            default: 'regular',
+        },
     },
     { timestamps: true }
 );

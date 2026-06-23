@@ -14,6 +14,9 @@ const adminLinks = [
     { to: '/admin/teas', label: 'Sản phẩm trà', hint: 'Giá, tồn kho, hiển thị', marker: 'TE', roles: ['Admin'] },
     { to: '/admin/ingredients', label: 'Nguyên liệu', hint: 'Giá và mô tả nguyên liệu', marker: 'IN', roles: ['Admin'] },
     { to: '/admin/users', label: 'Người dùng', hint: 'Phân quyền tài khoản', marker: 'US', roles: ['Admin'] },
+    { to: '/admin/wellness', label: 'Wellness', hint: 'Thống kê sức khỏe & Pro', marker: 'WE', roles: ['Admin', 'Staff'] },
+    { to: '/admin/wellness/suspicious', label: 'Nghi ngờ', hint: 'Tài khoản có dấu hiệu bất thường', marker: 'SP', roles: ['Admin', 'Staff'] },
+    { to: '/admin/wellness/challenges', label: 'Thử thách', hint: 'Quản lý thử thách cộng đồng', marker: 'CH', roles: ['Admin', 'Staff'] },
 ];
 
 const AdminLayout = () => {

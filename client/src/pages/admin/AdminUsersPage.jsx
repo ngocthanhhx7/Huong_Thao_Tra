@@ -23,6 +23,13 @@ const roleTones = {
     Customer: 'slate',
 };
 
+const proTones = {
+    purchase_bonus: 'green',
+    monthly: 'blue',
+    six_months: 'purple',
+    admin_grant: 'teal',
+};
+
 const AdminUsersPage = () => {
     const { user } = useContext(AuthContext);
     const [users, setUsers] = useState([]);
@@ -58,6 +65,21 @@ const AdminUsersPage = () => {
             setError(err.response?.data?.message || 'Không thể cập nhật quyền người dùng.');
         } finally {
             setUpdatingId('');
+        }
+    };
+
+    const handleProAction = async (userId, action) => {
+        const days = action === 'extend' ? prompt('Nhập số ngày gia hạn:', '30') : null;
+        if (action === 'extend' && !days) return;
+        try {
+            await api.patch(`/wellness/admin/users/${userId}/pro`, {
+                action,
+                days: days ? parseInt(days) : undefined,
+                note: `Admin ${action}`,
+            });
+            await fetchUsers();
+        } catch (err) {
+            alert(err.response?.data?.message || 'Lỗi thao tác Pro');
         }
     };
 
@@ -122,29 +144,69 @@ const AdminUsersPage = () => {
                     <div className="divide-y divide-slate-100">
                         {filteredUsers.map((member) => {
                             const isCurrentUser = member._id === user?._id;
+                            const pro = member.pro || {};
+                            const isPro = pro.isPro && pro.proExpiry && new Date(pro.proExpiry) > new Date();
 
                             return (
-                                <div key={member._id} className="grid gap-4 py-4 first:pt-0 last:pb-0 md:grid-cols-[1fr_180px] md:items-end">
+                                <div key={member._id} className="grid gap-4 py-4 first:pt-0 last:pb-0 md:grid-cols-[1fr_220px] md:items-end">
                                     <div className="min-w-0">
                                         <div className="flex flex-wrap items-center gap-2">
                                             <p className="font-black text-slate-950">{member.name}</p>
                                             <StatusBadge tone={roleTones[member.role] || 'slate'}>{member.role}</StatusBadge>
                                             {isCurrentUser && <StatusBadge tone="blue">Bạn</StatusBadge>}
+                                            {isPro && (
+                                                <StatusBadge tone={proTones[pro.proPlan] || 'green'}>
+                                                    Pro {pro.proPlan === 'purchase_bonus' ? 'Tặng' : pro.proPlan === 'monthly' ? '1T' : pro.proPlan === 'six_months' ? '6T' : 'Admin'}
+                                                </StatusBadge>
+                                            )}
+                                            {!isPro && pro.proExpiry && <StatusBadge tone="zinc">Hết hạn</StatusBadge>}
                                         </div>
                                         <p className="mt-1 break-all text-sm text-slate-600">{member.email}</p>
+                                        {isPro && (
+                                            <p className="text-xs text-slate-400">
+                                                Hết hạn: {new Date(pro.proExpiry).toLocaleDateString('vi-VN')}
+                                            </p>
+                                        )}
                                     </div>
-                                    <FormField label="Phân quyền">
-                                        <select
-                                            value={member.role}
-                                            disabled={isCurrentUser || updatingId === member._id}
-                                            onChange={(e) => updateRole(member._id, e.target.value)}
-                                            className={adminSelectClass}
-                                        >
-                                            <option value="Customer">Customer</option>
-                                            <option value="Staff">Staff</option>
-                                            <option value="Admin">Admin</option>
-                                        </select>
-                                    </FormField>
+                                    <div className="space-y-2">
+                                        <FormField label="Phân quyền">
+                                            <select
+                                                value={member.role}
+                                                disabled={isCurrentUser || updatingId === member._id}
+                                                onChange={(e) => updateRole(member._id, e.target.value)}
+                                                className={adminSelectClass}
+                                            >
+                                                <option value="Customer">Customer</option>
+                                                <option value="Staff">Staff</option>
+                                                <option value="Admin">Admin</option>
+                                            </select>
+                                        </FormField>
+                                        <div className="flex gap-1">
+                                            {!isPro ? (
+                                                <button
+                                                    onClick={() => handleProAction(member._id, 'activate')}
+                                                    className="flex-1 rounded border border-green-200 bg-green-50 px-2 py-1 text-xs font-bold text-green-700 hover:bg-green-100"
+                                                >
+                                                    + Pro
+                                                </button>
+                                            ) : (
+                                                <>
+                                                    <button
+                                                        onClick={() => handleProAction(member._id, 'extend')}
+                                                        className="flex-1 rounded border border-blue-200 bg-blue-50 px-2 py-1 text-xs font-bold text-blue-700 hover:bg-blue-100"
+                                                    >
+                                                        Gia hạn
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleProAction(member._id, 'deactivate')}
+                                                        className="flex-1 rounded border border-red-200 bg-red-50 px-2 py-1 text-xs font-bold text-red-700 hover:bg-red-100"
+                                                    >
+                                                        Tắt
+                                                    </button>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
                             );
                         })}

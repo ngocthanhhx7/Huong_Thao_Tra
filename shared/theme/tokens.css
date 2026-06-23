@@ -1,0 +1,86 @@
+@font-face {
+  font-family: 'Nunito';
+  src: url('/fonts/Nunito-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Nunito';
+  src: url('/fonts/Nunito-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Nunito';
+  src: url('/fonts/Nunito-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Nunito';
+  src: url('/fonts/Nunito-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Nunito';
+  src: url('/fonts/Nunito-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Nunito';
+  src: url('/fonts/Nunito-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-display: swap;
+}
+
+:root {
+  --color-primary: #3f7f32;
+  --color-primary-light: #5b9f45;
+  --color-leaf: #4f7d43;
+  --color-cream: #fffaf0;
+  --color-amber: #d99b25;
+  --color-bg: #f7faf4;
+  --color-surface: #ffffff;
+  --color-text: #1d2f20;
+  --color-text-secondary: #4a5568;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --shadow-sm: 0 2px 8px rgba(39, 67, 42, 0.06);
+  --shadow-md: 0 4px 16px rgba(39, 67, 42, 0.08);
+}
+
+body {
+  font-family: 'Nunito', ui-sans-serif, system-ui, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(47, 125, 50, 0.18);
+  color: var(--color-text);
+}
+
+.wellness-surface {
+  background: var(--color-surface);
+  border: 1px solid #e2e8dc;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.wellness-muted-surface {
+  background: #f8fbf3;
+  border: 1px solid #e4edda;
+  border-radius: var(--radius-md);
+}
+
+.wellness-focus:focus-visible {
+  outline: 3px solid rgba(47, 125, 50, 0.24);
+  outline-offset: 2px;
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}

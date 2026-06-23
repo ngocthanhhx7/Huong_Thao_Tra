@@ -14,6 +14,7 @@ const notificationSchema = new mongoose.Schema(
             default: 'user',
         },
         actor: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        source: { type: String, enum: ['web', 'wellness'], default: 'web' },
     },
     { timestamps: true }
 );

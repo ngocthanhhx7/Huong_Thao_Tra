@@ -20,6 +20,16 @@ const userSchema = new mongoose.Schema(
         sleepTime: { type: String },
         stressLevel: { type: String, enum: ['Low', 'Medium', 'High'] },
         healthGoal: { type: String },
+        pro: {
+            isPro: { type: Boolean, default: false },
+            proExpiry: { type: Date, default: null },
+            proPlan: {
+                type: String,
+                enum: ['purchase_bonus', 'monthly', 'six_months', 'admin_grant', null],
+                default: null,
+            },
+            proActivatedAt: { type: Date, default: null },
+        },
     },
     { timestamps: true }
 );

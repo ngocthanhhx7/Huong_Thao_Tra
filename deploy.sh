@@ -1,23 +1,37 @@
 #!/bin/bash
-# Ngăn script dừng lại nếu có lỗi nhỏ
 set -e
 
-echo "🚀 Bắt đầu quá trình cập nhật dự án trên VPS..."
+echo "🚀 Bắt đầu cập nhật dự án trên VPS..."
 
-# 1. Lấy code mới nhất từ GitHub
-echo "📥 1. Đang pull code mới nhất từ GitHub..."
+# 1. Pull code mới nhất
+echo "📥 1. Pull code từ GitHub..."
 git pull origin main
 
-# 2. Cập nhật và khởi động lại Backend
-echo "💻 2. Đang cài đặt thư viện và khởi động lại Backend..."
+# 2. Cài shared dependencies
+echo "📦 2. Cài shared dependencies..."
+cd shared
+npm install
+cd ..
+
+# 3. Cập nhật Backend
+echo "💻 3. Cập nhật Backend..."
 cd server
 npm install --production
 pm2 restart huong-thao-tra-backend
+cd ..
 
-# 3. Cập nhật và Build lại Frontend
-echo "🌐 3. Đang cài đặt thư viện và biên dịch lại Frontend..."
-cd ../client
+# 4. Build Frontend (web bán hàng)
+echo "🌐 4. Build Frontend chính..."
+cd client
 npm install
 npm run build
+cd ..
 
-echo "✅ Cập nhật hoàn tất! Dự án đã chạy phiên bản mới nhất."
+# 5. Build Wellness App
+echo "🍵 5. Build Wellness App..."
+cd wellness
+npm install
+npm run build
+cd ..
+
+echo "✅ Hoàn tất! Cả 2 app đã chạy phiên bản mới nhất."

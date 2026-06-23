@@ -27,6 +27,9 @@ import AdminTeasPage from './pages/admin/AdminTeasPage';
 import AdminIngredientsPage from './pages/admin/AdminIngredientsPage';
 import AdminAnalyticsPage from './pages/admin/AdminAnalyticsPage';
 import AdminHomeSettingsPage from './pages/admin/AdminHomeSettingsPage';
+import AdminWellnessDashboard from './pages/admin/AdminWellnessDashboard';
+import AdminSuspiciousUsers from './pages/admin/AdminSuspiciousUsers';
+import AdminChallengesPage from './pages/admin/AdminChallengesPage';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Ingredients from './pages/Ingredients';
@@ -76,6 +79,9 @@ function App() {
             <Route path="ingredients" element={<AdminIngredientsPage />} />
             <Route path="analytics" element={<AdminAnalyticsPage />} />
             <Route path="home-settings" element={<AdminHomeSettingsPage />} />
+            <Route path="wellness" element={<AdminWellnessDashboard />} />
+            <Route path="wellness/suspicious" element={<AdminSuspiciousUsers />} />
+            <Route path="wellness/challenges" element={<AdminChallengesPage />} />
           </Route>
 
           <Route path="/about" element={<About />} />
