@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import api from '@shared/api';
 
 const INTERACTION_LEVELS = {
@@ -8,30 +8,13 @@ const INTERACTION_LEVELS = {
 };
 
 export default function DrugCheck() {
-  const [mode, setMode] = useState('upload');
-  const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [manualDrugs, setManualDrugs] = useState('');
   const [analyzing, setAnalyzing] = useState(false);
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
-  const [manualDrugs, setManualDrugs] = useState('');
-  const fileInputRef = useRef(null);
-
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setImage(file);
-    setImagePreview(URL.createObjectURL(file));
-    setResults(null);
-    setError(null);
-  };
 
   const handleAnalyze = async () => {
-    if (mode === 'upload' && !image) {
-      setError('Vui lòng chọn ảnh đơn thuốc.');
-      return;
-    }
-    if (mode === 'manual' && !manualDrugs.trim()) {
+    if (!manualDrugs.trim()) {
       setError('Vui lòng nhập tên thuốc.');
       return;
     }
@@ -41,39 +24,21 @@ export default function DrugCheck() {
     setResults(null);
 
     try {
-      let payload;
-      if (mode === 'upload') {
-        const formData = new FormData();
-        formData.append('image', image);
-        payload = formData;
-      } else {
-        payload = { drugs: manualDrugs.split(',').map((d) => d.trim()).filter(Boolean) };
-      }
-
-      const { data } = await api.post('/wellness/drug-check', payload, {
-        headers: mode === 'upload' ? { 'Content-Type': 'multipart/form-data' } : undefined,
+      const { data } = await api.post('/wellness/drug-check', {
+        drugs: manualDrugs.split(',').map((d) => d.trim()).filter(Boolean),
       });
       setResults(data.interactions || []);
     } catch (err) {
-      if (err.response?.status === 413) {
-        setError('Ảnh quá lớn. Vui lòng chọn ảnh dưới 10MB.');
-      } else if (err.response?.status === 415) {
-        setError('Định dạng ảnh không được hỗ trợ. Vui lòng dùng JPG hoặc PNG.');
-      } else {
-        setError('Không thể phân tích đơn thuốc. Vui lòng thử lại sau.');
-      }
+      setError('Không thể phân tích đơn thuốc. Vui lòng thử lại sau.');
     } finally {
       setAnalyzing(false);
     }
   };
 
   const handleReset = () => {
-    setImage(null);
-    setImagePreview(null);
     setResults(null);
     setError(null);
     setManualDrugs('');
-    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   return (
@@ -86,68 +51,16 @@ export default function DrugCheck() {
         </p>
       </div>
 
-      <div className="flex gap-2">
-        <button
-          onClick={() => { setMode('upload'); handleReset(); }}
-          className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-            mode === 'upload' ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-600'
-          }`}
-        >
-          📷 Chụp ảnh
-        </button>
-        <button
-          onClick={() => { setMode('manual'); handleReset(); }}
-          className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-            mode === 'manual' ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-600'
-          }`}
-        >
-          ✍️ Nhập tay
-        </button>
-      </div>
-
-      {mode === 'upload' && !results && (
-        <div className="wellness-surface p-4 space-y-3">
-          {imagePreview ? (
-            <div className="space-y-3">
-              <img
-                src={imagePreview}
-                alt="Ảnh đơn thuốc"
-                className="w-full rounded-xl border border-gray-200 object-cover max-h-64"
-              />
-              <button onClick={handleReset} className="text-sm text-gray-500 underline">
-                Chọn ảnh khác
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="w-full border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-primary-400 transition-colors"
-            >
-              <div className="text-3xl mb-2">📸</div>
-              <p className="text-gray-600 font-medium">Chạm để chụp hoặc chọn ảnh</p>
-              <p className="text-xs text-gray-400 mt-1">JPG, PNG · Tối đa 10MB</p>
-            </button>
-          )}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/jpeg,image/png"
-            onChange={handleFileChange}
-            className="hidden"
-          />
-        </div>
-      )}
-
-      {mode === 'manual' && !results && (
+      {!results && (
         <div className="wellness-surface p-4 space-y-3">
           <label className="block text-sm font-medium text-gray-700">
-            Nhập tên thuốc (cách nhau bằng dấu phẩy)
+            Nhập tên thuốc bạn đang dùng (cách nhau bằng dấu phẩy)
           </label>
           <textarea
             className="input-field min-h-[100px] resize-none"
             value={manualDrugs}
             onChange={(e) => setManualDrugs(e.target.value)}
-            placeholder="VD: Paracetamol, Ibuprofen, Aspirin"
+            placeholder="VD: Paracetamol, Ibuprofen, Aspirin, Amoxicillin"
           />
         </div>
       )}
@@ -155,7 +68,7 @@ export default function DrugCheck() {
       {!results && (
         <button
           onClick={handleAnalyze}
-          disabled={analyzing || (mode === 'upload' && !image) || (mode === 'manual' && !manualDrugs.trim())}
+          disabled={analyzing || !manualDrugs.trim()}
           className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {analyzing ? (
@@ -164,7 +77,7 @@ export default function DrugCheck() {
               Đang phân tích...
             </span>
           ) : (
-            mode === 'upload' ? '🔍 Kiểm tra đơn thuốc' : '🔍 Kiểm tra tương tác'
+            '🔍 Kiểm tra tương tác'
           )}
         </button>
       )}
