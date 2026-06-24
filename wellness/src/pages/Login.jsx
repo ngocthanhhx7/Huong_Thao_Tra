@@ -33,10 +33,8 @@ export default function Login() {
     <div className="min-h-screen bg-gradient-to-b from-leaf-50 to-cream flex items-center justify-center px-4 safe-bottom">
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-primary-600 flex items-center justify-center text-white text-2xl font-extrabold shadow-md mb-3">
-            HTT
-          </div>
-          <h1 className="text-xl font-bold text-secondary">Hương Thảo Trà</h1>
+          <img src="/wellness/logo.png" alt="Trà Hoa Việt" className="h-16 w-16 rounded-2xl object-cover ring-1 ring-primary-100 shadow-md mb-3" />
+          <h1 className="text-xl font-bold text-secondary">Trà Hoa Việt</h1>
           <p className="text-sm text-gray-500">Đăng nhập để tiếp tục</p>
         </div>
 
