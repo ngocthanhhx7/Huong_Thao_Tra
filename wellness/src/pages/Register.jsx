@@ -26,7 +26,7 @@ export default function Register() {
     setLoading(true);
     try {
       await register(name.trim(), username.trim(), email.trim(), password);
-      navigate('/wellness/dashboard');
+      navigate('/dashboard');
     } catch (err) {
       const msg = err.response?.data?.message || 'Đăng ký thất bại. Vui lòng thử lại.';
       setError(msg);
@@ -121,7 +121,7 @@ export default function Register() {
 
           <p className="text-center text-sm text-gray-500 mt-5">
             Đã có tài khoản?{' '}
-            <Link to="/wellness/login" className="text-primary-600 font-semibold hover:underline">
+            <Link to="/login" className="text-primary-600 font-semibold hover:underline">
               Đăng nhập
             </Link>
           </p>

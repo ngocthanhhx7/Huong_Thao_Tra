@@ -13,12 +13,12 @@ const userSchema = new mongoose.Schema(
             default: 'Customer',
         },
         avatar: { type: String, default: '' },
-        gender: { type: String, enum: ['Nam', 'Nữ', 'Khác'], default: 'Khác' },
+        gender: { type: String, enum: ['Nam', 'Nữ', 'Khác', 'male', 'female', 'other'], default: 'other' },
         preferences: [{ type: String }],
         // For health plans (optional initially)
         age: { type: Number },
         sleepTime: { type: String },
-        stressLevel: { type: String, enum: ['Low', 'Medium', 'High'] },
+        stressLevel: { type: String, enum: ['Low', 'Medium', 'High', 'low', 'medium', 'high', ''] },
         healthGoal: { type: String },
         pro: {
             isPro: { type: Boolean, default: false },
@@ -29,6 +29,36 @@ const userSchema = new mongoose.Schema(
                 default: null,
             },
             proActivatedAt: { type: Date, default: null },
+        },
+        wellnessSettings: {
+            ritual: {
+                morning: {
+                    enabled: { type: Boolean, default: true },
+                    teaName: { type: String, default: '' },
+                    pushEnabled: { type: Boolean, default: false },
+                },
+                noon: {
+                    enabled: { type: Boolean, default: true },
+                    teaName: { type: String, default: '' },
+                    pushEnabled: { type: Boolean, default: false },
+                },
+                afternoon: {
+                    enabled: { type: Boolean, default: true },
+                    teaName: { type: String, default: '' },
+                    pushEnabled: { type: Boolean, default: false },
+                },
+                evening: {
+                    enabled: { type: Boolean, default: true },
+                    teaName: { type: String, default: '' },
+                    pushEnabled: { type: Boolean, default: false },
+                },
+            },
+            notifications: {
+                checkinReminder: { type: Boolean, default: true },
+                streakAlerts: { type: Boolean, default: true },
+                weatherAlerts: { type: Boolean, default: false },
+                proExpiryAlerts: { type: Boolean, default: true },
+            },
         },
     },
     { timestamps: true }

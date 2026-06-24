@@ -18,16 +18,16 @@ export default function PwaGate() {
 
   useEffect(() => {
     if (isStandalone()) {
-      navigate('/wellness/dashboard', { replace: true });
+      navigate('/dashboard', { replace: true });
       return;
     }
     if (!isIOS()) {
-      navigate('/wellness/dashboard', { replace: true });
+      navigate('/dashboard', { replace: true });
       return;
     }
     const flag = localStorage.getItem('pwa_installed');
     if (flag === 'true') {
-      navigate('/wellness/dashboard', { replace: true });
+      navigate('/dashboard', { replace: true });
       return;
     }
     setShowGuide(true);
@@ -36,7 +36,7 @@ export default function PwaGate() {
 
   const handleInstalled = () => {
     localStorage.setItem('pwa_installed', 'true');
-    navigate('/wellness/dashboard', { replace: true });
+    navigate('/dashboard', { replace: true });
   };
 
   if (checking) {

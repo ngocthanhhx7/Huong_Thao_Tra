@@ -88,7 +88,7 @@ export default function Settings() {
     setError(null);
     setSuccess(null);
     try {
-      await api.put('/wellness/settings/ritual', { slots });
+      await api.put('/wellness/settings', { ritual: slots, notifications: notify });
       setSuccess('Đã lưu cài đặt nghi thức.');
       setTimeout(() => setSuccess(null), 3000);
     } catch {
@@ -284,7 +284,7 @@ export default function Settings() {
       <section className="space-y-3">
         <h2 className="text-lg font-semibold text-gray-800">Hồ sơ</h2>
         <Link
-          to="/wellness/profile"
+          to="/profile"
           className="wellness-surface p-4 flex items-center gap-3 active:scale-[0.98] transition-transform no-underline"
         >
           <div className="w-10 h-10 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold text-lg">

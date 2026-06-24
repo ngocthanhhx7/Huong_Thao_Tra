@@ -23,6 +23,7 @@ const { createNotification } = require('../utils/notificationHelper');
 const { getGeminiModel } = require('../config/gemini');
 const { hasUserPurchasedTea } = require('../utils/purchaseHelper');
 const { createPayosPaymentLink } = require('../utils/payosHelper');
+const { normalizeJournalPayload } = require('../utils/wellnessJournalHelper');
 
 const getTodayDateString = () => new Date().toISOString().split('T')[0];
 
@@ -461,7 +462,7 @@ const getHealthLogs = async (req, res) => {
 };
 
 // @desc    Create or update a health log
-// @route   POST /api/wellness/health/log
+// @route   POST /api/wellness/health/logs
 // @access  Private
 const createHealthLog = async (req, res) => {
   try {
@@ -680,7 +681,13 @@ const getJournalEntries = async (req, res) => {
       .sort({ drunkAt: -1 })
       .populate('tea', 'name image price benefits');
 
-    res.json(entries);
+    const streak = await Streak.findOne({ user: req.user._id });
+
+    res.json({
+      entries,
+      streak: streak ? streak.currentStreak : 0,
+      longestStreak: streak ? streak.longestStreak : 0,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -691,22 +698,15 @@ const getJournalEntries = async (req, res) => {
 // @access  Private
 const createJournalEntry = async (req, res) => {
   try {
-    const { tea, teaName, drunkAt, mood, rating, bodyFeelings, note, photo } = req.body;
+    const journalPayload = normalizeJournalPayload(req.body);
 
-    if (!drunkAt) {
+    if (!journalPayload.drunkAt || Number.isNaN(journalPayload.drunkAt.getTime())) {
       return res.status(400).json({ message: 'drunkAt is required' });
     }
 
     const entry = await TeaJournal.create({
       user: req.user._id,
-      tea: tea || null,
-      teaName: teaName || '',
-      drunkAt,
-      mood,
-      rating,
-      bodyFeelings: bodyFeelings || [],
-      note: note || '',
-      photo: photo || '',
+      ...journalPayload,
     });
 
     await updateStreak(req.user._id);
@@ -732,16 +732,16 @@ const updateJournalEntry = async (req, res) => {
       return res.status(403).json({ message: 'Not authorized' });
     }
 
-    const { tea, teaName, drunkAt, mood, rating, bodyFeelings, note, photo } = req.body;
+    const journalPayload = normalizeJournalPayload(req.body);
 
-    if (tea !== undefined) entry.tea = tea;
-    if (teaName !== undefined) entry.teaName = teaName;
-    if (drunkAt !== undefined) entry.drunkAt = drunkAt;
-    if (mood !== undefined) entry.mood = mood;
-    if (rating !== undefined) entry.rating = rating;
-    if (bodyFeelings !== undefined) entry.bodyFeelings = bodyFeelings;
-    if (note !== undefined) entry.note = note;
-    if (photo !== undefined) entry.photo = photo;
+    if (req.body.tea !== undefined) entry.tea = journalPayload.tea;
+    if (req.body.teaName !== undefined) entry.teaName = journalPayload.teaName;
+    if (req.body.drunkAt !== undefined || req.body.date !== undefined || req.body.time !== undefined) entry.drunkAt = journalPayload.drunkAt;
+    if (req.body.mood !== undefined) entry.mood = journalPayload.mood;
+    if (req.body.rating !== undefined) entry.rating = journalPayload.rating;
+    if (req.body.bodyFeelings !== undefined || req.body.feelings !== undefined) entry.bodyFeelings = journalPayload.bodyFeelings;
+    if (req.body.note !== undefined) entry.note = journalPayload.note;
+    if (req.body.photo !== undefined) entry.photo = journalPayload.photo;
 
     await entry.save();
 
@@ -903,6 +903,34 @@ Trả lời bằng tiếng Việt, định dạng JSON:
       suggestions: suggestionDoc.suggestions,
       id: suggestionDoc._id,
     });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Get recent weather-based drink suggestion history
+// @route   GET /api/wellness/suggest/drink/history
+// @access  Private
+const getDrinkSuggestionHistory = async (req, res) => {
+  try {
+    const history = await DrinkSuggestion.find({ user: req.user._id })
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .lean();
+
+    res.json(
+      history.map((item) => ({
+        _id: item._id,
+        createdAt: item.createdAt,
+        weather: item.weather,
+        teas: (item.suggestions || []).map((suggestion) => ({
+          _id: suggestion.teaId,
+          name: suggestion.teaName,
+          reason: suggestion.reason,
+        })),
+        suggestions: item.suggestions || [],
+      }))
+    );
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -1783,6 +1811,74 @@ const unsubscribePush = async (req, res) => {
 };
 
 // ---------------------------------------------------------------------------
+// SETTINGS
+// ---------------------------------------------------------------------------
+
+// @desc    Get current user's wellness settings
+// @route   GET /api/wellness/settings
+// @access  Private
+const getWellnessSettings = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('wellnessSettings');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(user.wellnessSettings || {});
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Update current user's wellness settings
+// @route   PUT /api/wellness/settings
+// @access  Private
+const updateWellnessSettings = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('wellnessSettings');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const current = user.wellnessSettings || {};
+    user.wellnessSettings = {
+      ritual: req.body.ritual || req.body.slots || current.ritual,
+      notifications: req.body.notifications || current.notifications,
+    };
+
+    await user.save();
+    res.json(user.wellnessSettings);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Update current user's ritual settings
+// @route   PUT /api/wellness/settings/ritual
+// @access  Private
+const updateWellnessRitualSettings = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('wellnessSettings');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.wellnessSettings = {
+      ...(user.wellnessSettings || {}),
+      ritual: req.body.ritual || req.body.slots,
+    };
+
+    await user.save();
+    res.json(user.wellnessSettings);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// ---------------------------------------------------------------------------
 // ADMIN
 // ---------------------------------------------------------------------------
 
@@ -2136,6 +2232,7 @@ module.exports = {
   deleteJournalEntry,
   getStreakInfo,
   getDrinkSuggestion,
+  getDrinkSuggestionHistory,
   coachCheckin,
   coachChat,
   getCoachHistory,
@@ -2156,6 +2253,9 @@ module.exports = {
   checkDrugInteraction,
   subscribePush,
   unsubscribePush,
+  getWellnessSettings,
+  updateWellnessSettings,
+  updateWellnessRitualSettings,
   getAdminDashboard,
   getAdminUsers,
   adminUpdatePro,

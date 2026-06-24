@@ -19,6 +19,16 @@ const HEALTH_GOALS = [
   'Làm đẹp da',
 ];
 
+const formatPreferences = (preferences) => (
+  Array.isArray(preferences) ? preferences.join(', ') : preferences || ''
+);
+
+const parsePreferences = (preferences) => (
+  preferences
+    ? preferences.split(',').map((item) => item.trim()).filter(Boolean)
+    : []
+);
+
 export default function Profile() {
   const { user, setUser, logout } = useAuth();
   const navigate = useNavigate();
@@ -38,7 +48,7 @@ export default function Profile() {
       setForm({
         name: data.name || '',
         gender: data.gender || 'other',
-        preferences: data.preferences || '',
+        preferences: formatPreferences(data.preferences),
         age: data.age?.toString() || '',
         sleepTime: data.sleepTime || '',
         stressLevel: data.stressLevel || '',
@@ -63,7 +73,7 @@ export default function Profile() {
       const payload = {
         name: form.name.trim(),
         gender: form.gender,
-        preferences: form.preferences.trim(),
+        preferences: parsePreferences(form.preferences),
         age: parseInt(form.age, 10) || null,
         sleepTime: form.sleepTime,
         stressLevel: form.stressLevel,
@@ -74,7 +84,7 @@ export default function Profile() {
       setForm({
         name: data.name || '',
         gender: data.gender || 'other',
-        preferences: data.preferences || '',
+        preferences: formatPreferences(data.preferences),
         age: data.age?.toString() || '',
         sleepTime: data.sleepTime || '',
         stressLevel: data.stressLevel || '',
@@ -98,7 +108,7 @@ export default function Profile() {
     setForm({
       name: profile.name || '',
       gender: profile.gender || 'other',
-      preferences: profile.preferences || '',
+      preferences: formatPreferences(profile.preferences),
       age: profile.age?.toString() || '',
       sleepTime: profile.sleepTime || '',
       stressLevel: profile.stressLevel || '',
@@ -110,7 +120,7 @@ export default function Profile() {
 
   const handleLogout = () => {
     logout();
-    navigate('/wellness/login');
+    navigate('/login');
   };
 
   if (loading) {
@@ -301,14 +311,14 @@ export default function Profile() {
         <h2 className="text-lg font-semibold text-gray-800">Nhanh</h2>
         <div className="wellness-surface divide-y divide-gray-100">
           <Link
-            to="/wellness/pro"
+            to="/pro"
             className="flex items-center justify-between p-4 no-underline active:bg-gray-50"
           >
             <span className="text-sm text-gray-700">⭐ Gói Pro</span>
             <span className="text-gray-400 text-lg">›</span>
           </Link>
           <Link
-            to="/wellness/settings"
+            to="/settings"
             className="flex items-center justify-between p-4 no-underline active:bg-gray-50"
           >
             <span className="text-sm text-gray-700">⚙️ Cài đặt</span>

@@ -1,23 +1,24 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '@shared/AuthContext';
 import { useState } from 'react';
+import SkillIcon from './SkillIcon';
 
 const tabs = [
-  { to: '/wellness/dashboard', label: 'Sức khỏe', icon: '📊' },
-  { to: '/wellness/journal', label: 'Nhật ký', icon: '📔' },
-  { to: '/wellness/coach', label: 'AI Coach', icon: '🤖' },
+  { to: '/dashboard', label: 'Sức khỏe', icon: '📊', skillIcon: 'health' },
+  { to: '/journal', label: 'Nhật ký', icon: '📔', skillIcon: 'journal' },
+  { to: '/coach', label: 'AI Coach', icon: '🤖', skillIcon: 'coach' },
 ];
 
 const moreItems = [
-  { to: '/wellness/suggest', label: 'Gợi ý đồ uống', icon: '🍵' },
-  { to: '/wellness/workout', label: 'Vận động', icon: '🏃' },
-  { to: '/wellness/challenges', label: 'Thử thách', icon: '🎯' },
-  { to: '/wellness/reports', label: 'Báo cáo', icon: '📋' },
-  { to: '/wellness/drug-check', label: 'Kiểm tra thuốc', icon: '💊' },
-  { to: '/wellness/family', label: 'Gia đình', icon: '👨‍👩‍👧‍👦' },
-  { to: '/wellness/pro', label: 'Gói Pro', icon: '⭐' },
-  { to: '/wellness/settings', label: 'Cài đặt', icon: '⚙️' },
-  { to: '/wellness/profile', label: 'Hồ sơ', icon: '👤' },
+  { to: '/suggest', label: 'Gợi ý đồ uống', icon: '🍵', skillIcon: 'suggest' },
+  { to: '/workout', label: 'Vận động', icon: '🏃', skillIcon: 'workout' },
+  { to: '/challenges', label: 'Thử thách', icon: '🎯', skillIcon: 'challenges' },
+  { to: '/reports', label: 'Báo cáo', icon: '📋', skillIcon: 'reports' },
+  { to: '/drug-check', label: 'Kiểm tra thuốc', icon: '💊', skillIcon: 'drug-check' },
+  { to: '/family', label: 'Gia đình', icon: '👨‍👩‍👧‍👦', skillIcon: 'family' },
+  { to: '/pro', label: 'Gói Pro', icon: '⭐', skillIcon: 'pro' },
+  { to: '/settings', label: 'Cài đặt', icon: '⚙️', skillIcon: 'settings' },
+  { to: '/profile', label: 'Hồ sơ', icon: '👤', skillIcon: 'profile' },
 ];
 
 export default function WellnessLayout() {
@@ -27,7 +28,7 @@ export default function WellnessLayout() {
 
   const handleLogout = () => {
     logout();
-    navigate('/wellness/login');
+    navigate('/login');
   };
 
   return (
@@ -47,7 +48,7 @@ export default function WellnessLayout() {
               }`
             }
           >
-            <span className="text-xl">{tab.icon}</span>
+            <SkillIcon icon={tab.skillIcon} fallback={tab.icon} className="w-6 h-6" />
             <span className="text-[11px] font-medium">{tab.label}</span>
           </NavLink>
         ))}
@@ -84,7 +85,7 @@ export default function WellnessLayout() {
                   onClick={() => setDrawerOpen(false)}
                   className="flex flex-col items-center gap-1 p-3 rounded-xl bg-leaf-50 hover:bg-leaf-100 transition-colors"
                 >
-                  <span className="text-2xl">{item.icon}</span>
+                  <SkillIcon icon={item.skillIcon} fallback={item.icon} className="w-8 h-8" />
                   <span className="text-xs text-center font-medium text-gray-700">
                     {item.label}
                   </span>

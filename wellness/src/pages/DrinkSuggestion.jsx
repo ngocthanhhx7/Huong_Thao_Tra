@@ -20,12 +20,12 @@ function TeaCard({ tea }) {
     <div className="bg-white rounded-2xl p-4 shadow-sm border border-leaf-50">
       <h3 className="font-bold text-gray-800 text-lg mb-1">{tea.name}</h3>
       <p className="text-sm text-gray-500 mb-3">{tea.reason}</p>
-      <Link
-        to="/store"
+      <a
+        href="/teas"
         className="inline-block text-sm text-primary-600 font-medium hover:underline"
       >
         Xem tại cửa hàng
-      </Link>
+      </a>
     </div>
   );
 }

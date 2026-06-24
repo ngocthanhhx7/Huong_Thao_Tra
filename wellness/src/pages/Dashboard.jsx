@@ -208,17 +208,17 @@ export default function Dashboard() {
   const handleQuickAdd = async (e) => {
     e.preventDefault();
     const payload = {};
-    if (quickForm.sleep) payload.sleep = Number(quickForm.sleep);
+    if (quickForm.sleep) payload.sleepHours = Number(quickForm.sleep);
     if (quickForm.stress) payload.stress = Number(quickForm.stress);
     if (quickForm.weight) payload.weight = Number(quickForm.weight);
-    if (quickForm.water) payload.water = Number(quickForm.water);
-    if (quickForm.exercise) payload.exercise = Number(quickForm.exercise);
+    if (quickForm.water) payload.waterGlasses = Number(quickForm.water);
+    if (quickForm.exercise) payload.exerciseMinutes = Number(quickForm.exercise);
 
     if (Object.keys(payload).length === 0) return;
 
     setSubmitting(true);
     try {
-      await api.post('/wellness/health/log', { ...payload, date: new Date().toISOString() });
+      await api.post('/wellness/health/logs', { ...payload, date: new Date().toISOString().slice(0, 10) });
       setQuickForm({ sleep: '', stress: '', weight: '', water: '', exercise: '' });
       fetchData();
     } catch {
@@ -372,10 +372,10 @@ export default function Dashboard() {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
           <h3 className="text-sm font-bold text-gray-700 mb-3">Chỉ số hôm nay</h3>
           <div className="grid grid-cols-2 gap-3">
-            {todayLog.sleep != null && (
+            {todayLog.sleepHours != null && (
               <div className="bg-leaf-50 rounded-xl p-3">
                 <p className="text-xs text-gray-500">Giấc ngủ</p>
-                <p className="text-lg font-bold text-secondary">{todayLog.sleep}h</p>
+                <p className="text-lg font-bold text-secondary">{todayLog.sleepHours}h</p>
               </div>
             )}
             {todayLog.stress != null && (
@@ -390,16 +390,16 @@ export default function Dashboard() {
                 <p className="text-lg font-bold text-secondary">{todayLog.weight}kg</p>
               </div>
             )}
-            {todayLog.water != null && (
+            {todayLog.waterGlasses != null && (
               <div className="bg-leaf-50 rounded-xl p-3">
                 <p className="text-xs text-gray-500">Nước</p>
-                <p className="text-lg font-bold text-secondary">{todayLog.water}ml</p>
+                <p className="text-lg font-bold text-secondary">{todayLog.waterGlasses} ly</p>
               </div>
             )}
-            {todayLog.exercise != null && (
+            {todayLog.exerciseMinutes != null && (
               <div className="bg-leaf-50 rounded-xl p-3">
                 <p className="text-xs text-gray-500">Vận động</p>
-                <p className="text-lg font-bold text-secondary">{todayLog.exercise}ph</p>
+                <p className="text-lg font-bold text-secondary">{todayLog.exerciseMinutes}ph</p>
               </div>
             )}
           </div>

@@ -142,7 +142,11 @@ const getUserProfile = async (req, res) => {
             role: user.role,
             avatar: user.avatar,
             gender: user.gender,
-            preferences: user.preferences
+            preferences: user.preferences,
+            age: user.age,
+            sleepTime: user.sleepTime,
+            stressLevel: user.stressLevel,
+            healthGoal: user.healthGoal,
         });
     } else {
         res.status(404).json({ message: 'User not found' });
@@ -161,6 +165,10 @@ const updateUserProfile = async (req, res) => {
         user.avatar = req.body.avatar || user.avatar;
         user.gender = req.body.gender || user.gender;
         user.preferences = req.body.preferences || user.preferences;
+        user.age = req.body.age === undefined ? user.age : req.body.age;
+        user.sleepTime = req.body.sleepTime === undefined ? user.sleepTime : req.body.sleepTime;
+        user.stressLevel = req.body.stressLevel === undefined ? user.stressLevel : req.body.stressLevel;
+        user.healthGoal = req.body.healthGoal === undefined ? user.healthGoal : req.body.healthGoal;
 
         if (req.body.password) {
             user.password = req.body.password;
@@ -177,6 +185,10 @@ const updateUserProfile = async (req, res) => {
             avatar: updatedUser.avatar,
             gender: updatedUser.gender,
             preferences: updatedUser.preferences,
+            age: updatedUser.age,
+            sleepTime: updatedUser.sleepTime,
+            stressLevel: updatedUser.stressLevel,
+            healthGoal: updatedUser.healthGoal,
             token: generateToken(updatedUser._id),
         });
     } else {

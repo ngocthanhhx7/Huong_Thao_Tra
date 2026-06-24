@@ -3,11 +3,11 @@ import api from '@shared/api';
 import ReactMarkdown from 'react-markdown';
 
 const MOODS = [
-  { emoji: '😊', label: 'Vui vẻ', value: 'happy' },
-  { emoji: '😌', label: 'Bình yên', value: 'calm' },
-  { emoji: '😐', label: 'Bình thường', value: 'neutral' },
-  { emoji: '😔', label: 'Buồn', value: 'sad' },
-  { emoji: '😤', label: 'Căng thẳng', value: 'stressed' },
+  { emoji: '😊', label: 'Vui vẻ', value: 'great' },
+  { emoji: '😌', label: 'Bình yên', value: 'good' },
+  { emoji: '😐', label: 'Bình thường', value: 'okay' },
+  { emoji: '😔', label: 'Buồn', value: 'bad' },
+  { emoji: '😤', label: 'Căng thẳng', value: 'awful' },
 ];
 
 function AIMessage({ message }) {
@@ -37,7 +37,7 @@ export default function AICoach() {
 
   const [checkinForm, setCheckinForm] = useState({
     sleepHours: '',
-    stressLevel: 5,
+    stress: 5,
     mood: '',
     exerciseMinutes: '',
     waterGlasses: '',
@@ -88,7 +88,7 @@ export default function AICoach() {
     try {
       const history = newMessages.map((m) => ({ role: m.role, content: m.content }));
       const { data } = await api.post('/wellness/coach/chat', { message: text, history });
-      setChatMessages([...newMessages, { role: 'assistant', content: data.reply || data.message || data }]);
+      setChatMessages([...newMessages, { role: 'assistant', content: data.response || data.reply || data.message || String(data) }]);
     } catch {
       setChatMessages([...newMessages, { role: 'assistant', content: 'Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại.' }]);
     } finally {
@@ -144,12 +144,12 @@ export default function AICoach() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Mức căng thẳng: {checkinForm.stressLevel}/10
+                  Mức căng thẳng: {checkinForm.stress}/10
                 </label>
                 <input
                   type="range"
-                  value={checkinForm.stressLevel}
-                  onChange={(e) => handleCheckinChange('stressLevel', Number(e.target.value))}
+                  value={checkinForm.stress}
+                  onChange={(e) => handleCheckinChange('stress', Number(e.target.value))}
                   min="1"
                   max="10"
                   className="w-full accent-primary-600"

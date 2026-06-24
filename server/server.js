@@ -3,10 +3,22 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const path = require('path');
 const connectDB = require('./config/db');
 
 // Load env vars
-dotenv.config();
+const serverEnvPath = path.resolve(__dirname, '.env');
+const envResult = dotenv.config({ path: serverEnvPath });
+
+if (envResult.error) {
+    dotenv.config();
+}
+
+const requiredEnvVars = ['MONGO_URI', 'JWT_SECRET'];
+const missingEnvVars = requiredEnvVars.filter((name) => !process.env[name]);
+if (missingEnvVars.length) {
+    console.warn(`Missing environment variables: ${missingEnvVars.join(', ')}`);
+}
 
 // Connect to database
 connectDB();

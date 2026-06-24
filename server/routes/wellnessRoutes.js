@@ -13,6 +13,7 @@ const {
   deleteJournalEntry,
   getStreakInfo,
   getDrinkSuggestion,
+  getDrinkSuggestionHistory,
   coachCheckin,
   coachChat,
   getCoachHistory,
@@ -33,6 +34,9 @@ const {
   checkDrugInteraction,
   subscribePush,
   unsubscribePush,
+  getWellnessSettings,
+  updateWellnessSettings,
+  updateWellnessRitualSettings,
   getAdminDashboard,
   getAdminUsers,
   adminUpdatePro,
@@ -63,6 +67,7 @@ router.route('/journal/:id').put(protect, updateJournalEntry).delete(protect, de
 
 // DRINK SUGGESTION
 router.route('/suggest/drink').get(protect, getDrinkSuggestion);
+router.route('/suggest/drink/history').get(protect, getDrinkSuggestionHistory);
 
 // AI COACH
 router.route('/coach/checkin').post(protect, coachCheckin);
@@ -95,6 +100,10 @@ router.route('/drug-check').post(protect, checkDrugInteraction);
 // PUSH
 router.route('/push/subscribe').post(protect, subscribePush);
 router.route('/push/unsubscribe').delete(protect, unsubscribePush);
+
+// SETTINGS
+router.route('/settings').get(protect, getWellnessSettings).put(protect, updateWellnessSettings);
+router.route('/settings/ritual').put(protect, updateWellnessRitualSettings);
 
 // ADMIN
 router.route('/admin/dashboard').get(protect, staff, getAdminDashboard);

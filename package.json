@@ -5,7 +5,9 @@
         "start": "node server/server.js",
         "server": "npm run dev --prefix server",
         "client": "npm run dev --prefix client",
-        "dev": "concurrently \"npm run server\" \"npm run client\""
+        "wellness": "npm run dev --prefix wellness",
+        "dev": "concurrently \"npm run server\" \"npm run client\"",
+        "dev:wellness": "concurrently \"npm run server\" \"npm run wellness\""
     },
     "dependencies": {
         "concurrently": "^8.2.2"

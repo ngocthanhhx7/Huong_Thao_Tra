@@ -35,12 +35,12 @@ function AppRoutes() {
     <Routes>
       <Route path="/" element={<PwaGate />} />
       <Route element={<WellnessLayout />}>
-        <Route path="/dashboard" element={<ProGuard><Dashboard /></ProGuard>} />
-        <Route path="/journal" element={<ProGuard><TeaJournal /></ProGuard>} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/journal" element={<TeaJournal />} />
         <Route path="/coach" element={<ProGuard><AICoach /></ProGuard>} />
-        <Route path="/suggest" element={<ProGuard><DrinkSuggestion /></ProGuard>} />
+        <Route path="/suggest" element={<DrinkSuggestion />} />
         <Route path="/workout" element={<ProGuard><WorkoutPlanner /></ProGuard>} />
-        <Route path="/challenges" element={<ProGuard><Challenges /></ProGuard>} />
+        <Route path="/challenges" element={<Challenges />} />
         <Route path="/family" element={<ProGuard><FamilyHub /></ProGuard>} />
         <Route path="/reports" element={<ProGuard><Reports /></ProGuard>} />
         <Route path="/drug-check" element={<ProGuard><DrugCheck /></ProGuard>} />

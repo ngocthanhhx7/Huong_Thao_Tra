@@ -34,7 +34,7 @@ export default function ProGuard({ children }) {
   }
 
   if (!proStatus?.isPro) {
-    return <Navigate to="/wellness/pro" replace />;
+    return <Navigate to="/pro" replace />;
   }
 
   return children;

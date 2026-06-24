@@ -10,12 +10,17 @@ const STREAK_BADGES = [
 ];
 
 const MOODS = [
-  { emoji: '😊', label: 'Vui vẻ' },
-  { emoji: '😌', label: 'Bình yên' },
-  { emoji: '😐', label: 'Bình thường' },
-  { emoji: '😔', label: 'Buồn' },
-  { emoji: '😤', label: 'Căng thẳng' },
+  { emoji: '😊', label: 'Vui vẻ', value: 'great' },
+  { emoji: '😌', label: 'Bình yên', value: 'good' },
+  { emoji: '😐', label: 'Bình thường', value: 'okay' },
+  { emoji: '😔', label: 'Buồn', value: 'bad' },
+  { emoji: '😤', label: 'Căng thẳng', value: 'awful' },
 ];
+
+const MOOD_BY_VALUE = MOODS.reduce((acc, mood) => {
+  acc[mood.value] = mood;
+  return acc;
+}, {});
 
 const FEELINGS = [
   'tỉnh táo', 'buồn ngủ', 'ấm bụng', 'thư giãn',
@@ -25,7 +30,7 @@ const FEELINGS = [
 function groupByDate(entries) {
   const map = {};
   entries.forEach((e) => {
-    const date = e.createdAt?.split('T')[0] || new Date().toISOString().split('T')[0];
+    const date = e.drunkAt?.split('T')[0] || e.createdAt?.split('T')[0] || new Date().toISOString().split('T')[0];
     if (!map[date]) map[date] = [];
     map[date].push(e);
   });
@@ -56,7 +61,7 @@ export default function TeaJournal() {
     setError('');
     try {
       const { data } = await api.get('/wellness/journal');
-      setJournal(data);
+      setJournal(Array.isArray(data) ? { entries: data, streak: 0 } : data);
     } catch {
       setError('Không thể tải nhật ký trà. Thử lại sau.');
     } finally {
@@ -101,10 +106,11 @@ export default function TeaJournal() {
     try {
       const payload = {
         teaName: form.teaName,
+        date: new Date().toISOString().slice(0, 10),
         time: form.time,
         mood: form.mood,
         rating: form.rating,
-        feelings: form.feelings,
+        bodyFeelings: form.feelings,
         note: form.note,
       };
       if (form.photo) {
@@ -211,15 +217,15 @@ export default function TeaJournal() {
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs text-gray-400">{entry.time || '--:--'}</span>
+                          <span className="text-xs text-gray-400">{entry.drunkAt ? new Date(entry.drunkAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) : '--:--'}</span>
                           <span className="font-semibold text-gray-800 truncate">
-                            {entry.teaName}
+                            {entry.teaName || entry.tea?.name}
                           </span>
                         </div>
                         <div className="flex items-center gap-3 mb-2">
-                          {entry.mood && (
-                            <span className="text-xl" title={entry.mood}>
-                              {entry.mood}
+                          {entry.mood && MOOD_BY_VALUE[entry.mood] && (
+                            <span className="text-xl" title={MOOD_BY_VALUE[entry.mood].label}>
+                              {MOOD_BY_VALUE[entry.mood].emoji}
                             </span>
                           )}
                           {entry.rating > 0 && (
@@ -228,9 +234,9 @@ export default function TeaJournal() {
                             </span>
                           )}
                         </div>
-                        {entry.feelings?.length > 0 && (
+                        {(entry.bodyFeelings || entry.feelings)?.length > 0 && (
                           <div className="flex flex-wrap gap-1 mb-2">
-                            {entry.feelings.map((f) => (
+                            {(entry.bodyFeelings || entry.feelings).map((f) => (
                               <span
                                 key={f}
                                 className="px-2 py-0.5 bg-leaf-50 text-leaf-800 rounded-full text-xs"
@@ -333,11 +339,11 @@ export default function TeaJournal() {
                 <div className="flex gap-2">
                   {MOODS.map((m) => (
                     <button
-                      key={m.emoji}
+                      key={m.value}
                       type="button"
-                      onClick={() => handleChange('mood', m.emoji)}
+                      onClick={() => handleChange('mood', m.value)}
                       className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl transition-all ${
-                        form.mood === m.emoji
+                        form.mood === m.value
                           ? 'bg-primary-100 ring-2 ring-primary-500 scale-110'
                           : 'bg-gray-50 hover:bg-gray-100'
                       }`}

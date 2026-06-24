@@ -20,6 +20,21 @@ api.interceptors.request.use(
 
 const ERROR_ROUTES = ['/login', '/register', '/404', '/403', '/401', '/500', '/maintenance', '/network-error'];
 
+const getAppBasePath = () => {
+  if (typeof window !== 'undefined' && window.location.pathname.startsWith('/wellness')) {
+    return '/wellness';
+  }
+  return '';
+};
+
+const isErrorRoute = (path) => {
+  const appBase = getAppBasePath();
+  const normalizedPath = appBase && path.startsWith(appBase)
+    ? path.slice(appBase.length) || '/'
+    : path;
+  return ERROR_ROUTES.includes(normalizedPath);
+};
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -27,8 +42,8 @@ api.interceptors.response.use(
     if (!error.response) {
       if (typeof navigator !== 'undefined' && navigator.onLine === false) {
         const path = window.location.pathname;
-        if (!ERROR_ROUTES.includes(path)) {
-          window.location.href = '/network-error';
+        if (!isErrorRoute(path)) {
+          window.location.href = `${getAppBasePath()}/network-error`;
         }
       }
       return Promise.reject(error);
@@ -36,8 +51,8 @@ api.interceptors.response.use(
     if (status === 401) {
       localStorage.removeItem('userInfo');
       const path = window.location.pathname;
-      if (path !== '/login' && !ERROR_ROUTES.includes(path)) {
-        window.location.href = '/login';
+      if (!isErrorRoute(path)) {
+        window.location.href = `${getAppBasePath()}/login`;
       }
     }
     return Promise.reject(error);
