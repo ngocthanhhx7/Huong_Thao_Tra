@@ -115,7 +115,7 @@ const confirmDemoPayment = async (req, res) => {
             });
         }
 
-        await order.save();
+        await order.save({ validateBeforeSave: false });
 
         res.json({
             payment,
@@ -196,7 +196,7 @@ const handlePayosWebhook = async (req, res) => {
                         status: 'Completed',
                         update_time: new Date().toISOString(),
                     };
-                    await order.save();
+                    await order.save({ validateBeforeSave: false });
 
                     // Gửi thông báo cho khách hàng
                     await createNotification({

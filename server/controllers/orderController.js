@@ -212,7 +212,7 @@ const getOrderById = async (req, res) => {
                             status: 'Completed',
                             update_time: new Date().toISOString(),
                         };
-                        await order.save();
+                        await order.save({ validateBeforeSave: false });
 
                         // Gửi thông báo cho khách hàng
                         await createNotification({
@@ -272,7 +272,7 @@ const updateOrderStatus = async (req, res) => {
             order.deliveredAt = new Date();
         }
 
-        const updatedOrder = await order.save();
+        const updatedOrder = await order.save({ validateBeforeSave: false });
 
         await createNotification({
             recipient: order.user,
