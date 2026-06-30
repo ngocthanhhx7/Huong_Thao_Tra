@@ -29,7 +29,7 @@ input, textarea {
 }
 
 :root {
-  --wellness-nav-height: 72px;
+  --wellness-nav-height: 60px;
 }
 
 .wellness-app-shell {
@@ -62,9 +62,9 @@ input, textarea {
 }
 
 .wellness-bottom-nav {
-  min-height: var(--wellness-nav-height);
-  padding-top: 0.5rem;
-  padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
+  height: calc(var(--wellness-nav-height) + env(safe-area-inset-bottom, 0px));
+  padding-top: 0.25rem;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .wellness-drawer-panel {

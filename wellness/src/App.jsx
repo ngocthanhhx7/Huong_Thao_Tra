@@ -21,34 +21,34 @@ import ProGuard from './components/ProGuard';
 function AppRoutes() {
   const { user } = useAuth();
 
-  if (!user) {
-    return (
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="*" element={<Login />} />
-      </Routes>
-    );
-  }
-
   return (
     <Routes>
       <Route element={<PwaGate />}>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route element={<WellnessLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/journal" element={<TeaJournal />} />
-          <Route path="/coach" element={<ProGuard><AICoach /></ProGuard>} />
-          <Route path="/suggest" element={<DrinkSuggestion />} />
-          <Route path="/workout" element={<ProGuard><WorkoutPlanner /></ProGuard>} />
-          <Route path="/challenges" element={<Challenges />} />
-          <Route path="/family" element={<ProGuard><FamilyHub /></ProGuard>} />
-          <Route path="/reports" element={<ProGuard><Reports /></ProGuard>} />
-          <Route path="/drug-check" element={<ProGuard><DrugCheck /></ProGuard>} />
-          <Route path="/pro" element={<ProPurchase />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/profile" element={<Profile />} />
-        </Route>
+        {!user ? (
+          <>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="*" element={<Login />} />
+          </>
+        ) : (
+          <>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route element={<WellnessLayout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/journal" element={<TeaJournal />} />
+              <Route path="/coach" element={<ProGuard><AICoach /></ProGuard>} />
+              <Route path="/suggest" element={<DrinkSuggestion />} />
+              <Route path="/workout" element={<ProGuard><WorkoutPlanner /></ProGuard>} />
+              <Route path="/challenges" element={<Challenges />} />
+              <Route path="/family" element={<ProGuard><FamilyHub /></ProGuard>} />
+              <Route path="/reports" element={<ProGuard><Reports /></ProGuard>} />
+              <Route path="/drug-check" element={<ProGuard><DrugCheck /></ProGuard>} />
+              <Route path="/pro" element={<ProPurchase />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/profile" element={<Profile />} />
+            </Route>
+          </>
+        )}
       </Route>
     </Routes>
   );
