@@ -37,27 +37,27 @@ export default function WellnessLayout() {
         <Outlet />
       </main>
 
-      <nav className="wellness-bottom-nav fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex items-center justify-around z-50">
+      <nav className="wellness-bottom-nav fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex items-end justify-around z-50">
         {tabs.map((tab) => (
           <NavLink
             key={tab.to}
             to={tab.to}
             className={({ isActive }) =>
-              `flex flex-col items-center gap-0.5 px-2 py-0.5 rounded-lg transition-colors ${
+              `wellness-bottom-nav-item flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-colors ${
                 isActive ? 'text-primary-600' : 'text-gray-500'
               }`
             }
           >
-            <SkillIcon icon={tab.skillIcon} fallback={tab.icon} className="w-5 h-5" />
-            <span className="text-[10px] font-medium">{tab.label}</span>
+            <SkillIcon icon={tab.skillIcon} fallback={tab.icon} className="w-6 h-6" />
+            <span className="text-[11px] font-medium">{tab.label}</span>
           </NavLink>
         ))}
         <button
           onClick={() => setDrawerOpen(true)}
-          className="flex flex-col items-center gap-0.5 px-2 py-0.5 text-gray-500"
+          className="wellness-bottom-nav-item flex flex-col items-center gap-0.5 px-2 py-1 text-gray-500"
         >
-          <span className="text-lg leading-5">☰</span>
-          <span className="text-[10px] font-medium">Thêm</span>
+          <span className="text-xl leading-6">☰</span>
+          <span className="text-[11px] font-medium">Thêm</span>
         </button>
       </nav>
 
