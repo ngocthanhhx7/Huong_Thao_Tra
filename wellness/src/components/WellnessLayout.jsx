@@ -43,21 +43,21 @@ export default function WellnessLayout() {
             key={tab.to}
             to={tab.to}
             className={({ isActive }) =>
-              `flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg transition-colors ${
+              `flex flex-col items-center gap-0.5 px-2 py-0.5 rounded-lg transition-colors ${
                 isActive ? 'text-primary-600' : 'text-gray-500'
               }`
             }
           >
-            <SkillIcon icon={tab.skillIcon} fallback={tab.icon} className="w-6 h-6" />
-            <span className="text-[11px] font-medium">{tab.label}</span>
+            <SkillIcon icon={tab.skillIcon} fallback={tab.icon} className="w-5 h-5" />
+            <span className="text-[10px] font-medium">{tab.label}</span>
           </NavLink>
         ))}
         <button
           onClick={() => setDrawerOpen(true)}
-          className="flex flex-col items-center gap-0.5 px-2 py-1 text-gray-500"
+          className="flex flex-col items-center gap-0.5 px-2 py-0.5 text-gray-500"
         >
-          <span className="text-xl">☰</span>
-          <span className="text-[11px] font-medium">Thêm</span>
+          <span className="text-lg leading-5">☰</span>
+          <span className="text-[10px] font-medium">Thêm</span>
         </button>
       </nav>
 

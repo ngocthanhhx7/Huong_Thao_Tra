@@ -30,7 +30,7 @@ input, textarea {
 }
 
 :root {
-  --wellness-nav-height: 56px;
+  --wellness-nav-height: 52px;
 }
 
 .wellness-app-shell {
@@ -58,25 +58,14 @@ input, textarea {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  padding-bottom: calc(var(--wellness-nav-height) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: var(--wellness-nav-height);
   -webkit-overflow-scrolling: touch;
 }
 
 .wellness-bottom-nav {
-  height: calc(var(--wellness-nav-height) + env(safe-area-inset-bottom, 0px));
+  height: var(--wellness-nav-height);
   padding-top: 0.25rem;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-
-.wellness-bottom-nav::after {
-  content: '';
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: env(safe-area-inset-bottom, 0px);
-  background: #ffffff;
-  pointer-events: none;
+  padding-bottom: 0.25rem;
 }
 
 .wellness-drawer-panel {
