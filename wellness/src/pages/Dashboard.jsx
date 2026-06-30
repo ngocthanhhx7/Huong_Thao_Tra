@@ -253,7 +253,7 @@ export default function Dashboard() {
   });
 
   return (
-    <div className="px-4 py-6 space-y-5 safe-bottom">
+    <div className="px-4 py-6 space-y-5">
       <h1 className="text-xl font-extrabold text-secondary">Sức khỏe của bạn</h1>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex flex-col items-center">

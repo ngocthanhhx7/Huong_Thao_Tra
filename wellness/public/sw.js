@@ -1,8 +1,8 @@
-const CACHE_NAME = 'htt-wellness-v2';
+const CACHE_NAME = 'htt-wellness-v3';
 const STATIC_ASSETS = [
   '/wellness/',
   '/wellness/manifest.json',
-  '/logo.png',
+  '/wellness/logo.png',
 ];
 
 self.addEventListener('install', (event) => {

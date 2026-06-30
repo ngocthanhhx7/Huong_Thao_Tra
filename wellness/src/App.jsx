@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Navigate, Routes, Route } from 'react-router-dom';
 import { useAuth } from '@shared/AuthContext';
 import WellnessLayout from './components/WellnessLayout';
 import PwaGate from './pages/PwaGate';
@@ -33,20 +33,22 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/" element={<PwaGate />} />
-      <Route element={<WellnessLayout />}>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/journal" element={<TeaJournal />} />
-        <Route path="/coach" element={<ProGuard><AICoach /></ProGuard>} />
-        <Route path="/suggest" element={<DrinkSuggestion />} />
-        <Route path="/workout" element={<ProGuard><WorkoutPlanner /></ProGuard>} />
-        <Route path="/challenges" element={<Challenges />} />
-        <Route path="/family" element={<ProGuard><FamilyHub /></ProGuard>} />
-        <Route path="/reports" element={<ProGuard><Reports /></ProGuard>} />
-        <Route path="/drug-check" element={<ProGuard><DrugCheck /></ProGuard>} />
-        <Route path="/pro" element={<ProPurchase />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/profile" element={<Profile />} />
+      <Route element={<PwaGate />}>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route element={<WellnessLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/journal" element={<TeaJournal />} />
+          <Route path="/coach" element={<ProGuard><AICoach /></ProGuard>} />
+          <Route path="/suggest" element={<DrinkSuggestion />} />
+          <Route path="/workout" element={<ProGuard><WorkoutPlanner /></ProGuard>} />
+          <Route path="/challenges" element={<Challenges />} />
+          <Route path="/family" element={<ProGuard><FamilyHub /></ProGuard>} />
+          <Route path="/reports" element={<ProGuard><Reports /></ProGuard>} />
+          <Route path="/drug-check" element={<ProGuard><DrugCheck /></ProGuard>} />
+          <Route path="/pro" element={<ProPurchase />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/profile" element={<Profile />} />
+        </Route>
       </Route>
     </Routes>
   );

@@ -32,12 +32,12 @@ export default function WellnessLayout() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-leaf-50">
-      <main className="flex-1 overflow-y-auto pb-20 safe-bottom">
+    <div className="wellness-app-shell flex flex-col bg-leaf-50">
+      <main className="wellness-app-main">
         <Outlet />
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex items-center justify-around py-2 safe-bottom z-50">
+      <nav className="wellness-bottom-nav fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex items-center justify-around z-50">
         {tabs.map((tab) => (
           <NavLink
             key={tab.to}
@@ -67,7 +67,7 @@ export default function WellnessLayout() {
             className="absolute inset-0 bg-black/40"
             onClick={() => setDrawerOpen(false)}
           />
-          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-6 animate-slide-up max-h-[70vh] overflow-y-auto safe-bottom">
+          <div className="wellness-drawer-panel absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-6 animate-slide-up max-h-[70vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-gray-800">Menu</h2>
               <button

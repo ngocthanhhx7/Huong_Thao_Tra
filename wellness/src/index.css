@@ -12,10 +12,12 @@
 
 html, body, #root {
   height: 100%;
+  min-height: 100%;
   overscroll-behavior: none;
 }
 
 body {
+  overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
   -webkit-user-select: none;
   user-select: none;
@@ -24,6 +26,62 @@ body {
 input, textarea {
   -webkit-user-select: text;
   user-select: text;
+}
+
+:root {
+  --wellness-nav-height: 72px;
+}
+
+.wellness-app-shell {
+  height: 100vh;
+  min-height: 100vh;
+  overflow: hidden;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+@supports (height: 100svh) {
+  .wellness-app-shell {
+    height: 100svh;
+    min-height: 100svh;
+  }
+}
+
+@supports (height: 100dvh) {
+  .wellness-app-shell {
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+}
+
+.wellness-app-main {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-bottom: calc(var(--wellness-nav-height) + env(safe-area-inset-bottom, 0px));
+  -webkit-overflow-scrolling: touch;
+}
+
+.wellness-bottom-nav {
+  min-height: var(--wellness-nav-height);
+  padding-top: 0.5rem;
+  padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+.wellness-drawer-panel {
+  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+.pwa-install-page {
+  height: 100vh;
+  min-height: 100vh;
+  height: 100svh;
+  min-height: 100svh;
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow-y: auto;
+  padding-top: calc(2.5rem + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px));
+  -webkit-overflow-scrolling: touch;
 }
 
 @layer components {
