@@ -47,7 +47,7 @@ export default function PwaGate() {
 
         <div className="w-full bg-white rounded-2xl shadow-md border border-gray-100 p-6 mb-6">
           <h2 className="text-lg font-bold text-primary-600 mb-5 text-center">
-            Cài đặt giống GeForce Now
+            Hướng dẫn cài đặt App Trà Hoa Việt
           </h2>
 
           <div className="space-y-5">
