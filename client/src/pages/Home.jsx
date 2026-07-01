@@ -3,7 +3,6 @@ import { useHomeScrollStory } from '../hooks/useHomeScrollStory';
 import api from '../services/api';
 
 import Footer from '../components/Footer';
-import ScrollProgress from '../components/home/ScrollProgress';
 import HeroCinematic from '../components/home/HeroCinematic';
 import ProblemChapter from '../components/home/ProblemChapter';
 import HerbalTransitionChapter from '../components/home/HerbalTransitionChapter';
@@ -226,7 +225,6 @@ const Home = () => {
         </button>
       </div>
 
-      <ScrollProgress />
       <div className="home-continuity-trail" aria-hidden="true" />
       <div className="home-journey-thread" aria-hidden="true">
         <span className="thread-node thread-node-1" />

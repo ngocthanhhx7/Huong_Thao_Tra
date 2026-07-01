@@ -73,20 +73,17 @@ export function useHomeScrollStory(rootRef, {
     const mm = gsap.matchMedia();
 
     mm.add('(min-width: 769px)', () => {
-      // 3. Pinned Hero Sequence - desktop only.
-      // Keeps the section pinned for metrics fade but keeps the city visual stationary.
-      const pinnedHeroTl = gsap.timeline({
+      // 3. Hero scroll sequence - desktop only. Avoid pinning so layout height stays consistent.
+      const heroScrollTl = gsap.timeline({
         scrollTrigger: {
           trigger: '.hero-story',
           start: 'top top',
-          end: '+=85%',
+          end: 'bottom top',
           scrub: 1,
-          pin: true,
-          pinSpacing: true,
-          refreshPriority: 2,
+          invalidateOnRefresh: true,
         },
       });
-      pinnedHeroTl
+      heroScrollTl
         .to('.hero-atmosphere', {
           opacity: 0.78,
           ease: 'none',
@@ -343,19 +340,30 @@ export function useHomeScrollStory(rootRef, {
       });
     });
 
-    const handleLoad = () => {
+    let isActive = true;
+
+    const refreshScroll = () => {
+      if (!isActive) return;
       ScrollTrigger.refresh();
     };
 
     if (document.readyState === 'complete') {
-      ScrollTrigger.refresh();
+      refreshScroll();
     } else {
-      window.addEventListener('load', handleLoad);
+      window.addEventListener('load', refreshScroll);
     }
 
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(refreshScroll).catch(() => {});
+    }
+
+    const refreshTimer = window.setTimeout(refreshScroll, 600);
+
     return () => {
+      isActive = false;
       mm.revert();
-      window.removeEventListener('load', handleLoad);
+      window.clearTimeout(refreshTimer);
+      window.removeEventListener('load', refreshScroll);
     };
 
   }, { scope: rootRef });
