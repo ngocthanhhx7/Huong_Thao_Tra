@@ -5803,6 +5803,41 @@ body {
   100% { transform: translateY(-8px) rotate(2deg); }
 }
 
+/* Low-motion production home: keep content visible and avoid device-dependent animation stalls. */
+.home-story,
+.home-story *,
+.home-story *::before,
+.home-story *::after {
+  animation: none !important;
+  transition-duration: 0ms !important;
+  scroll-behavior: auto !important;
+}
+
+.home-story .reveal,
+.home-story .hero-sequence,
+.home-story .city-sequence,
+.home-story .diagnostic-board,
+.home-story .ai-panel-layer,
+.home-story .formula-featured-stage,
+.home-story .formula-selector-card,
+.home-story .trust-item,
+.home-story .final-section {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+.home-story .ai-recommendation.opacity-40,
+.home-story .ai-recommendation[class*="opacity-40"] {
+  display: none !important;
+}
+
+.home-story .home-btn-primary::after,
+.home-story .ai-orbit,
+.home-story .speaker-control {
+  display: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .collage-card--1,
   .collage-card--2,
@@ -5810,4 +5845,3 @@ body {
     animation: none !important;
   }
 }
-

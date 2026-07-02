@@ -114,18 +114,11 @@ const AIHologramShowcase = ({ onBeep = () => {}, showcaseTeas = null }) => {
         </div>
 
         <div className="ai-hologram-shell relative">
-          {/* Orbiting background lines */}
-          <div className="ai-panel-layer ai-orbit" aria-hidden="true">
-            <span className="orbit-dot orbit-dot-1" />
-            <span className="orbit-dot orbit-dot-2" />
-            <span className="orbit-dot orbit-dot-3" />
-          </div>
-
           <div className="ai-panel-layer ai-console">
             <div className="ai-console-header mb-4 flex items-center justify-between">
               <span className="font-mono text-xs text-[#7dd8ff] tracking-wider">Smart Wellness AI v2.6</span>
               <strong className="flex items-center gap-1.5 font-mono text-xs text-emerald-400">
-                <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
                 SYSTEM ACTIVE
               </strong>
             </div>
@@ -149,7 +142,7 @@ const AIHologramShowcase = ({ onBeep = () => {}, showcaseTeas = null }) => {
             {/* Real-time Biological Signals Scan Panel */}
             <div className="mt-6 pt-4 border-t border-white/10">
               <p className="text-[10px] font-mono text-white/50 mb-3 uppercase tracking-widest flex items-center gap-1.5">
-                <img src={homeAssets.icons.scan} className="h-3.5 w-3.5 filter invert brightness-200 animate-spin" style={{ animationDuration: '3s' }} alt="" aria-hidden="true" />
+                <img src={homeAssets.icons.scan} className="h-3.5 w-3.5 filter invert brightness-200" alt="" aria-hidden="true" />
                 {status === 'analyzing' ? 'Đang đọc tín hiệu...' : 'Bản quét sinh học hiện tại'}
               </p>
               <div className="grid grid-cols-2 gap-2">
@@ -160,7 +153,7 @@ const AIHologramShowcase = ({ onBeep = () => {}, showcaseTeas = null }) => {
                       key={signal.id} 
                       className={`p-2.5 rounded-lg border transition-all duration-300 flex flex-col justify-between ${
                         isMatchingNeed && status === 'analyzing'
-                          ? 'border-[#7dd8ff] bg-[#7dd8ff]/10 animate-pulse'
+                          ? 'border-[#7dd8ff] bg-[#7dd8ff]/10'
                           : isMatchingNeed && status === 'ready'
                           ? 'border-[#add489] bg-[#add489]/10'
                           : 'border-white/5 bg-white/5'
@@ -287,4 +280,3 @@ AIHologramShowcase.propTypes = {
 };
 
 export default AIHologramShowcase;
-
